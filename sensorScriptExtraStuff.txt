@@ -1,0 +1,123 @@
+
+#printing out specific values
+#import xlrd
+#book = xlrd.open_workbook(r"H:\Sensor Script\ER docs\ER-20018334_AK.xlsx") 
+#sheet1 = book.sheet_by_index(1)
+#val = sheet1.cell_value(4,30)
+#print(val)
+#book = xlrd.open_workbook(r"H:\Sensor Script\Practice.xlsx") 
+#val = sheet1.cell_value(3,3) 
+#print(val)
+
+
+#trying out pandas and printing out sheets
+#import pandas as pd
+#test_s1 = pd.read_excel("H:\Sensor Script\Practice.xlsx", 0, index_col=2, )
+#test_s2 = pd.read_excel("H:\Sensor Script\Practice.xlsx", 1)
+#print(test_s1.shape)
+#print(test_s1.head())
+#print(test_s2.shape)
+#print(test_s2.head())
+
+
+
+
+
+#import openpyxl as opx
+#book = opx.load_workbook("H:\Sensor Script\ER docs\ER-20018334_AK.xlsx")
+#book = opx.load_workbook("H:\Sensor Script\Practice.xlsx")
+#sheet = book.worksheets[1]
+#FCF = sheet['F25'].value
+#print(FCF)
+
+
+#import pandas as pd
+
+
+
+
+
+
+
+
+
+
+# Finding the Y axis label
+#for col in range(sheet.ncols):
+#    if sheet.cell_value(0, col) == 'Y':
+#        print(col)
+
+# Finding the X axis label
+#for row in range(sheet.nrows):
+#    if sheet.cell_value(row, 0) == 26.0:
+#        print(row) 
+
+
+
+
+# Finding the coordinates of a string
+for row in range(sheet.nrows):
+    for col in range(sheet.ncols):
+        if sheet.cell_value(row, col) == 'Y':
+#        if sheet.cell_value(row, col) == 'CMF100M':
+            print(row) 
+            print(col) #the row that contains the data
+            x = col
+            y = row
+
+
+            
+            
+
+
+
+#for row in range (sheet.nrows):
+#    new_row = []
+#    for col in range (sheet.ncols):
+#        new_row.append(sheet.cell_value(row,col))
+#    data.append(new_row)
+#print(data)
+
+
+################################
+
+
+coeff_list = ["ID string", "FCF", "K1"]
+sensor_list = []
+correctTable = False 
+Sdef_table = []
+extraCharacters = ['{',' ','\"','}','\n']
+
+
+
+# Find line number
+for num, line in enumerate(code_file, 1):
+    if "};" in line:
+        correctTable = False
+    if correctTable == True:
+        for item in extraCharacters:
+         line = line.replace(item, '')
+        sensor_list.append(line.split(',')[0])
+    if "ID String" in line:
+        correctTable = True
+        Sdef_table = line.split(',')
+
+
+print(Sdef_table)
+print()
+print()
+print(sensor_list)
+print()
+
+#############################
+
+# Get title
+for line in code_file:
+    if "ID String" in line:
+        line = line.replace('/', '')
+        line = line.replace(' ', '')
+        line = line.replace('\n', '')
+        title_list = line.split(',')
+        
+        
+###############
