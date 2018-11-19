@@ -78,50 +78,94 @@ sensor_list = [] #All the sensors listed in the code
 new_row = []
 full_report = []
 
-correctTable = False
-match_found = False
-CAT_found = False
-SMV_found = False
+extraCharacters = ['{', ' ', '\"', '\n', '*', 'f', '/',]
+#code_file.seek(0)   # Go back to beginning of file
 
-extraCharacters = ['{',' ','\"','}','\n','/*', 'f']
-code_file.seek(0)   # Go back to beginning of file
-
+Cat_table = []
+Smv_table = []
+Coeff_table = []
+insideCatTable = False
+insideSmvTable = False
+insideCoeffTable = False
 
 
 #Get sensor list and coefficient titles from code
 for line in code_file:
-    if "};" in line:            #If its the end of the table
-        correctTable = False
-    if correctTable == True: #Dont read the file until in the right spot
-        for item in extraCharacters:  #remove unwanted characters in the line
-            line = line.replace(item, '')
-        current_line = line.split(',')
-        sensor_list.append(current_line[0])  # Take the sensor types from each line
-        
-        for coeff in coeff_list:  #Match up the coefficients and titles
-            for title_num, title in enumerate(title_list, 0):
-                if title == coeff:                           #Put the code number coefficient
-                    new_row.append(current_line[title_num])  # into the full data report
-                    match_found = True
-                    break #No need to keep looking after the matching title is found 
-            if CAT_found == True: # CAT variables located in another table
-                print() # Search through all the CAT table variables
-            if SMV_found == True: # SMV variables located in another table
-                print() # Search through all the SMV table variables
-            if match_found == False:
-                print()
-            
-            match_found = False
+    for item in extraCharacters:  #remove unwanted characters in the line
+        line = line.replace(item, '')
+    current_line = line.split(',')
+#    print(current_line)
 
-        print(new_row)
-        full_report.append(new_row)
-        new_row = [] #Clear data for next sensor type 
+    if "End" in current_line:        #If its the end of the table
+        insideCatTable = False
+        insideSmvTable = False
+        insideCoeffTable = False
+
+    if "CAT_TABLE" in current_line or insideCatTable == True:
+        Cat_table.append(current_line)
+        insideCatTable = True
+
+    if "SMV_TABLE" in current_line or insideSmvTable == True:
+        Smv_table.append(current_line)
+        insideSmvTable = True
+
+    if "COEFF_TABLE" in current_line or insideCoeffTable == True:
+        Coeff_table.append(current_line)
+        insideCoeffTable = True
+
+
+
+print(Cat_table[0])
+print(Cat_table[1])
+print(Smv_table[0])
+print(Smv_table[1])
+print(Coeff_table[0])
+print(Coeff_table[1])
+print(Coeff_table[2])
+print(Coeff_table[3])
+print(Coeff_table[4])
+print(Coeff_table[5])
+
+
+
+#Get sensor list and coefficient titles from code
+#for line in code_file:
+#    if "};" in line:            #If its the end of the table
+#        correctTable = False
+#    if CAT_found == True: # CAT variables located in another table
+#        print() # Search through all the CAT table variables
+#    if SMV_found == True: # SMV variables located in another table
+#        print() # Search through all the SMV table variables
+#    if match_found == False:
+#        print()
         
-    if "ID String" in line: # Take the code coefficient names and make a list
-        correctTable = True
-        line = line.replace('/', '')
-        line = line.replace('\n', '')
-        title_list = line.split(',')  # Makes the title list 
+        
+        
+#   if correctTable == True: #Dont read the file until in the right spot
+#        for item in extraCharacters:  #remove unwanted characters in the line
+#            line = line.replace(item, '')
+#        current_line = line.split(',')
+#        sensor_list.append(current_line[0])  # Take the sensor types from each line
+        
+#        for coeff in coeff_list:  #Match up the coefficients and titles
+#            for title_num, title in enumerate(title_list, 0):
+#                if title == coeff:                           #Put the code number coefficient
+#                    new_row.append(current_line[title_num -1])  # into the full data report
+#                    match_found = True
+#                    break #No need to keep looking after the matching title is found 
+            
+            
+#            match_found = False
+
+#        print(new_row)
+#        full_report.append(new_row)
+#        new_row = [] #Clear data for next sensor type 
+        
+#    if "ID String" in line: # Take the code coefficient names and make a list
+#        correctTable = True
+#        line = line.replace('/', '')
+#        line = line.replace('\n', '')
+#        title_list = line.split(',')  # Makes the title list 
         #print(title_list)
         #print()
         #print()
