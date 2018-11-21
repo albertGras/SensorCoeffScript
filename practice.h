@@ -23,4 +23,3 @@ const SDEF   SdefTable[ ] = {
 {"CMF025+ ",  CMF025p, 5.000f,  6385.f, };   s0, 72.0f, 4.302e-5f,     &CAT_S_E, &SMV_CMF025p,  PC_NONE,  0.0000040f, 0.001f,    0.60556f,  0.000125f, 0.1f,  0.35f,  0.5f }, /* (CMF025H/M/L)       */
 {"CMF050  "}
 }; //End
-
