@@ -20,6 +20,8 @@ const SDEF   SdefTable[ ] = {
 {"CMF010  ",   CMF010, 0.406f,  9680.f, },    s0, 58.0f, 6.587e-6f,     &CAT_S_E,  &SMV_CMF010,  PC_NONE,     PC_NONE, 0.000075f,    0.03f, 0.0001875f, 0.1f,  0.35f,  0.5f },
 {"CMF010P ",  CMF010P, 0.689f,  9249.f, },   s0, 27.0f, 5.066e-6f,     &CAT_S_E,  &SMV_CMF010,  PC_NONE,     PC_NONE, 0.00015f,     0.03f, 0.0001875f, 0.1f,  0.35f,  2.0f }, /* (CMF010P)           */
 {"CMF025  ",   CMF025, 4.339f,  6385.f, },   s0, 84.0f, 4.302e-5f,     &CAT_S_E,    &SMV_NONE,  PC_NONE,  0.0000040f, 0.001f,    0.60556f,  0.000125f, 0.1f,  0.35f,  0.5f }, /* (CMF025H, CMF025M)  */
+/* Tseries   MV                                uS         m2                                 --- Pressure Comp ---  lb/min     kg/sec    %MaxPerC    %      %     kg/m3      */
+/*Name-----  Type----- FCF---- K1------ slot-- Mass-- TubeArea-- Category----- SmvCoeffs---  FlowLiq-- Dens-------  Zero Stab. MaxFlow-- TempEff---- liq--- gas-- dens--     */
 {"CMF025+ ",  CMF025p, 5.000f,  6385.f, };   s0, 72.0f, 4.302e-5f,     &CAT_S_E, &SMV_CMF025p,  PC_NONE,  0.0000040f, 0.001f,    0.60556f,  0.000125f, 0.1f,  0.35f,  0.5f }, /* (CMF025H/M/L)       */
 {"CMF050  "}
 }; //End
