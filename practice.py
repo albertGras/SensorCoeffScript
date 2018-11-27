@@ -36,6 +36,8 @@ while count < 3:   # while all 3 tables havent been read (Coeff, Cat, Smv)
     for item in extraCharacters:  #remove unwanted characters in the line
         line = line.replace(item, '')
     line = line.split(',')
+    if line[0] == '':
+        continue
     if "End" in line:   # end of one of the tables
         count = count + 1
         inCoeffTable = False
