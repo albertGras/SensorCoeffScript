@@ -54,23 +54,27 @@ while count < 3:   # while all 3 tables havent been read (Coeff, Cat, Smv)
         cat_title_list.append(line)
         inCatTable = True
     elif inCatTable == True:         #Create cat table
+        line[0] = line[0].split('=', 1)[-1]  #Remove all characters before the '='
         cat_table.append(line)
 
     elif "SMV_TABLE" in line:        #Create smv table list
         smv_title_list.append(line)
         inSmvTable = True
     elif inSmvTable == True:         #Create smv table
+        line[0] = line[0].split('=', 1)[-1]  #Remove all characters before the '='
         smv_table.append(line)
 
 
 print("End")
 
-
+print("Sensor List")
 print(sensor_list)
 print()
 print()
+print("Coeff Title List")
 print(coeff_title_list)
 print()
+print("Coeff Table")
 print(coeff_table[0])
 print(coeff_table[1])
 print(coeff_table[2])
@@ -93,8 +97,10 @@ print(coeff_table[18])
 print(coeff_table[19])
 print()
 print()
+print("Cat title list")
 print(cat_title_list)
 print()
+print("Cat Table")
 print(cat_table[0])
 print(cat_table[1])
 print(cat_table[2])
@@ -107,8 +113,10 @@ print(cat_table[8])
 print(cat_table[9])
 print()
 print()
+print("Smv title list")
 print(smv_title_list)
 print()
+print("Smv Table")
 print(smv_table[0])
 print(smv_table[1])
 print(smv_table[2])
