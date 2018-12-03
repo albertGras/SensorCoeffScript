@@ -121,3 +121,129 @@ for line in code_file:
         
         
 ###############
+
+
+
+
+#blue_er_title_list = ["ID String", "FCF", "K1"]
+#green_er_title_list = ["GasFD"]
+#red_er_title_list = ["NominalFlowRate", "TubeID"]
+#purple_er_title_list = ["A4"]
+# "", "", "", "", "", "", "", "", "", "", 
+
+
+
+
+
+
+
+print()
+print()
+print("Coeff Title List")
+print(coeff_title_list)
+print()
+print("Coeff Table")
+print(coeff_table[0])
+print(coeff_table[1])
+print(coeff_table[2])
+print(coeff_table[3])
+print(coeff_table[4])
+print(coeff_table[5])
+print(coeff_table[6])
+print(coeff_table[7])
+print(coeff_table[8])
+print(coeff_table[9])
+print(coeff_table[10])
+print(coeff_table[11])
+print(coeff_table[12])
+print(coeff_table[13])
+print(coeff_table[14])
+print(coeff_table[15])
+print(coeff_table[16])
+print(coeff_table[17])
+print(coeff_table[18])
+print(coeff_table[19])
+print()
+print()
+print("Cat title list")
+print(cat_title_list)
+print()
+print("Cat Table")
+print(cat_table[0])
+print(cat_table[1])
+print(cat_table[2])
+print(cat_table[3])
+print(cat_table[4])
+print(cat_table[5])
+print(cat_table[6])
+print(cat_table[7])
+print(cat_table[8])
+print(cat_table[9])
+print()
+print()
+print("Smv title list")
+print(smv_title_list)
+print()
+print("Smv Table")
+print(smv_table[0])
+print(smv_table[1])
+print(smv_table[2])
+print(smv_table[3])
+print(smv_table[4])
+print(smv_table[5])
+print(smv_table[6])
+print(smv_table[7])
+print(smv_table[8])
+print(smv_table[9])
+
+
+    #Read in ER document into file
+    er_doc_blue   = "H:\SensorScript\ER docs\ER-20018334_AK.xlsx"
+    
+    #Create workbooks for excel document
+    wb_blue = xlrd.open_workbook(er_doc_blue)
+
+    #Get the correct sheet in the excel document
+    blue_old_params = wb_blue.sheet_by_index(1)
+    blue_new_params = wb_blue.sheet_by_index(2)
+    
+    blue_title_line_number = 15
+    blue_data_line_number = 21
+    
+    new_row = []
+
+    # Copy all coefficient names in blue er doc - old params 
+    num_cols = blue_old_params.ncols   # Number of columns
+    for col_idx in range(0, num_cols):  # Iterate through columns
+        old_blue_doc_title_list.append(blue_old_params.cell_value(blue_title_line_number, col_idx))  # Get cell object by row, col
+    print (old_blue_doc_title_list)
+    print()
+
+    # Copy all values in blue er doc - old params 
+    for row_idx in range(blue_data_line_number, blue_old_params.nrows):    # Iterate through rows
+        for col_idx in range(0, num_cols):  # Iterate through columns
+            new_row.append(blue_old_params.cell_value(row_idx, col_idx))  # Get cell object by row, col
+        print (new_row)
+        old_blue_doc_table.append(new_row)
+        new_row = []
+
+    print()
+    print()
+    print()
+
+    # Copy all coefficient names in blue er doc - new params 
+    num_cols = blue_new_params.ncols   # Number of columns
+    for col_idx in range(0, num_cols):  # Iterate through columns
+        new_blue_doc_title_list.append(blue_old_params.cell_value(blue_title_line_number, col_idx))  # Get cell object by row, col
+    print (new_blue_doc_title_list)
+    print()
+
+
+    # Copy all values in blue er doc - new params 
+    for row_idx in range(blue_data_line_number, blue_new_params.nrows):    # Iterate through rows
+        for col_idx in range(0, num_cols):  # Iterate through columns
+            new_row.append(blue_new_params.cell_value(row_idx, col_idx))  # Get cell object by row, col
+        print (new_row)
+        new_blue_doc_table.append(new_row)
+        new_row = []
+

@@ -1,134 +1,60 @@
 import xlrd
 import docx
+from scriptUtility import *
+
+#Read in ER documents
+er_doc_red    = "H:\SensorScript\ER docs\ER-20015860_CF.xlsx"
+er_doc_purple  = docx.Document("H:\SensorScript\ER docs\ER-20027172_AD.docx")
+
+#Create workbooks for excel documents
+wb_red = xlrd.open_workbook(er_doc_red)
+
+
 
 print("Hello World!")
 print()
 
-#code_file   = open("H:\SensorScript\practice.h")
-code_file   = open("C:\PVCS\ProjectsDB\Kinetis_DB\k2Src\k_src_app\coriolis\sensor.cpp")
-
-coeff_list = ["ID String", "FCF", "K1", "GasFD", "TubeID"] #All the coeffs that need comparison
-
-sensor_list = [] #All the sensors listed in the code
-coeff_title_list = [] 
-coeff_table = [] #Table of all regular coefficients listed in the code 
-cat_title_list = []
-cat_table = [] #Table of all Category coefficients 
-smv_title_list = []
-smv_table = [] #Table of all Smart Meter Verification coefficients 
-
-inCoeffTable = False
-inSmvTable = False
-inCatTable = False
-
-line = []
-count = 0
-
-extraCharacters = ['{', ' ', '\"', '\n', 'f','}', ';', '/',]
-
-code_file.seek(0)   # Go to beginning of file
+new_row = []
+new_blue_doc_title_list = []
+new_blue_doc_table = []
+old_blue_doc_title_list =[]
+old_blue_doc_table =[]
 
 
-while count < 3:   # while all 3 tables havent been read (Coeff, Cat, Smv)
-    line = code_file.readline()
-    if not line:                  # if end of file, stop reading file
-        break
-    for item in extraCharacters:  #remove unwanted characters in the line
-        line = line.replace(item, '')
-    line = line.split(',')
-    if line[0] == '':
-        continue
-    if "End" in line:   # end of one of the tables
-        count = count + 1
-        inCoeffTable = False
-        inSmvTable = False
-        inCatTable = False
 
-    elif "COEFF_TABLE" in line:      #Create coeff table list
-        coeff_title_list.append(line)
-        inCoeffTable = True
-    elif inCoeffTable == True:       #Create coeff table
-        if not any("--" in s for s in line):
-            sensor_list.append(line[0])  # Take the sensor types from each line
-            coeff_table.append(line)
+copyBlueErDocFile(new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table)
 
-    elif "CAT_TABLE" in line:        #Create cat table list
-        cat_title_list.append(line)
-        inCatTable = True
-    elif inCatTable == True:         #Create cat table
-        line[0] = line[0].split('=', 1)[-1]  #Remove all characters before the '='
-        cat_table.append(line)
+#print(new_blue_doc_title_list[0])
 
-    elif "SMV_TABLE" in line:        #Create smv table list
-        smv_title_list.append(line)
-        inSmvTable = True
-    elif inSmvTable == True:         #Create smv table
-        line[0] = line[0].split('=', 1)[-1]  #Remove all characters before the '='
-        smv_table.append(line)
+#print(old_blue_doc_table[0])
+
+    
+# Finding sensor type location in ER doc
+#for row in range(blue_old_params.nrows):
+#    if sensor_type in blue_old_params.cell_value(row, 0):
+#        blue_old_sensor_type_loc = row
+#        break
+#for row in range(blue_new_params.nrows):
+#    if sensor_type in blue_new_params.cell_value(row, 0):
+#        blue_new_sensor_type_loc = row
+#        break
+
+
+#print("Old params location: ", blue_old_sensor_type_loc)
+#print("New params location: ", blue_new_sensor_type_loc)
+#print()
+
+#Populate ER Doc row 
+#new_row = []
+#new_row.append(blue_old_params.cell_value(blue_old_sensor_type_loc, FCF))
+#new_row.append(blue_old_params.cell_value(blue_old_sensor_type_loc, K1))
+#new_row.append(blue_old_params.cell_value(blue_old_sensor_type_loc, K2))
+#new_row.append(blue_new_params.cell_value(blue_new_sensor_type_loc, ID_RESISTOR))
+#new_row.append(blue_new_params.cell_value(blue_new_sensor_type_loc, ID_STRING))
+#data.append(new_row)
+#print(data)
+
+
 
 
 print("End")
-
-print("Sensor List")
-print(sensor_list)
-print()
-print()
-print("Coeff Title List")
-print(coeff_title_list)
-print()
-print("Coeff Table")
-print(coeff_table[0])
-print(coeff_table[1])
-print(coeff_table[2])
-print(coeff_table[3])
-print(coeff_table[4])
-print(coeff_table[5])
-print(coeff_table[6])
-print(coeff_table[7])
-print(coeff_table[8])
-print(coeff_table[9])
-print(coeff_table[10])
-print(coeff_table[11])
-print(coeff_table[12])
-print(coeff_table[13])
-print(coeff_table[14])
-print(coeff_table[15])
-print(coeff_table[16])
-print(coeff_table[17])
-print(coeff_table[18])
-print(coeff_table[19])
-print()
-print()
-print("Cat title list")
-print(cat_title_list)
-print()
-print("Cat Table")
-print(cat_table[0])
-print(cat_table[1])
-print(cat_table[2])
-print(cat_table[3])
-print(cat_table[4])
-print(cat_table[5])
-print(cat_table[6])
-print(cat_table[7])
-print(cat_table[8])
-print(cat_table[9])
-print()
-print()
-print("Smv title list")
-print(smv_title_list)
-print()
-print("Smv Table")
-print(smv_table[0])
-print(smv_table[1])
-print(smv_table[2])
-print(smv_table[3])
-print(smv_table[4])
-print(smv_table[5])
-print(smv_table[6])
-print(smv_table[7])
-print(smv_table[8])
-print(smv_table[9])
-
-
-
