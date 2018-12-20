@@ -98,34 +98,34 @@ def copyBlueErDocFile(new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_
     num_cols = blue_old_params.ncols   # Number of columns
     for col_idx in range(0, num_cols):  # Iterate through columns
         old_blue_doc_title_list.append(blue_old_params.cell_value(blue_title_line_number, col_idx))  # Get cell object by row, col
-#    print (old_blue_doc_title_list)
-#    print()
+    print (old_blue_doc_title_list)
+    print()
 
     # Copy all values in blue er doc - old params 
     for row_idx in range(blue_data_line_number, blue_old_params.nrows):    # Iterate through rows
         for col_idx in range(0, num_cols):  # Iterate through columns
             new_row.append(blue_old_params.cell_value(row_idx, col_idx))  # Get cell object by row, col
-#        print (new_row)
+        print (new_row)
         old_blue_doc_table.append(new_row)
         new_row = []
 
-#    print()
-#    print()
-#    print()
+    print()
+    print()
+    print()
 
     # Copy all coefficient names in blue er doc - new params 
     num_cols = blue_new_params.ncols   # Number of columns
     for col_idx in range(0, num_cols):  # Iterate through columns
-        new_blue_doc_title_list.append(blue_old_params.cell_value(blue_title_line_number, col_idx))  # Get cell object by row, col
-#    print (new_blue_doc_title_list)
-#    print()
+        new_blue_doc_title_list.append(blue_new_params.cell_value(blue_title_line_number, col_idx))  # Get cell object by row, col
+    print (new_blue_doc_title_list)
+    print()
 
 
     # Copy all values in blue er doc - new params 
     for row_idx in range(blue_data_line_number, blue_new_params.nrows):    # Iterate through rows
         for col_idx in range(0, num_cols):  # Iterate through columns
             new_row.append(blue_new_params.cell_value(row_idx, col_idx))  # Get cell object by row, col
-#        print (new_row)
+        print (new_row)
         new_blue_doc_table.append(new_row)
         new_row = []
     
