@@ -1,60 +1,72 @@
 import xlrd
 import docx
+import numpy
 from scriptUtility import *
-
-#Read in ER documents
-er_doc_red    = "H:\SensorScript\ER docs\ER-20015860_CF.xlsx"
-er_doc_purple  = docx.Document("H:\SensorScript\ER docs\ER-20027172_AD.docx")
-
-#Create workbooks for excel documents
-wb_red = xlrd.open_workbook(er_doc_red)
-
 
 
 print("Hello World!")
-print()
 
-new_row = []
+
+final_array = []
+
+coeffs_to_compare = ["ID String", "FCF", "K1"] #, "GasFD", "NominalFlowRate", "TubeID", "A4"] #All the coeffs that need comparison
+
+#Lists for copying the code
+sensor_list = [] #All the sensors listed in the code
+coeff_title_list = [] 
+coeff_table = [] #Table of all regular coefficients listed in the code 
+cat_title_list = []
+cat_table = [] #Table of all Category coefficients 
+smv_title_list = []
+smv_table = [] #Table of all Smart Meter Verification coefficients 
+
+#Lists for copying the Blue ER document
 new_blue_doc_title_list = []
 new_blue_doc_table = []
 old_blue_doc_title_list =[]
 old_blue_doc_table =[]
 
+#Lists for "compileErDocRow"
+working_row = []
 
-
+copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table)
 copyBlueErDocFile(new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table)
 
-#print(new_blue_doc_title_list[0])
 
-#print(old_blue_doc_table[0])
+
+# Create final, results array
+
+#Put code coeffs into final array
+for code_row in coeff_table:  #put first row of coeff from code in final array
+    for coeff in coeffs_to_compare: # Loop through master coeff list
+        for code_coeff_num, code_list_coeff_name in enumerate(coeff_title_list[0], 0):
+            if coeff == code_list_coeff_name:
+                working_row.append(code_row[code_coeff_num -1])
+    final_array.append(working_row)
+    print(working_row)
+    working_row = []
 
     
-# Finding sensor type location in ER doc
-#for row in range(blue_old_params.nrows):
-#    if sensor_type in blue_old_params.cell_value(row, 0):
-#        blue_old_sensor_type_loc = row
-#        break
-#for row in range(blue_new_params.nrows):
-#    if sensor_type in blue_new_params.cell_value(row, 0):
-#        blue_new_sensor_type_loc = row
-#        break
+    
+    # put er document coeffs into final array 
+    for coeff in coeffs_to_compare:  # Loop through master coeff list
+    
+        compileErDocRow(coeff, code_row, working_row, new_blue_doc_title_list, 
+            new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table)
+    final_array.append(working_row)
+    print (working_row)
+    print()
+    working_row = []
 
-
-#print("Old params location: ", blue_old_sensor_type_loc)
-#print("New params location: ", blue_new_sensor_type_loc)
-#print()
-
-#Populate ER Doc row 
-#new_row = []
-#new_row.append(blue_old_params.cell_value(blue_old_sensor_type_loc, FCF))
-#new_row.append(blue_old_params.cell_value(blue_old_sensor_type_loc, K1))
-#new_row.append(blue_old_params.cell_value(blue_old_sensor_type_loc, K2))
-#new_row.append(blue_new_params.cell_value(blue_new_sensor_type_loc, ID_RESISTOR))
-#new_row.append(blue_new_params.cell_value(blue_new_sensor_type_loc, ID_STRING))
-#data.append(new_row)
-#print(data)
 
 
 
 
 print("End")
+
+
+
+
+
+
+

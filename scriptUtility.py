@@ -79,7 +79,7 @@ def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat
 
 
 def copyBlueErDocFile(new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table):
-    #Read in ER document into file
+    #Read in blue ER document into array
     er_doc_blue   = "H:\SensorScript\ER docs\ER-20018334_AK.xlsx"
     
     #Create workbooks for excel document
@@ -110,8 +110,6 @@ def copyBlueErDocFile(new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_
         new_row = []
 
 #    print()
-#    print()
-#    print()
 
     # Copy all coefficient names in blue er doc - new params 
     num_cols = blue_new_params.ncols   # Number of columns
@@ -130,30 +128,34 @@ def copyBlueErDocFile(new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_
         new_row = []
     
     
-
-#def copyBlueErDocFile():
-#    beforeTables = True
-#    title_row = False
-#    ERdocList = []
-#    new_row = []
-
-#    er_doc_green  = docx.Document("H:\SensorScript\ER docs\ER-20015206_AP.docx")
-#    #Put green ER-20015206_AP docx into list
-#    tables = er_doc_green.tables
-#    for table in tables:
-#        for row in table.rows:
-#            title_row = False
-#            if(beforeTables == False and len(new_row) != 0):
-#                ERdocList.append(new_row)
-#                new_row = []
-#            for cell in row.cells:
-#                if("Sensor Model") in cell.text:
-#                    title_row = True
-#                    beforeTables = False
-#                elif(beforeTables == False and title_row == False):
-#                    if cell.text != '':  # Remove blank lines
-#                        new_row.append(cell.text)
-#        print(new_row)
+    
+def compileErDocRow(coeff, code_row, working_row, new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table):
+    match = False
+    
+    for doc_coeff_num, doc_coeff_name in enumerate(new_blue_doc_title_list, 0): # loop through new sheet doc coeff titles
+        if coeff == doc_coeff_name: #If these match then this doc contains the coeff title 
+            match = True
+            for doc_row in new_blue_doc_table: #loop through each row of the blue doc
+                if code_row[0] in doc_row[0]: # If the sensor in the doc matched the sensor in the code
+                    working_row.append(str(doc_row[doc_coeff_num]))
+                    match = False
+                    return working_row
+                    
+    if match == False: #Didnt find the coeff in the new sheet
+        for doc_coeff_num, doc_coeff_name in enumerate(old_blue_doc_title_list, 0): # loop through old sheet doc coeff titles
+            if coeff == doc_coeff_name: #If these match then this doc contains the coeff title
+                match = True
+                for doc_row in old_blue_doc_table: #loop through each row of the blue doc to find the right sensor
+                    if code_row[0] in doc_row[0]: # If the sensor in the doc matched the sensor in the code
+                        working_row.append(str(doc_row[doc_coeff_num]))
+                        match = False
+                        return working_row
     
     
+    
+    
+
+
+
+
     
