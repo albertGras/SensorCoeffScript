@@ -113,14 +113,14 @@ def copyBlueErDocFile(new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_
 
     # Copy all coefficient names in blue er doc - new params 
     num_cols = blue_new_params.ncols   # Number of columns
-    for col_idx in range(0, num_cols):  # Iterate through columns
+    for col_idx in range(0, num_cols):  # Iterate through columns (x axis direction)
         new_blue_doc_title_list.append(blue_new_params.cell_value(blue_title_line_number, col_idx))  # Get cell object by row, col
 #    print (new_blue_doc_title_list)
 #    print()
 
 
     # Copy all values in blue er doc - new params 
-    for row_idx in range(blue_data_line_number, blue_new_params.nrows):    # Iterate through rows
+    for row_idx in range(blue_data_line_number, blue_new_params.nrows):    # Iterate through rows (y axis direction)
         for col_idx in range(0, num_cols):  # Iterate through columns
             new_row.append(blue_new_params.cell_value(row_idx, col_idx))  # Get cell object by row, col
 #        print (new_row)
@@ -136,7 +136,7 @@ def compileErDocRow(coeff, code_row, working_row, new_blue_doc_title_list, new_b
         if coeff == doc_coeff_name: #If these match then this doc contains the coeff title 
             match = True
             for doc_row in new_blue_doc_table: #loop through each row of the blue doc
-                if code_row[0] in doc_row[0]: # If the sensor in the doc matched the sensor in the code
+                if code_row[0] in doc_row[3]: # If the sensor in the doc matched the sensor in the code
                     working_row.append(str(doc_row[doc_coeff_num]))
                     match = False
                     return working_row
@@ -146,7 +146,7 @@ def compileErDocRow(coeff, code_row, working_row, new_blue_doc_title_list, new_b
             if coeff == doc_coeff_name: #If these match then this doc contains the coeff title
                 match = True
                 for doc_row in old_blue_doc_table: #loop through each row of the blue doc to find the right sensor
-                    if code_row[0] in doc_row[0]: # If the sensor in the doc matched the sensor in the code
+                    if code_row[0] in doc_row[3]: # If the sensor in the doc matched the sensor in the code
                         working_row.append(str(doc_row[doc_coeff_num]))
                         match = False
                         return working_row
