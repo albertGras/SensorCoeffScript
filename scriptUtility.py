@@ -1,6 +1,7 @@
 import xlrd
 
 def titleListSetUp(line, title_list):
+
     extraCharacters2 = ['{', '\"', '\n', 'f','}', ';', '/', 'COEFF_TABLE,', 'CAT_TABLE,', 'SMV_TABLE,']
 #    extraCharacters2 = ['{', '\"', '\n', 'f','}', ';', '/']
 
@@ -11,7 +12,14 @@ def titleListSetUp(line, title_list):
     title_list.append(line)
     
     
+def tableSetUp(line):
+    extraCharacters = ['{', ' ', '\"', '\n', 'f','}', ';', '/']
     
+    for item in extraCharacters:  #remove unwanted characters in the line
+        line = line.replace(item, '')
+    line = line.split(',')
+    line[0] = line[0].split('=', 1)[-1]  #Remove all characters before the '='
+    return line
 
 def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table):
     code_file   = open("H:\SensorScript\practice.h")
@@ -23,15 +31,14 @@ def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat
 
     line = []
     count = 0
-
-    extraCharacters = ['{', ' ', '\"', '\n', 'f','}', ';', '/']
-
+    
     code_file.seek(0)   # Go to beginning of file
 
     while count < 3:   # while all 3 tables havent been read (Coeff, Cat, Smv)
         line = code_file.readline()  # Read a line from the coefficient code file
         if not line:                  # if end of file, stop trying to read the file
             break  # break out of reading file while loop
+
         if "End" in line:   # end of one of the tables
             count = count + 1
             inCoeffTable = False
@@ -39,12 +46,11 @@ def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat
             inCatTable = False
 
         elif "COEFF_TABLE" in line:      #Create coeff table list
-            titleListSetUp(line, coeff_title_list) # #############
+            titleListSetUp(line, coeff_title_list) # Prepare title line to be put into array
             inCoeffTable = True
+        
         elif inCoeffTable == True:       #Create coeff table
-            for item in extraCharacters:  #remove unwanted characters in the line
-                line = line.replace(item, '')
-            line = line.split(',')
+            line = tableSetUp(line)# Prepare coeff data lines to be put into array 
             if line[0] == '':  # Remove blank lines
                 continue
             if not any("--" in s for s in line): #Remove comment rows with additional coeff decriptions
@@ -52,38 +58,32 @@ def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat
                 coeff_table.append(line)
 
         elif "CAT_TABLE" in line:        #Create cat table list
-            titleListSetUp(line, cat_title_list) # #############
+            titleListSetUp(line, cat_title_list) # Prepare title line to be put into array
             inCatTable = True
+        
         elif inCatTable == True:         #Create cat table
-            for item in extraCharacters:  #remove unwanted characters in the line
-                line = line.replace(item, '')
-            line = line.split(',')
+            line = tableSetUp(line) # Prepare coeff data lines to be put into array 
             if line[0] == '':  # Remove blank lines
                 continue
-            line[0] = line[0].split('=', 1)[-1]  #Remove all characters before the '='
             cat_table.append(line)
 
         elif "SMV_TABLE" in line:        #Create smv table list
-            titleListSetUp(line, smv_title_list) # #############
+            titleListSetUp(line, smv_title_list) # Prepare title line to be put into array
             inSmvTable = True
+        
         elif inSmvTable == True:         #Create smv table
-            for item in extraCharacters:  #remove unwanted characters in the line
-                line = line.replace(item, '')
-            line = line.split(',')
+            line = tableSetUp(line) # Prepare coeff data lines to be put into array 
             if line[0] == '':  # Remove blank lines
                 continue
-            line[0] = line[0].split('=', 1)[-1]  #Remove all characters before the '='
             smv_table.append(line)
 
 #    print(smv_title_list)
 #    print()
 #    print(smv_table)
 #    print()
-#    print()
 #    print(cat_title_list)
 #    print()
 #    print(cat_table)
-#    print()
 #    print()
 #    print(sensor_list)
 #    print()
