@@ -11,15 +11,15 @@ def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat
     line = []
     count = 0
 
-    extraCharacters = ['{', ' ', '\"', '\n', 'f','}', ';', '/',]
-    extraCharacters2 = ['{', '\"', '\n', 'f','}', ';', '/',]
-
+    extraCharacters = ['{', ' ', '\"', '\n', 'f','}', ';', '/']
+    extraCharacters2 = ['{', '\"', '\n', 'f','}', ';', '/', 'COEFF_TABLE,', 'CAT_TABLE,', 'SMV_TABLE,']
+#    extraCharacters2 = ['{', '\"', '\n', 'f','}', ';', '/']
     code_file.seek(0)   # Go to beginning of file
 
     while count < 3:   # while all 3 tables havent been read (Coeff, Cat, Smv)
-        line = code_file.readline()
-        if not line:                  # if end of file, stop reading file
-            break
+        line = code_file.readline()  # Read a line from the coefficient code file
+        if not line:                  # if end of file, stop trying to read the file
+            break  # break out of reading file while loop
         if "End" in line:   # end of one of the tables
             count = count + 1
             inCoeffTable = False
@@ -29,7 +29,8 @@ def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat
         elif "COEFF_TABLE" in line:      #Create coeff table list
             for item in extraCharacters2:  #remove unwanted characters in the line
                 line = line.replace(item, '')
-            line = line.split(',')
+            line = line.split(',')   # Split up the code line by comas 
+#            line = [x for x in line if x != ''] #Remove blank elements
             coeff_title_list.append(line)
             inCoeffTable = True
         elif inCoeffTable == True:       #Create coeff table
@@ -46,6 +47,7 @@ def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat
             for item in extraCharacters2:  #remove unwanted characters in the line
                 line = line.replace(item, '')
             line = line.split(',')
+#            line = [x for x in line if x != ''] #Remove blank elements
             cat_title_list.append(line)
             inCatTable = True
         elif inCatTable == True:         #Create cat table
@@ -61,6 +63,7 @@ def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat
             for item in extraCharacters2:  #remove unwanted characters in the line
                 line = line.replace(item, '')
             line = line.split(',')
+#            line = [x for x in line if x != ''] #Remove blank elements
             smv_title_list.append(line)
             inSmvTable = True
         elif inSmvTable == True:         #Create smv table
@@ -72,10 +75,22 @@ def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat
             line[0] = line[0].split('=', 1)[-1]  #Remove all characters before the '='
             smv_table.append(line)
 
-
-
-
-
+#    print(smv_title_list)
+#    print()
+#    print(smv_table)
+#    print()
+#    print()
+#    print(cat_title_list)
+#    print()
+#    print(cat_table)
+#    print()
+#    print()
+#    print(sensor_list)
+#    print()
+#    print(coeff_title_list)
+#    print()
+#    print(coeff_table)
+#    print("*******************")
 
 
 def copyBlueErDocFile(new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table):
@@ -129,6 +144,41 @@ def copyBlueErDocFile(new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_
     
     
     
+    
+def addCatAndSmvTablesToCoeffTable(coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table):
+    
+    coeff_title_list = coeff_title_list[0]
+#    print(coeff_title_list)
+#    print(coeff_table)
+#    print()
+    
+    for coeff_num, coeff_title in enumerate(coeff_title_list, 0):
+        if "CAT" in coeff_title:
+            for cat_title in cat_title_list[0]:
+                coeff_title_list.insert(coeff_num, cat_title)
+                for row in coeff_table:
+                    for cat_value in cat_table[0]:
+                        row.insert(coeff_num, cat_value)
+            break;
+
+    for coeff_num, coeff_title in enumerate(coeff_title_list, 0):
+        if "SMV" in coeff_title:
+            for smv_title in smv_title_list[0]:
+                coeff_title_list.insert(coeff_num, smv_title)
+                for row in coeff_table:
+                    for smv_value in smv_table[0]:
+                        row.insert(coeff_num, cat_value)
+            break;
+            
+#    print()
+#    print(coeff_title_list)
+#    print(coeff_table[0])
+#    print('-----------')
+        
+ 
+    
+    
+    
 def compileErDocRow(coeff, code_row, working_row, new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table):
     match = False
     
@@ -152,8 +202,7 @@ def compileErDocRow(coeff, code_row, working_row, new_blue_doc_title_list, new_b
                         return working_row
     
     
-    
-    
+
 
 
 
