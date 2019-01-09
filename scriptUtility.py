@@ -1,5 +1,18 @@
 import xlrd
 
+def titleListSetUp(line, title_list):
+    extraCharacters2 = ['{', '\"', '\n', 'f','}', ';', '/', 'COEFF_TABLE,', 'CAT_TABLE,', 'SMV_TABLE,']
+#    extraCharacters2 = ['{', '\"', '\n', 'f','}', ';', '/']
+
+    for item in extraCharacters2:  #remove unwanted characters in the line
+        line = line.replace(item, '')
+    line = line.split(',')   # Split up the code line by comas 
+    line = [x for x in line if x != ''] #Remove blank elements
+    title_list.append(line)
+    
+    
+    
+
 def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table):
     code_file   = open("H:\SensorScript\practice.h")
 #    code_file   = open("C:\PVCS\ProjectsDB\Kinetis_DB\k2Src\k_src_app\coriolis\sensor.cpp")
@@ -12,8 +25,7 @@ def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat
     count = 0
 
     extraCharacters = ['{', ' ', '\"', '\n', 'f','}', ';', '/']
-    extraCharacters2 = ['{', '\"', '\n', 'f','}', ';', '/', 'COEFF_TABLE,', 'CAT_TABLE,', 'SMV_TABLE,']
-#    extraCharacters2 = ['{', '\"', '\n', 'f','}', ';', '/']
+
     code_file.seek(0)   # Go to beginning of file
 
     while count < 3:   # while all 3 tables havent been read (Coeff, Cat, Smv)
@@ -27,11 +39,7 @@ def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat
             inCatTable = False
 
         elif "COEFF_TABLE" in line:      #Create coeff table list
-            for item in extraCharacters2:  #remove unwanted characters in the line
-                line = line.replace(item, '')
-            line = line.split(',')   # Split up the code line by comas 
-#            line = [x for x in line if x != ''] #Remove blank elements
-            coeff_title_list.append(line)
+            titleListSetUp(line, coeff_title_list) # #############
             inCoeffTable = True
         elif inCoeffTable == True:       #Create coeff table
             for item in extraCharacters:  #remove unwanted characters in the line
@@ -44,11 +52,7 @@ def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat
                 coeff_table.append(line)
 
         elif "CAT_TABLE" in line:        #Create cat table list
-            for item in extraCharacters2:  #remove unwanted characters in the line
-                line = line.replace(item, '')
-            line = line.split(',')
-#            line = [x for x in line if x != ''] #Remove blank elements
-            cat_title_list.append(line)
+            titleListSetUp(line, cat_title_list) # #############
             inCatTable = True
         elif inCatTable == True:         #Create cat table
             for item in extraCharacters:  #remove unwanted characters in the line
@@ -60,11 +64,7 @@ def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat
             cat_table.append(line)
 
         elif "SMV_TABLE" in line:        #Create smv table list
-            for item in extraCharacters2:  #remove unwanted characters in the line
-                line = line.replace(item, '')
-            line = line.split(',')
-#            line = [x for x in line if x != ''] #Remove blank elements
-            smv_title_list.append(line)
+            titleListSetUp(line, smv_title_list) # #############
             inSmvTable = True
         elif inSmvTable == True:         #Create smv table
             for item in extraCharacters:  #remove unwanted characters in the line
