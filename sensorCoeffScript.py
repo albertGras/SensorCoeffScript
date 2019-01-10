@@ -1,6 +1,5 @@
-import xlrd
-import docx
-import numpy
+#import docx
+#import numpy
 from scriptUtility import *
 
 
@@ -42,6 +41,8 @@ copyBlueErDocFile(new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_titl
 addCatAndSmvTablesToCoeffTable(coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table)
 
 
+coeffPopulated = False
+
 #print(coeff_title_list)
 #print()
 #print(coeff_table)
@@ -51,9 +52,13 @@ addCatAndSmvTablesToCoeffTable(coeff_title_list, coeff_table, cat_title_list, ca
 #Put code coeffs into final array
 for code_row in coeff_table:  #put first row of coeffs from code in final array
     for coeff in coeffs_to_compare: # Loop through master coeff list
+        coeffPopulated = False
         for code_coeff_num, code_list_coeff_name in enumerate(coeff_title_list[0], 0):
             if coeff == code_list_coeff_name:
+                coeffPopulated = True
                 working_row.append(code_row[code_coeff_num])
+        if coeffPopulated == False:
+            working_row.append("---")
     final_array.append(working_row)
     print(working_row)
     working_row = []
@@ -62,8 +67,7 @@ for code_row in coeff_table:  #put first row of coeffs from code in final array
     
     # put er document coeffs into final array 
     for coeff in coeffs_to_compare:  # Loop through master coeff list
-        compileErDocRow(coeff, code_row, working_row, new_blue_doc_title_list, 
-            new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table)
+        compileErDocRow(coeff, code_row, working_row, new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table)
     final_array.append(working_row)
     print (working_row)
     print()

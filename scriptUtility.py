@@ -1,5 +1,7 @@
 import xlrd
 
+
+
 def titleListSetUp(line, title_list):
 
     extraCharacters2 = ['{', '\"', '\n', 'f','}', ';', '/', 'COEFF_TABLE,', 'CAT_TABLE,', 'SMV_TABLE,']
@@ -12,6 +14,8 @@ def titleListSetUp(line, title_list):
     title_list.append(line)
     
     
+    
+    
 def tableSetUp(line):
     extraCharacters = ['{', ' ', '\"', '\n', 'f','}', ';', '/']
     
@@ -21,6 +25,9 @@ def tableSetUp(line):
     line[0] = line[0].split('=', 1)[-1]  #Remove all characters before the '='
     return line
 
+    
+    
+    
 def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table):
     code_file   = open("H:\SensorScript\practice.h")
 #    code_file   = open("C:\PVCS\ProjectsDB\Kinetis_DB\k2Src\k_src_app\coriolis\sensor.cpp")
@@ -93,19 +100,16 @@ def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat
 #    print("*******************")
 
 
-def copyBlueErDocFile(new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table):
-    #Read in blue ER document into array
-    er_doc_blue   = "H:\SensorScript\ER docs\ER-20018334_AK.xlsx"
-    
-    #Create workbooks for excel document
-    wb_blue = xlrd.open_workbook(er_doc_blue)
 
-    #Get the correct sheet in the excel document
-    blue_old_params = wb_blue.sheet_by_index(1)
-    blue_new_params = wb_blue.sheet_by_index(2)
+def copyBlueErDocFile(new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table):
     
-    blue_title_line_number = 15
-    blue_data_line_number = 21
+    er_doc_blue   = "H:\SensorScript\ER docs\ER-20018334_AK.xlsx" #Read in blue ER document into an array
+    wb_blue = xlrd.open_workbook(er_doc_blue) #Create workbook for excel blue er document
+    blue_old_params = wb_blue.sheet_by_index(1) #Set up the old parameters sheet in the excel document
+    blue_new_params = wb_blue.sheet_by_index(2) #Set up the new parameters sheet in the excel document
+    
+    blue_title_line_number = 15 # The row number of where the title names are located
+    blue_data_line_number = 21 # The row number of where the coeff data begins
     
     new_row = []
 
@@ -181,26 +185,24 @@ def addCatAndSmvTablesToCoeffTable(coeff_title_list, coeff_table, cat_title_list
     
 def compileErDocRow(coeff, code_row, working_row, new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table):
     match = False
-    
     for doc_coeff_num, doc_coeff_name in enumerate(new_blue_doc_title_list, 0): # loop through new sheet doc coeff titles
         if coeff == doc_coeff_name: #If these match then this doc contains the coeff title 
             match = True
             for doc_row in new_blue_doc_table: #loop through each row of the blue doc
                 if code_row[0] in doc_row[3]: # If the sensor in the doc matched the sensor in the code
                     working_row.append(str(doc_row[doc_coeff_num]))
-                    match = False
                     return working_row
                     
     if match == False: #Didnt find the coeff in the new sheet
         for doc_coeff_num, doc_coeff_name in enumerate(old_blue_doc_title_list, 0): # loop through old sheet doc coeff titles
             if coeff == doc_coeff_name: #If these match then this doc contains the coeff title
-                match = True
                 for doc_row in old_blue_doc_table: #loop through each row of the blue doc to find the right sensor
                     if code_row[0] in doc_row[3]: # If the sensor in the doc matched the sensor in the code
                         working_row.append(str(doc_row[doc_coeff_num]))
                         match = False
                         return working_row
-    
+        working_row.append('---')
+        return working_row
     
 
 
