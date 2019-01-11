@@ -1,5 +1,13 @@
 import xlrd
 
+def createConstantsArray(line):
+    line = line.replace('#define', '')
+    line = line.replace('f', '')
+    line = line.split(' ')
+    line = [x for x in line if x != ''] #Remove blank elements
+    del line[2:20]
+#    print(line)
+    return line
 
 
 def titleListSetUp(line, title_list):
@@ -28,7 +36,7 @@ def tableSetUp(line):
     
     
     
-def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table):
+def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table, constants_table):
     code_file   = open("H:\SensorScript\practice.h")
 #    code_file   = open("C:\PVCS\ProjectsDB\Kinetis_DB\k2Src\k_src_app\coriolis\sensor.cpp")
 
@@ -43,8 +51,15 @@ def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat
 
     while count < 3:   # while all 3 tables havent been read (Coeff, Cat, Smv)
         line = code_file.readline()  # Read a line from the coefficient code file
+
         if not line:                  # if end of file, stop trying to read the file
             break  # break out of reading file while loop
+
+        if "define" in line:
+            line = createConstantsArray(line)
+            constants_table.append(line)
+#            print(constants_table)
+#            print()
 
         if "End" in line:   # end of one of the tables
             count = count + 1
@@ -55,7 +70,7 @@ def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat
         elif "COEFF_TABLE" in line:      #Create coeff table list
             titleListSetUp(line, coeff_title_list) # Prepare title line to be put into array
             inCoeffTable = True
-        
+
         elif inCoeffTable == True:       #Create coeff table
             line = tableSetUp(line)# Prepare coeff data lines to be put into array 
             if line[0] == '':  # Remove blank lines
@@ -67,7 +82,7 @@ def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat
         elif "CAT_TABLE" in line:        #Create cat table list
             titleListSetUp(line, cat_title_list) # Prepare title line to be put into array
             inCatTable = True
-        
+
         elif inCatTable == True:         #Create cat table
             line = tableSetUp(line) # Prepare coeff data lines to be put into array 
             if line[0] == '':  # Remove blank lines
@@ -77,13 +92,14 @@ def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat
         elif "SMV_TABLE" in line:        #Create smv table list
             titleListSetUp(line, smv_title_list) # Prepare title line to be put into array
             inSmvTable = True
-        
+
         elif inSmvTable == True:         #Create smv table
             line = tableSetUp(line) # Prepare coeff data lines to be put into array 
             if line[0] == '':  # Remove blank lines
                 continue
             smv_table.append(line)
 
+#   print(constants_table)
 #    print(smv_title_list)
 #    print()
 #    print(smv_table)
@@ -98,6 +114,8 @@ def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat
 #    print()
 #    print(coeff_table)
 #    print("*******************")
+
+
 
 
 

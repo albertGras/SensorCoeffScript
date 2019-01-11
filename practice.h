@@ -6,6 +6,16 @@ const S_CAT   CAT_TiTAN1      = { 0.5f, 100.0f,  0.5f, 1.07f, 2.0f,      _0p0,  
 const S_CAT   CAT_TiTAN2      = { 0.5f,   _150,  _0p7,  _1p1, 2.0f,      _0p0,   _1p0, 0.0625f,      _0p0,      _0p0,      _0p0,       _0p0, 100.0f,      _0p0, SSA_TSERIES_COMP };
 //End
 
+
+#define _3p4     3.4f       // default mV/Hz Target Amp
+#define _150   150.0f       // default drive P
+#define _0p7     0.7f       // default drive I
+#define _1p1     1.1f       // default overshoot
+#define _14     14.0f       // default uS FD Limit
+#define _1p0     1.0f       // default GasFD
+#define _0p425 0.425f       // default mv/Hz A3 limit (.425 is 12.5% of 3.4)
+#define _0p0     0.0f       // default for VOS
+
 /*                               3083- 3085- 3087--   3089  3091--  3094--     3159----    3161-- 3163-- 3165--   3089-  3091--  3163- */
 //SMV_TABLE,Tone Level,Ramp Time,BL Temp Coeff,Drive SP FCF,Puck P FCF,BL Temp ?Quad? Coeff,dF Tone Spacing,Freq. Drift Limit,Max Sensor Current,X,X 
 const S_SMV  SMV_CMF010  = {      5.f, 30.f, 6.970f,  1.7f,  50.f, -0.003533f, 0.2666667f, .067f,   8.f,    0.f,  1.7f, 50000.f, 300.f };

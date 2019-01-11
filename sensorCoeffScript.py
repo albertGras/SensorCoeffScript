@@ -18,7 +18,7 @@ coeffs_to_compare = ["ID String", "NominalFlowRate", "FCF", "K1", "I.D. Resistor
     "BL Temp Coeff*", "Drive SP FCF", "Puck P FCF", "dF Tone Spacing", "Freq. Drift Limit*", "Max Sensor Current", 
     "Minimum Flow Multiplier", "T03", "MassFlowAccuracy_Liquid", "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", ] 
 
-#Lists for copying the code
+#Lists for copying the code file
 sensor_list = [] #All the sensors listed in the code
 coeff_title_list = [] 
 coeff_table = [] #Table of all regular coefficients listed in the code 
@@ -26,6 +26,7 @@ cat_title_list = []
 cat_table = [] #Table of all Category coefficients 
 smv_title_list = []
 smv_table = [] #Table of all Smart Meter Verification coefficients 
+constants_table = []
 
 #Lists for copying the Blue ER document
 new_blue_doc_title_list = []
@@ -36,16 +37,21 @@ old_blue_doc_table =[]
 #Lists for "compileErDocRow"
 working_row = []
 
-copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table)
-copyBlueErDocFile(new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table)
-addCatAndSmvTablesToCoeffTable(coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table)
-
 
 coeffPopulated = False
 
-#print(coeff_title_list)
-#print()
-#print(coeff_table)
+copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table, constants_table)
+copyBlueErDocFile(new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table)
+addCatAndSmvTablesToCoeffTable(coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table)
+
+# Replace variables with their values 
+for code_row_num, code_row in enumerate(coeff_table, 0):
+    for code_element_num, code_element in enumerate(code_row, 0):
+        for x in constants_table:
+            if x[0] == code_element:
+                coeff_table[code_row_num][code_element_num] = x[1]
+
+
 
 # Create final, results array
 
@@ -56,9 +62,9 @@ for code_row in coeff_table:  #put first row of coeffs from code in final array
         for code_coeff_num, code_list_coeff_name in enumerate(coeff_title_list[0], 0):
             if coeff == code_list_coeff_name:
                 coeffPopulated = True
-                working_row.append(code_row[code_coeff_num])
+                working_row.append(code_row[code_coeff_num]) # Add coeff value to list 
         if coeffPopulated == False:
-            working_row.append("---")
+            working_row.append("---")  # Add a place holder if value doesnt exist
     final_array.append(working_row)
     print(working_row)
     working_row = []
