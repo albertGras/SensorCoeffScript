@@ -219,12 +219,15 @@ def compileErDocRow(coeff, code_row, working_row, new_blue_doc_title_list, new_b
                         working_row.append(str(doc_row[doc_coeff_num]))
                         match = False
                         return working_row
-        working_row.append('---')
+        working_row.append('---') # Add a --- for coefficients that cant be populated
         return working_row
     
 
 
-
-
-
-    
+def formatString(stringVariable):
+    try: #If the variable can be made into a float, return the float value
+        return "%s"%float(stringVariable)
+    except: # If the variable cannot be made into a float, then just return the original string
+        return stringVariable
+   
+   
