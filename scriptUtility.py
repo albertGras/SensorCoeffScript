@@ -1,4 +1,5 @@
 import xlrd
+import xlsxwriter
 
 def createConstantsArray(line):
     line = line.replace('#define', '')
@@ -37,8 +38,8 @@ def tableSetUp(line):
     
     
 def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table, constants_table):
-    code_file   = open("H:\SensorScript\practice.h")
-#    code_file   = open("C:\PVCS\ProjectsDB\Kinetis_DB\k2Src\k_src_app\coriolis\sensor.cpp")
+#    code_file   = open("H:\SensorScript\practice.h")
+    code_file   = open("C:\PVCS\ProjectsDB\Kinetis_DB\k2Src\k_src_app\coriolis\sensor.cpp")
 
     inCoeffTable = False
     inSmvTable = False
@@ -78,6 +79,7 @@ def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat
             if not any("--" in s for s in line): #Remove comment rows with additional coeff decriptions
                 sensor_list.append(line[0])  # Take the sensor types from each line
                 coeff_table.append(line)
+#                print(line)
 
         elif "CAT_TABLE" in line:        #Create cat table list
             titleListSetUp(line, cat_title_list) # Prepare title line to be put into array
@@ -98,29 +100,51 @@ def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat
             if line[0] == '':  # Remove blank lines
                 continue
             smv_table.append(line)
-
-#   print(constants_table)
-#    print(smv_title_list)
-#    print()
-#    print(smv_table)
-#    print()
-#    print(cat_title_list)
-#    print()
-#    print(cat_table)
-#    print()
+            
 #    print(sensor_list)
+
+
+def addCatAndSmvTablesToCoeffTable(coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table):
+    coeff_title_list = coeff_title_list[0]
+#    print(coeff_title_list)
+#    print(coeff_table)
+#    print()
+    
+    for coeff_num, coeff_title in enumerate(coeff_title_list, 0):
+        if "CAT" in coeff_title:
+            for cat_title in cat_title_list[0]:
+                coeff_title_list.insert(coeff_num, cat_title)
+                for row in coeff_table:
+                    for cat_value in cat_table[0]:
+                        row.insert(coeff_num, cat_value)
+            break;
+
+    for coeff_num, coeff_title in enumerate(coeff_title_list, 0):
+        if "SMV" in coeff_title:
+            for smv_title in smv_title_list[0]:
+                coeff_title_list.insert(coeff_num, smv_title)
+                for row in coeff_table:
+                    for smv_value in smv_table[0]:
+                        row.insert(coeff_num, cat_value)
+            break;
+            
 #    print()
 #    print(coeff_title_list)
-#    print()
-#    print(coeff_table)
-#    print("*******************")
+#    print(coeff_table[0])
+#    print('-----------')
 
 
+def replaceVariablesWithDefinitions(coeff_table, constants_table):
+    for code_row_num, code_row in enumerate(coeff_table, 0):
+        for code_element_num, code_element in enumerate(code_row, 0):
+            for x in constants_table:
+                if x[0] == code_element:
+                    coeff_table[code_row_num][code_element_num] = x[1]
+    return coeff_table
 
 
-
+    #ER-20018334
 def copyBlueErDocFile(new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table):
-    
     er_doc_blue   = "H:\SensorScript\ER docs\ER-20018334_AK.xlsx" #Read in blue ER document into an array
     wb_blue = xlrd.open_workbook(er_doc_blue) #Create workbook for excel blue er document
     blue_old_params = wb_blue.sheet_by_index(1) #Set up the old parameters sheet in the excel document
@@ -165,42 +189,12 @@ def copyBlueErDocFile(new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_
         new_row = []
     
     
-    
-    
-def addCatAndSmvTablesToCoeffTable(coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table):
-    
-    coeff_title_list = coeff_title_list[0]
-#    print(coeff_title_list)
-#    print(coeff_table)
-#    print()
-    
-    for coeff_num, coeff_title in enumerate(coeff_title_list, 0):
-        if "CAT" in coeff_title:
-            for cat_title in cat_title_list[0]:
-                coeff_title_list.insert(coeff_num, cat_title)
-                for row in coeff_table:
-                    for cat_value in cat_table[0]:
-                        row.insert(coeff_num, cat_value)
-            break;
+#def copyRedErDocFile
 
-    for coeff_num, coeff_title in enumerate(coeff_title_list, 0):
-        if "SMV" in coeff_title:
-            for smv_title in smv_title_list[0]:
-                coeff_title_list.insert(coeff_num, smv_title)
-                for row in coeff_table:
-                    for smv_value in smv_table[0]:
-                        row.insert(coeff_num, cat_value)
-            break;
-            
-#    print()
-#    print(coeff_title_list)
-#    print(coeff_table[0])
-#    print('-----------')
-        
- 
-    
-    
-    
+
+
+
+
 def compileErDocRow(coeff, code_row, working_row, new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table):
     match = False
     for doc_coeff_num, doc_coeff_name in enumerate(new_blue_doc_title_list, 0): # loop through new sheet doc coeff titles
@@ -210,7 +204,7 @@ def compileErDocRow(coeff, code_row, working_row, new_blue_doc_title_list, new_b
                 if code_row[0] in doc_row[3]: # If the sensor in the doc matched the sensor in the code
                     working_row.append(str(doc_row[doc_coeff_num]))
                     return working_row
-                    
+
     if match == False: #Didnt find the coeff in the new sheet
         for doc_coeff_num, doc_coeff_name in enumerate(old_blue_doc_title_list, 0): # loop through old sheet doc coeff titles
             if coeff == doc_coeff_name: #If these match then this doc contains the coeff title
@@ -219,9 +213,9 @@ def compileErDocRow(coeff, code_row, working_row, new_blue_doc_title_list, new_b
                         working_row.append(str(doc_row[doc_coeff_num]))
                         match = False
                         return working_row
-        working_row.append('---') # Add a --- for coefficients that cant be populated
-        return working_row
-    
+    working_row.append('---') # Else, add a '---' for coefficients that cant be populated
+    return working_row
+
 
 
 def formatString(stringVariable):
@@ -229,5 +223,126 @@ def formatString(stringVariable):
         return "%s"%float(stringVariable)
     except: # If the variable cannot be made into a float, then just return the original string
         return stringVariable
+
+
+
+
+def createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_list, working_row, final_code_array, new_blue_doc_title_list,
+new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table, final_doc_array):
+
+    coeffPopulated = False
+
+    final_array.append(coeffs_to_compare) # Add coeff titles to first row of final array 
+
+    #Put code coeffs into final code array
+    for code_row in coeff_table:  #put first row of coeffs from code in final array
+        for coeff in coeffs_to_compare: # Loop through master coeff list
+            coeffPopulated = False
+            for code_coeff_num, code_list_coeff_name in enumerate(coeff_title_list[0], 0):
+                if coeff == code_list_coeff_name:
+                    coeffPopulated = True
+                    working_row.append(code_row[code_coeff_num]) # Add coeff value to list 
+#                    print("code")
+#                    print(code_row[code_coeff_num])
+            if coeffPopulated == False:
+                working_row.append("---")  # Add a place holder if value doesnt exist
+#                print("---")
+#                print("End code")
+#            print()
+        final_code_array.append(working_row)
+    #    print(working_row)
+        working_row = []
+
+        
+        
+        # put er document coeffs into final array 
+        for coeff in coeffs_to_compare:  # Loop through master coeff list
+            compileErDocRow(coeff, code_row, working_row, new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table)
+        final_doc_array.append(working_row)
+#        print (working_row)
+#        print()
+        working_row = []
+   
+   
+   
+   #Create and put match or no match row into final array
+    for array_num, array in enumerate(final_code_array):
+        final_array.append(final_code_array[array_num])
+        print(final_code_array[array_num])
+        final_array.append(final_doc_array[array_num])
+        print(final_doc_array[array_num])
+        
+        for element_num, element in enumerate(array):
+            print( final_code_array[array_num][element_num])
+            print( final_doc_array[array_num][element_num])
+            print(element_num)
+            print()
+            if formatString(final_code_array[array_num][element_num]) == formatString(final_doc_array[array_num][element_num]):
+#                print(array_num)
+#                print(element_num)
+                working_row.append("Ok")
+            else:
+                working_row.append("No Match")
+
+        final_array.append(working_row)
+        print(working_row)
+#        print()
+        working_row = []
+   
+def exportFinalArraytoExcelDocument(final_array):
+    #Transfer final array values to excel document 
+
+    # Create an new Excel file and add a worksheet.
+    workbook = xlsxwriter.Workbook('H:\SensorScript\demo.xlsx')
+    worksheet = workbook.add_worksheet()
+
+    # Widen the first column to make the text clearer.
+    worksheet.set_column('A:AZ', 19)
+
+    default_format = workbook.add_format()   
+    underline_format = workbook.add_format({'bottom': 1})
+    red_format = workbook.add_format({'font_color': 'red'})
+
+    for row_num, row in enumerate(final_array, 0):
+        for element_num, element in enumerate(row, 0):
+            if row_num % 3.0 == 0:
+                worksheet.write(row_num, element_num, final_array[row_num][element_num], underline_format)
+            else:
+                worksheet.write(row_num, element_num, final_array[row_num][element_num], default_format)
+
+    worksheet.conditional_format('A1:AZ20', 
+                                 {'type': 'text',
+                                  'criteria': 'containing',
+                                  'value': 'No Match',
+                                  'format': red_format})
+
+    workbook.close()
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
    
    
