@@ -38,8 +38,8 @@ def tableSetUp(line):
     
     
 def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table, constants_table):
-#    code_file   = open("H:\SensorScript\practice.h")
-    code_file   = open("C:\PVCS\ProjectsDB\Kinetis_DB\k2Src\k_src_app\coriolis\sensor.cpp")
+    code_file   = open("H:\SensorScript\practice.h")
+#    code_file   = open("C:\PVCS\ProjectsDB\Kinetis_DB\k2Src\k_src_app\coriolis\sensor.cpp")
 
     inCoeffTable = False
     inSmvTable = False
@@ -143,49 +143,48 @@ def replaceVariablesWithDefinitions(coeff_table, constants_table):
     return coeff_table
 
 
-    #ER-20018334
-def copyBlueErDocFile(new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table):
-    er_doc_blue   = "H:\SensorScript\ER docs\ER-20018334_AK.xlsx" #Read in blue ER document into an array
-    wb_blue = xlrd.open_workbook(er_doc_blue) #Create workbook for excel blue er document
-    blue_old_params = wb_blue.sheet_by_index(1) #Set up the old parameters sheet in the excel document
-    blue_new_params = wb_blue.sheet_by_index(2) #Set up the new parameters sheet in the excel document
+
+def copyExcelFile(excel_title_list_one, excel_table_one, excel_title_list_two, excel_table_two, excel_file, title_line_num, data_line_num):
     
-    blue_title_line_number = 15 # The row number of where the title names are located
-    blue_data_line_number = 21 # The row number of where the coeff data begins
+    wb = xlrd.open_workbook(excel_file) #Create workbook for excel blue er document
+    sheet_one = wb.sheet_by_index(1) #Set up the old parameters sheet in the excel document
+    sheet_two = wb.sheet_by_index(2) #Set up the new parameters sheet in the excel document
     
     new_row = []
 
     # Copy all coefficient names in blue er doc - old params 
-    num_cols = blue_old_params.ncols   # Number of columns
+    num_cols = sheet_one.ncols   # Number of columns
     for col_idx in range(0, num_cols):  # Iterate through columns
-        old_blue_doc_title_list.append(blue_old_params.cell_value(blue_title_line_number, col_idx))  # Get cell object by row, col
-#    print (old_blue_doc_title_list)
+        excel_title_list_two.append(sheet_one.cell_value(title_line_num, col_idx))  # Get cell object by row, col
+#    print (excel_title_list_two)
 #    print()
 
     # Copy all values in blue er doc - old params 
-    for row_idx in range(blue_data_line_number, blue_old_params.nrows):    # Iterate through rows
+    for row_idx in range(data_line_num, sheet_one.nrows):    # Iterate through rows
         for col_idx in range(0, num_cols):  # Iterate through columns
-            new_row.append(blue_old_params.cell_value(row_idx, col_idx))  # Get cell object by row, col
+            new_row.append(sheet_one.cell_value(row_idx, col_idx))  # Get cell object by row, col
 #        print (new_row)
-        old_blue_doc_table.append(new_row)
+#        print()
+        excel_table_two.append(new_row)
         new_row = []
 
-#    print()
+
 
     # Copy all coefficient names in blue er doc - new params 
-    num_cols = blue_new_params.ncols   # Number of columns
+    num_cols = sheet_two.ncols   # Number of columns
     for col_idx in range(0, num_cols):  # Iterate through columns (x axis direction)
-        new_blue_doc_title_list.append(blue_new_params.cell_value(blue_title_line_number, col_idx))  # Get cell object by row, col
-#    print (new_blue_doc_title_list)
+        excel_title_list_one.append(sheet_two.cell_value(title_line_num, col_idx))  # Get cell object by row, col
+#    print (excel_title_list_one)
 #    print()
 
 
     # Copy all values in blue er doc - new params 
-    for row_idx in range(blue_data_line_number, blue_new_params.nrows):    # Iterate through rows (y axis direction)
+    for row_idx in range(data_line_num, sheet_two.nrows):    # Iterate through rows (y axis direction)
         for col_idx in range(0, num_cols):  # Iterate through columns
-            new_row.append(blue_new_params.cell_value(row_idx, col_idx))  # Get cell object by row, col
+            new_row.append(sheet_two.cell_value(row_idx, col_idx))  # Get cell object by row, col
 #        print (new_row)
-        new_blue_doc_table.append(new_row)
+#        print()
+        excel_table_one.append(new_row)
         new_row = []
     
     
@@ -250,7 +249,7 @@ new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table, final_doc_array
 #                print("End code")
 #            print()
         final_code_array.append(working_row)
-    #    print(working_row)
+#        print(working_row)
         working_row = []
 
         
@@ -273,10 +272,10 @@ new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table, final_doc_array
         print(final_doc_array[array_num])
         
         for element_num, element in enumerate(array):
-            print( final_code_array[array_num][element_num])
-            print( final_doc_array[array_num][element_num])
-            print(element_num)
-            print()
+#            print( final_code_array[array_num][element_num])
+#            print( final_doc_array[array_num][element_num])
+#            print(element_num)
+#            print()
             if formatString(final_code_array[array_num][element_num]) == formatString(final_doc_array[array_num][element_num]):
 #                print(array_num)
 #                print(element_num)
@@ -286,7 +285,7 @@ new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table, final_doc_array
 
         final_array.append(working_row)
         print(working_row)
-#        print()
+        print()
         working_row = []
    
 def exportFinalArraytoExcelDocument(final_array):

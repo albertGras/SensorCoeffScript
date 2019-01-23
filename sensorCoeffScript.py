@@ -1,5 +1,3 @@
-#import docx
-#import numpy
 from scriptUtility import *
 
 
@@ -25,15 +23,28 @@ smv_title_list = []
 smv_table = [] #Table of all Smart Meter Verification coefficients 
 constants_table = []
 
-#Lists for copying the Blue ER document
+#Blue ER document variables
+blue_excel_file   = "H:\SensorScript\ER docs\ER-20018334_AK.xlsx" #Read in blue ER document into an array
+blue_excel_title_line_num = 15 # The row number of where the title names are located
+blue_excel_data_line_num = 21 # The row number of where the coeff data begins
 new_blue_doc_title_list = []
 new_blue_doc_table = []
 old_blue_doc_title_list =[]
 old_blue_doc_table =[]
 
+#Red ER document variables
+red_excel_file   = "H:\SensorScript\ER docs\ER-20015860_CF.xlsx" #Read in red ER document into an array
+red_excel_title_line_num = 6 # The row number of where the title names are located
+red_excel_data_line_num = 10 # The row number of where the coeff data begins
+coriolis_red_doc_title_list = []
+coriolis_red_doc_table = []
+dens_visc_red_doc_title_list = []
+dens_visc_red_doc_table = []
+
 #Lists for "compileErDocRow"
 working_row = []
 
+#Arrays for compiling final lists
 final_array = []
 final_code_array = []
 final_doc_array = []
@@ -43,20 +54,18 @@ final_doc_array = []
 
 copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table, constants_table)
 
-copyBlueErDocFile(new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table)
-
-er_doc_red   = "H:\SensorScript\ER docs\ER-20015860_CF.xlsx" #Read in red ER document into an array
-wb_red = xlrd.open_workbook(er_doc_red) #Create workbook for excel red er document
-
-new_row = []
-
-# title = row 7 (so 6?)
-#data = 12
-# data is 11 on denisty viscosity sheet
-
 addCatAndSmvTablesToCoeffTable(coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table)
 
 replaceVariablesWithDefinitions(coeff_table, constants_table)
+
+
+#ER-20018334  /  Blue
+copyExcelFile(new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table, blue_excel_file, 
+    blue_excel_title_line_num, blue_excel_data_line_num) 
+
+#ER-20015860  /  Red
+copyExcelFile(coriolis_red_doc_title_list, coriolis_red_doc_table, dens_visc_red_doc_title_list, dens_visc_red_doc_table, red_excel_file, 
+    red_excel_title_line_num, red_excel_data_line_num) 
 
 
 
