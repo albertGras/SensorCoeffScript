@@ -39,6 +39,7 @@ def tableSetUp(line):
     
 def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table, constants_table):
     code_file   = open("H:\SensorScript\practice.h")
+#    code_file   = open("C:\Pegasus\BFSrc800\Coriolis\sensor.cpp")
 #    code_file   = open("C:\PVCS\ProjectsDB\Kinetis_DB\k2Src\k_src_app\coriolis\sensor.cpp")
 #    code_file = open(r"C:\Users\AGrasmeder\Documents\SensorCoeffScript\practice.h")
 
@@ -319,8 +320,56 @@ def exportFinalArraytoExcelDocument(final_array):
    
    
    
-   
-   
+def copyGreenErDoc(er_doc_green, greenTableOne, greenTableTwo, greenTableThree, greenTableFour):
+    new_row = []
+    title_row = False
+    beforeTables = True
+    tableNumber = 0
+    
+    tables = er_doc_green.tables
+    
+    for table in tables:
+        for row in table.rows:
+            title_row = False
+            if(beforeTables == False and len(new_row) != 0):
+                if tableNumber == 1:
+                    greenTableOne.append(new_row)
+
+                elif tableNumber == 2:
+                    greenTableTwo.append(new_row)
+
+                elif tableNumber == 3:
+                    greenTableThree.append(new_row)
+
+                elif tableNumber == 5: # because of the way the table is setup Sensor Model is read twice and this becomes 5 instead of 4
+                    greenTableFour.append(new_row)
+
+                new_row = []
+            for cell in row.cells:
+                if("Sensor Model") in cell.text:
+                    tableNumber = tableNumber + 1
+                    title_row = True
+                    beforeTables = False
+
+                if beforeTables == False and title_row == False:  # Add item to row if its after the tables start
+                    if cell.text != '':  # Remove blank lines
+                        new_row.append(cell.text)
+
+    print()
+    print()
+    print("table 1")
+    print(greenTableOne)
+    print()
+    print("table 2")
+    print(greenTableTwo)
+    print()
+    print("table 3")
+    print(greenTableThree)
+    print()
+    print("table 4")
+    print(greenTableFour)
+    print()
+
    
    
    

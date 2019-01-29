@@ -1,4 +1,5 @@
 from scriptUtility import *
+from docx import Document
 
 
 print("Hello World!")
@@ -44,6 +45,17 @@ coriolis_red_doc_table = []
 dens_visc_red_doc_title_list = []
 dens_visc_red_doc_table = []
 
+
+#Green ER document variables
+er_doc_green   = Document("H:\SensorScript\ER docs\ER-20015206_AP.docx") #Read in green ER document into an array
+greenTableOne = []
+greenTableTwo = []
+greenTableThree = []
+greenTableFour = []
+
+
+
+
 #Lists for "compileErDocRow"
 working_row = []
 
@@ -70,16 +82,10 @@ copyExcelFile(old_blue_doc_title_list, old_blue_doc_table, new_blue_doc_title_li
 copyExcelFile(coriolis_red_doc_title_list, coriolis_red_doc_table, dens_visc_red_doc_title_list, dens_visc_red_doc_table, 
     red_excel_file, red_excel_title_line_num, red_excel_data_line_num) 
     
-#print(dens_visc_red_doc_title_list)
-#print()
-#print(dens_visc_red_doc_table)
-#print()
-#print()
-#print(coriolis_red_doc_title_list)
-#print()
-#print(coriolis_red_doc_table)
-#print()
-#print()
+    
+#ER-20015206 / Green
+copyGreenErDoc(er_doc_green, greenTableOne, greenTableTwo, greenTableThree, greenTableFour)
+
 
 
 
