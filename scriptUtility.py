@@ -13,7 +13,7 @@ def createConstantsArray(line):
 
 def titleListSetUp(line, title_list):
 
-    extraCharacters2 = ['{', '\"', '\n', 'f','}', ';', '/', 'COEFF_TABLE,', 'CAT_TABLE,', 'SMV_TABLE,']
+    extraCharacters2 = ['{', '\"', '\n', '}', ';', '/', 'COEFF_TABLE,', 'CAT_TABLE,', 'SMV_TABLE,']
 #    extraCharacters2 = ['{', '\"', '\n', 'f','}', ';', '/']
 
     for item in extraCharacters2:  #remove unwanted characters in the line
@@ -237,11 +237,17 @@ def createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_li
         for coeff in coeffs_to_compare: # Loop through master coeff list
             coeffPopulated = False
             for code_coeff_num, code_list_coeff_name in enumerate(coeff_title_list[0], 0):
+                print(coeff)
+                print(code_list_coeff_name)
+                print()
                 if coeff == code_list_coeff_name:
+
                     coeffPopulated = True
                     working_row.append(code_row[code_coeff_num]) # Add coeff value to list 
-#                    print("code")
-#                    print(code_row[code_coeff_num])
+                    print("code")
+                    print(code_row[code_coeff_num])
+                    print()
+                    #? break
             if coeffPopulated == False:
                 working_row.append("---")  # Add a place holder if value doesnt exist
         final_code_array.append(working_row)
