@@ -318,8 +318,6 @@ def exportFinalArraytoExcelDocument(final_array):
    
    
    
-   
-   
 def copyGreenErDoc(er_doc_green, greenTableOne, greenTableTwo, greenTableThree, greenTableFour):
     new_row = []
     title_row = False
@@ -355,29 +353,52 @@ def copyGreenErDoc(er_doc_green, greenTableOne, greenTableTwo, greenTableThree, 
                     if cell.text != '':  # Remove blank lines
                         new_row.append(cell.text)
 
-    print()
-    print()
-    print("table 1")
-    print(greenTableOne)
-    print()
-    print("table 2")
-    print(greenTableTwo)
-    print()
-    print("table 3")
-    print(greenTableThree)
-    print()
-    print("table 4")
-    print(greenTableFour)
-    print()
+#    print()
+#    print()
+#    print("table 1")
+#    print(greenTableOne)
+#    print()
+#    print("table 2")
+#    print(greenTableTwo)
+#    print()
+#    print("table 3")
+#    print(greenTableThree)
+#    print()
+#    print("table 4")
+#    print(greenTableFour)
+#    print()
 
    
    
    
    
    
-   
-   
-   
+def copyPurpleErDoc(er_doc_purple, purpleDocTable):
+    purpleDocTable = []
+    beforeTables = True
+    title_row = False
+    new_row = []
+
+    #Put green ER-20015206_AP docx into list (original)
+    tables = er_doc_purple.tables
+    for table in tables:
+        for row in table.rows:
+            title_row = False
+            if(beforeTables == False and len(new_row) != 0):
+                purpleDocTable.append(new_row)
+#                print(new_row)
+                new_row = []
+            for cell in row.cells:
+                if("Sensor Model") in cell.text:
+                    title_row = True
+                    beforeTables = False
+                if beforeTables == False and title_row == False:
+                    if cell.text != '':  # Remove blank lines
+                        new_row.append(cell.text)
+    purpleDocTable.append(new_row)
+#    print(new_row)
+       
+       
    
    
    

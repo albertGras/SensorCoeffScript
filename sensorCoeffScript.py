@@ -53,8 +53,9 @@ greenTableTwo = []
 greenTableThree = []
 greenTableFour = []
 
-
-
+#Purple ER document variables
+er_doc_purple   = Document("H:\SensorScript\ER docs\ER-20027172_AD.docx") #Read in purple ER document into an array
+purpleDocTable = []
 
 #Lists for "compileErDocRow"
 working_row = []
@@ -86,7 +87,8 @@ copyExcelFile(coriolis_red_doc_title_list, coriolis_red_doc_table, dens_visc_red
 #ER-20015206 / Green
 copyGreenErDoc(er_doc_green, greenTableOne, greenTableTwo, greenTableThree, greenTableFour)
 
-
+#ER-20027172 / Purple
+copyPurpleErDoc(er_doc_purple, purpleDocTable)
 
 
 createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_list, working_row, final_code_array, new_blue_doc_title_list,
