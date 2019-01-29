@@ -196,12 +196,17 @@ def checkDocForCoeff(doc_title_list, doc_table, coeff, code_row, working_row, se
                     return working_row
 
 def compileErDocRow(coeff, code_row, working_row, new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table,
-    coriolis_red_doc_title_list, coriolis_red_doc_table, dens_visc_red_doc_title_list, dens_visc_red_doc_table):
+    coriolis_red_doc_title_list, coriolis_red_doc_table, dens_visc_red_doc_title_list, dens_visc_red_doc_table, purpleDocTable):
     
     blue_sensor_col = 3
     red_sensor_col = 1
     
     # Look at new sheet in blue ER doc for coeff 
+    if coeff == "A 4":  # There is a space because there is an unrelated A4 in the red document 
+        for doc_row in purpleDocTable:
+            if doc_row[0] == code_row[0]:
+                working_row.append(str(doc_row[1]))
+    
     if checkDocForCoeff(new_blue_doc_title_list, new_blue_doc_table, coeff, code_row, working_row, blue_sensor_col) != None:
         return
     # Look at old sheet in blue ER doc for coeff
@@ -226,7 +231,7 @@ def formatString(stringVariable):
 
 def createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_list, working_row, final_code_array, new_blue_doc_title_list,
     new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table, coriolis_red_doc_title_list, coriolis_red_doc_table, 
-    dens_visc_red_doc_title_list, dens_visc_red_doc_table, final_doc_array):
+    dens_visc_red_doc_title_list, dens_visc_red_doc_table, purpleDocTable, final_doc_array):
 
     coeffPopulated = False
 
@@ -237,16 +242,16 @@ def createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_li
         for coeff in coeffs_to_compare: # Loop through master coeff list
             coeffPopulated = False
             for code_coeff_num, code_list_coeff_name in enumerate(coeff_title_list[0], 0):
-                print(coeff)
-                print(code_list_coeff_name)
-                print()
+#                print(coeff)
+#                print(code_list_coeff_name)
+#                print()
                 if coeff == code_list_coeff_name:
 
                     coeffPopulated = True
                     working_row.append(code_row[code_coeff_num]) # Add coeff value to list 
-                    print("code")
-                    print(code_row[code_coeff_num])
-                    print()
+#                    print("code")
+#                    print(code_row[code_coeff_num])
+#                    print()
                     #? break
             if coeffPopulated == False:
                 working_row.append("---")  # Add a place holder if value doesnt exist
@@ -259,7 +264,7 @@ def createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_li
         # put er document coeffs into final array 
         for coeff in coeffs_to_compare:  # Loop through master coeff list
             compileErDocRow(coeff, code_row, working_row, new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table,
-                coriolis_red_doc_title_list, coriolis_red_doc_table, dens_visc_red_doc_title_list, dens_visc_red_doc_table)
+                coriolis_red_doc_title_list, coriolis_red_doc_table, dens_visc_red_doc_title_list, dens_visc_red_doc_table, purpleDocTable)
         final_doc_array.append(working_row)
 #        print (working_row)
 #        print()
