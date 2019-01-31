@@ -7,13 +7,13 @@ print()
 
 #All the coeffs that need comparison
 #coeffs_to_compare = ["ID String", "FCF", "K1", "GasFD", "NominalFlowRate", "TubeID", "A4"]
-coeffs_to_compare = ["ID String", "NominalFlowRate", "FCF", "K1", "I.D. Resistor", "Drive Target", "Proportional Gain800", 
-    "Integral Gain800", "Proportional Gain2200", "Integral Gain2200", "Proportional Gain700", "Integral Gain700", 
-    "FD Limit", "Overshoot", "GasFD", "TubeID", "Gas Slope", "Gas Offset", "Liq Slope", "Liq Offset",
-    "DriveSaturationAlgorithm800", "PressureEffect_Flow_Liquid", "PressureEffect_Flow_Gas", "PressureEffect_Density", 
-    "Zero Stability", "A 4", "TemperatureEffect_Density", "TemperatureEffect_Flow", "Tone Level", "Ramp Time", 
-    "BL Temp Coeff*", "Drive SP FCF", "Puck P FCF", "dF Tone Spacing", "Freq. Drift Limit*", "Max Sensor Current", 
-    "Minimum Flow Multiplier", "T03", "MassFlowAccuracy_Liquid", "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", ] 
+coeffs_to_compare = ["ID String", "NominalFlowRate", "FCF", "K1", "I.D. Resistor", "Drive Target", "Proportional Gain\n800", 
+    "Integral Gain\n800", "Proportional Gain\n2200", "Integral Gain\n2200", "FD Limit", "Overshoot", "GasFD", "TubeID", 
+    "Gas Slope", "Gas Offset", "Liq Slope", "Liq Offset", "DriveSaturationAlgorithm800", "PressureEffect_Flow_Liquid", 
+    "PressureEffect_Flow_Gas", "PressureEffect_Density", "Zero Stability", "A 4", "TemperatureEffect_Density", 
+    "TemperatureEffect_Flow", "Tone Level", "Ramp Time", "BL Temp Coeff*", "Drive SP FCF", "Puck P FCF", "dF Tone Spacing",
+    "Freq. Drift Limit*", "Max Sensor Current", "Minimum Flow Multiplier", "T03", "MassFlowAccuracy_Liquid", 
+    "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", ] 
 
 #Lists for copying the code file
 sensor_list = [] #All the sensors listed in the code

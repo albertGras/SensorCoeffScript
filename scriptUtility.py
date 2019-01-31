@@ -280,14 +280,20 @@ def createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_li
         print(final_doc_array[array_num])
         
         for element_num, element in enumerate(array):
-#            print( final_code_array[array_num][element_num])
-#            print( final_doc_array[array_num][element_num])
+            print(formatString(final_code_array[array_num][element_num]))
+            print(formatString(final_doc_array[array_num][element_num]))
 #            print(element_num)
-#            print()
+            print()
+
             if formatString(final_code_array[array_num][element_num]) == formatString(final_doc_array[array_num][element_num]):
-#                print(array_num)
-#                print(element_num)
                 working_row.append("Ok")
+                
+            elif ((final_code_array[array_num][element_num] == "0.0") or (final_code_array[array_num][element_num] == "0"))  and (final_doc_array[array_num][element_num] == '---'): 
+                working_row.append("Ok")
+                
+            elif ((final_doc_array[array_num][element_num] == "0.0") or (final_doc_array[array_num][element_num] == "0"))  and (final_code_array[array_num][element_num] == '---'):
+                working_row.append("Ok")
+                
             else:
                 working_row.append("No Match")
 
@@ -318,7 +324,7 @@ def exportFinalArraytoExcelDocument(final_array):
             else:
                 worksheet.write(row_num, element_num, final_array[row_num][element_num], default_format)
 
-    worksheet.conditional_format('A1:AZ20', 
+    worksheet.conditional_format('A1:ZZ500', 
                                  {'type': 'text',
                                   'criteria': 'containing',
                                   'value': 'No Match',
