@@ -108,9 +108,14 @@ def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat
 
 def addCatAndSmvTablesToCoeffTable(coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table):
     coeff_title_list = coeff_title_list[0]
-#    print(coeff_title_list)
-#    print(coeff_table)
-#    print()
+    print(coeff_title_list)
+    print()
+    print(coeff_table)
+    print()
+    print()
+    print(cat_table)
+    print()
+    print(smv_table)
     
     for coeff_num, coeff_title in enumerate(coeff_title_list, 0):
         if "CAT" in coeff_title:
@@ -119,7 +124,7 @@ def addCatAndSmvTablesToCoeffTable(coeff_title_list, coeff_table, cat_title_list
                 for row in coeff_table:
                     for cat_value in cat_table[0]:
                         row.insert(coeff_num, cat_value)
-            break;
+            break
 
     for coeff_num, coeff_title in enumerate(coeff_title_list, 0):
         if "SMV" in coeff_title:
@@ -127,13 +132,14 @@ def addCatAndSmvTablesToCoeffTable(coeff_title_list, coeff_table, cat_title_list
                 coeff_title_list.insert(coeff_num, smv_title)
                 for row in coeff_table:
                     for smv_value in smv_table[0]:
-                        row.insert(coeff_num, cat_value)
-            break;
+                        row.insert(coeff_num, smv_value)
+            break
             
-#    print()
-#    print(coeff_title_list)
-#    print(coeff_table[0])
-#    print('-----------')
+    print()
+    print(coeff_title_list)
+    print()
+    print(coeff_table[0])
+    print('-----------')
 
 
 def replaceVariablesWithDefinitions(coeff_table, constants_table):
@@ -142,6 +148,7 @@ def replaceVariablesWithDefinitions(coeff_table, constants_table):
             for x in constants_table:
                 if x[0] == code_element:
                     coeff_table[code_row_num][code_element_num] = x[1]
+                    break
     return coeff_table
 
 
@@ -248,11 +255,9 @@ def createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_li
                 if coeff == code_list_coeff_name:
 
                     coeffPopulated = True
-                    working_row.append(code_row[code_coeff_num]) # Add coeff value to list 
-#                    print("code")
 #                    print(code_row[code_coeff_num])
-#                    print()
-                    #? break
+                    working_row.append(code_row[code_coeff_num]) # Add coeff value to list 
+                    break
             if coeffPopulated == False:
                 working_row.append("---")  # Add a place holder if value doesnt exist
         final_code_array.append(working_row)
@@ -280,10 +285,10 @@ def createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_li
         print(final_doc_array[array_num])
         
         for element_num, element in enumerate(array):
-            print(formatString(final_code_array[array_num][element_num]))
-            print(formatString(final_doc_array[array_num][element_num]))
+#            print(formatString(final_code_array[array_num][element_num]))
+#            print(formatString(final_doc_array[array_num][element_num]))
 #            print(element_num)
-            print()
+#           print()
 
             if formatString(final_code_array[array_num][element_num]) == formatString(final_doc_array[array_num][element_num]):
                 working_row.append("Ok")

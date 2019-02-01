@@ -13,7 +13,7 @@ coeffs_to_compare = ["ID String", "NominalFlowRate", "FCF", "K1", "I.D. Resistor
     "PressureEffect_Flow_Gas", "PressureEffect_Density", "Zero Stability", "A 4", "TemperatureEffect_Density", 
     "TemperatureEffect_Flow", "Tone Level", "Ramp Time", "BL Temp Coeff*", "Drive SP FCF", "Puck P FCF", "dF Tone Spacing",
     "Freq. Drift Limit*", "Max Sensor Current", "Minimum Flow Multiplier", "T03", "MassFlowAccuracy_Liquid", 
-    "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", ] 
+    "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", "Drive SP FCF", "Puck P FCF", "Max Sensor Current"] 
 
 #Lists for copying the code file
 sensor_list = [] #All the sensors listed in the code
@@ -74,6 +74,8 @@ addCatAndSmvTablesToCoeffTable(coeff_title_list, coeff_table, cat_title_list, ca
 
 replaceVariablesWithDefinitions(coeff_table, constants_table)
 
+print()
+print(coeffs_to_compare)
 
 #ER-20018334  /  Blue
 copyExcelFile(old_blue_doc_title_list, old_blue_doc_table, new_blue_doc_title_list, new_blue_doc_table, blue_excel_file, 
