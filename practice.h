@@ -17,10 +17,11 @@ const S_CAT   CAT_TiTAN2      = { 0.5f,   _150,  _0p7,  _1p1, 2.0f,      _0p0,  
 #define _0p0     0.0f       // default for VOS
 
 /*                               3083- 3085- 3087--   3089  3091--  3094--     3159----    3161-- 3163-- 3165--   3089-  3091--  3163- */
-//SMV_TABLE,Tone Level,Ramp Time,BL Temp Coeff,Drive SP FCF,Puck P FCF,BL Temp ?Quad? Coeff,dF Tone Spacing,Freq. Drift Limit,Max Sensor Current,X,X 
+//SMV_TABLE,Tone Level,Ramp Time,BL Temp Coeff,Drive SP FCF,Puck P FCF,BL Temp ?Quad? Coeff,dF Tone Spacing,Freq Drift Limit,Max Sensor Current,X,X,X,X 
 const S_SMV  SMV_CMF010  = {      5.f, 30.f, 6.970f,  1.7f,  50.f, -0.003533f, 0.2666667f, .067f,   8.f,    0.f,  1.7f, 50000.f, 300.f };
 const S_SMV  SMV_CMF025p = {     15.f, 15.f, 7.680f,  3.4f, 250.f, -0.003649f, 0.3333333f, .083f,  30.f,    0.f,  1.7f, 50000.f, 343.f };
 const S_SMV  SMV_CMF050  = {     20.f, 15.f, 6.970f,  .85f, 250.f, -0.003533f, 0.3333333f, .083f,  30.f,    0.f,  1.0f, 50000.f, 300.f };
+const S_SMV  SMV_NONE    = {      0.f,  0.f,    0.f,   0.f,   0.f,        0.f,        0.f,   0.f,   0.f,    0.f,  NO_FDM_COEFFS };
 //End
 
 const SDEF   SdefTable[ ] = {
