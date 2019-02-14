@@ -307,6 +307,21 @@ def createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_li
         print()
         working_row = []
    
+
+def writeRowDescriptors(worksheet, workbook, row_num):
+    right_border_format = workbook.add_format({'right': 1})
+    right_and_bottom_border_format = workbook.add_format({'right': 1, 'bottom': 1})
+    
+    if (row_num == 0): 
+        pass
+    elif(row_num % 3.0 == 1.0): 
+        worksheet.write(row_num, 0, "code", right_border_format)
+    elif (row_num % 3.0 == 2.0): 
+        worksheet.write(row_num, 0, "doc", right_border_format)
+    elif(row_num % 3.0 == 0.0): 
+        worksheet.write(row_num, 0, "compare", right_and_bottom_border_format)
+   
+  
 def exportFinalArraytoExcelDocument(final_array):
     #Transfer final array values to excel document 
 
@@ -315,19 +330,22 @@ def exportFinalArraytoExcelDocument(final_array):
 #    workbook = xlsxwriter.Workbook(r'C:\Users\AGrasmeder\Documents\SensorCoeffScript')
     worksheet = workbook.add_worksheet()
 
-    # Widen the first column to make the text clearer.
-    worksheet.set_column('A:AZ', 19)
+    # Widen the first colums to make the text clearer.
+    worksheet.set_column('B:AZ', 19)
 
     default_format = workbook.add_format()   
     underline_format = workbook.add_format({'bottom': 1})
+    right_border_format = workbook.add_format({'right': 1})
+    right_and_bottom_border_format = workbook.add_format({'right': 1, 'bottom': 1})
     red_format = workbook.add_format({'font_color': 'red'})
 
     for row_num, row in enumerate(final_array, 0):
+        writeRowDescriptors(worksheet, workbook, row_num)
         for element_num, element in enumerate(row, 0):
             if row_num % 3.0 == 0:
-                worksheet.write(row_num, element_num, final_array[row_num][element_num], underline_format)
+                worksheet.write(row_num, element_num+1, final_array[row_num][element_num], underline_format)
             else:
-                worksheet.write(row_num, element_num, final_array[row_num][element_num], default_format)
+                worksheet.write(row_num, element_num+1, final_array[row_num][element_num], default_format)
 
     worksheet.conditional_format('A1:ZZ500', 
                                  {'type': 'text',
