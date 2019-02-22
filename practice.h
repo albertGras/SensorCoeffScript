@@ -1,6 +1,6 @@
 //                                ---- Drive -------   Over   FD       CMFS              A3     ----------------- VOS --------------------   MinFlow g/ccPerDegC
 //                                Amp      P      I    shoot  lim       A4      GasFD   limit   Gas Slope  Gas Offst  Liq Slope   Liq Offst  Mult    tempEffect Flags
-//CAT_TABLE,Drive Target,!P!,!I!,Overshoot,FD Limit,A4,GasFD,X,Gas Slope,Gas Offset,Liq Slope,Liq Offset,Minimum Flow Multiplier,X,X 
+//CAT_TABLE,Drive Target,Proportional Gain 800,Integral Gain 800,Overshoot,FD Limit,A4,GasFD,X,Gas Slope,Gas Offset,Liq Slope,Liq Offset,Minimum Flow Multiplier,X,X 
 const S_CAT   CAT_S_E         = { _3p4, 100.0f,  0.5f, 1.07f,  _14,      _0p0,   _1p0,  _0p425,      _0p0,      _0p0,      _0p0,       _0p0,  50.0f, 0.000015f, 0 };
 const S_CAT   CAT_TiTAN1      = { 0.5f, 100.0f,  0.5f, 1.07f, 2.0f,      _0p0,   _1p0, 0.0625f,      _0p0,      _0p0,      _0p0,       _0p0, 100.0f,      _0p0, SSA_TSERIES_COMP };
 const S_CAT   CAT_TiTAN2      = { 0.5f,   _150,  _0p7,  _1p1, 2.0f,      _0p0,   _1p0, 0.0625f,      _0p0,      _0p0,      _0p0,       _0p0, 100.0f,      _0p0, SSA_TSERIES_COMP };

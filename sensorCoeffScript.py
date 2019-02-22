@@ -7,8 +7,8 @@ print()
 
 #All the coeffs that need comparison
 #coeffs_to_compare = ["ID String", "FCF", "K1", "GasFD", "NominalFlowRate", "TubeID", "A4"]
-coeffs_to_compare = ["ID String", "NominalFlowRate", "FCF", "K1", "I.D. Resistor", "Drive Target", "Proportional Gain\n800", 
-    "Integral Gain\n800", "Proportional Gain\n2200", "Integral Gain\n2200", "FD Limit", "Overshoot", "GasFD", "TubeID", 
+coeffs_to_compare = ["ID String", "NominalFlowRate", "FCF", "K1", "I.D. Resistor", "Drive Target", "Proportional Gain 800", 
+    "Integral Gain 800", "Proportional Gain 2200", "Integral Gain 2200", "FD Limit", "Overshoot", "GasFD", "TubeID", 
     "Gas Slope", "Gas Offset", "Liq Slope", "Liq Offset", "DriveSaturationAlgorithm800", "PressureEffect_Flow_Liquid", 
     "PressureEffect_Flow_Gas", "PressureEffect_Density", "Zero Stability", "A 4", "TemperatureEffect_Density", 
     "TemperatureEffect_Flow", "Tone Level", "Ramp Time", "BL Temp Coeff*", "Drive SP FCF", "Puck P FCF", "dF Tone Spacing",
@@ -73,9 +73,6 @@ copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat_tab
 addCatAndSmvTablesToCoeffTable(coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table)
 
 replaceVariablesWithDefinitions(coeff_table, constants_table)
-
-print()
-print(coeffs_to_compare)
 
 #ER-20018334  /  Blue
 copyExcelFile(old_blue_doc_title_list, old_blue_doc_table, new_blue_doc_title_list, new_blue_doc_table, blue_excel_file, 

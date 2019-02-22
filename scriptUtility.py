@@ -108,14 +108,6 @@ def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat
 
 def addCatAndSmvTablesToCoeffTable(coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table):
     coeff_title_list = coeff_title_list[0]
-    print(coeff_title_list)
-    print()
-    print(coeff_table)
-    print()
-    print()
-    print(cat_table)
-    print()
-    print(smv_table)
     
     for coeff_num, coeff_title in enumerate(coeff_title_list, 0):
         if "CAT" in coeff_title:
@@ -134,12 +126,6 @@ def addCatAndSmvTablesToCoeffTable(coeff_title_list, coeff_table, cat_title_list
                     for smv_value in smv_table[0]:
                         row.insert(coeff_num, smv_value)
             break
-            
-    print()
-    print(coeff_title_list)
-    print()
-    print(coeff_table[0])
-    print('-----------')
 
 
 def replaceVariablesWithDefinitions(coeff_table, constants_table):
