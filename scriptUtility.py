@@ -151,15 +151,11 @@ def copyExcelFile(excel_title_list_one, excel_table_one, excel_title_list_two, e
     num_cols = sheet_one.ncols   # Number of columns
     for col_idx in range(0, num_cols):  # Iterate through columns
         excel_title_list_one.append(sheet_one.cell_value(title_line_num, col_idx))  # Get cell object by row, col
-#    print (excel_title_list_one)
-#    print()
 
     # Copy all values in blue er doc - old params 
     for row_idx in range(data_line_num, sheet_one.nrows):    # Iterate through rows
         for col_idx in range(0, num_cols):  # Iterate through columns
             new_row.append(sheet_one.cell_value(row_idx, col_idx))  # Get cell object by row, col
-#        print (new_row)
-#        print()
         excel_table_one.append(new_row)
         new_row = []
 
@@ -167,15 +163,11 @@ def copyExcelFile(excel_title_list_one, excel_table_one, excel_title_list_two, e
     num_cols = sheet_two.ncols   # Number of columns
     for col_idx in range(0, num_cols):  # Iterate through columns (x axis direction)
         excel_title_list_two.append(sheet_two.cell_value(title_line_num, col_idx))  # Get cell object by row, col
-#    print (excel_title_list_two)
-#    print()
 
     # Copy all values in blue er doc - new params 
     for row_idx in range(data_line_num, sheet_two.nrows):    # Iterate through rows (y axis direction)
         for col_idx in range(0, num_cols):  # Iterate through columns
             new_row.append(sheet_two.cell_value(row_idx, col_idx))  # Get cell object by row, col
-#        print (new_row)
-#        print()
         excel_table_two.append(new_row)
         new_row = []
     
@@ -189,7 +181,7 @@ def checkDocForCoeff(doc_title_list, doc_table, coeff, code_row, working_row, se
                     return working_row
 
 def compileErDocRow(coeff, code_row, working_row, new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table,
-    coriolis_red_doc_title_list, coriolis_red_doc_table, dens_visc_red_doc_title_list, dens_visc_red_doc_table, purpleDocTable):
+    coriolis_red_doc_title_list, coriolis_red_doc_table, dens_visc_red_doc_title_list, dens_visc_red_doc_table, purpleDocTable, greenTableFour):
     
     blue_sensor_col = 3
     red_sensor_col = 1
@@ -197,16 +189,51 @@ def compileErDocRow(coeff, code_row, working_row, new_blue_doc_title_list, new_b
     # Look at new sheet in blue ER doc for coeff 
     if coeff == "A 4":  # There is a space because there is an unrelated A4 in the red document 
         for doc_row in purpleDocTable:
-            if doc_row[0] == code_row[0]:
+            if code_row[0] in doc_row[0]:
                 working_row.append(str(doc_row[1]))
-    
+                return
+
+    if coeff == "GasFD":
+        for doc_row in greenTableFour:
+            if code_row[0] in doc_row[0]:
+                working_row.append(str(doc_row[1]))
+                return
+
+    if coeff == "Gas Slope":
+        for doc_row in greenTableFour:
+            if code_row[0] in doc_row[0]:
+                working_row.append(str(doc_row[2]))
+                return
+
+    if coeff == "Gas Offset":
+        for doc_row in greenTableFour:
+            if code_row[0] in doc_row[0]:
+                working_row.append(str(doc_row[3]))
+                return
+
+    if coeff == "Liq Slope":
+        for doc_row in greenTableFour:
+            if code_row[0] in doc_row[0]:
+                working_row.append(str(doc_row[4]))
+                return
+
+    if coeff == "Liq Offset":
+        for doc_row in greenTableFour:
+            if code_row[0] in doc_row[0]:
+                working_row.append(str(doc_row[5]))
+                return
+
+    # Look at new blue doc before old blue doc for most recent coeff values
     if checkDocForCoeff(new_blue_doc_title_list, new_blue_doc_table, coeff, code_row, working_row, blue_sensor_col) != None:
         return
+
     # Look at old sheet in blue ER doc for coeff
     if checkDocForCoeff(old_blue_doc_title_list, old_blue_doc_table, coeff, code_row, working_row, blue_sensor_col) != None:
         return
+
     if checkDocForCoeff(coriolis_red_doc_title_list, coriolis_red_doc_table, coeff, code_row, working_row, red_sensor_col) != None:
         return
+
     if checkDocForCoeff(dens_visc_red_doc_title_list, dens_visc_red_doc_table, coeff, code_row, working_row, red_sensor_col) != None:
         return
 
@@ -224,7 +251,7 @@ def formatString(stringVariable):
 
 def createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_list, working_row, final_code_array, new_blue_doc_title_list,
     new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table, coriolis_red_doc_title_list, coriolis_red_doc_table, 
-    dens_visc_red_doc_title_list, dens_visc_red_doc_table, purpleDocTable, final_doc_array):
+    dens_visc_red_doc_title_list, dens_visc_red_doc_table, purpleDocTable, final_doc_array, greenTableFour):
 
     coeffPopulated = False
 
@@ -255,7 +282,7 @@ def createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_li
         # put er document coeffs into final array 
         for coeff in coeffs_to_compare:  # Loop through master coeff list
             compileErDocRow(coeff, code_row, working_row, new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table,
-                coriolis_red_doc_title_list, coriolis_red_doc_table, dens_visc_red_doc_title_list, dens_visc_red_doc_table, purpleDocTable)
+                coriolis_red_doc_title_list, coriolis_red_doc_table, dens_visc_red_doc_title_list, dens_visc_red_doc_table, purpleDocTable, greenTableFour)
         final_doc_array.append(working_row)
 #        print (working_row)
 #        print()
@@ -379,26 +406,9 @@ def copyGreenErDoc(er_doc_green, greenTableOne, greenTableTwo, greenTableThree, 
                     if cell.text != '':  # Remove blank lines
                         new_row.append(cell.text)
 
-#    print()
-#    print()
-#    print("table 1")
-#    print(greenTableOne)
-#    print()
-#    print("table 2")
-#    print(greenTableTwo)
-#    print()
-#    print("table 3")
-#    print(greenTableThree)
-#    print()
-#    print("table 4")
-#    print(greenTableFour)
-#    print()
 
-   
-   
-   
-   
-   
+
+
 def copyPurpleErDoc(er_doc_purple, purpleDocTable):
     purpleDocTable = []
     beforeTables = True

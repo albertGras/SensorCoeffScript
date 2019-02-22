@@ -9,11 +9,13 @@ print()
 #coeffs_to_compare = ["ID String", "FCF", "K1", "GasFD", "NominalFlowRate", "TubeID", "A4"]
 coeffs_to_compare = ["ID String", "NominalFlowRate", "FCF", "K1", "I.D. Resistor", "Drive Target", "Proportional Gain 800", 
     "Integral Gain 800", "Proportional Gain 2200", "Integral Gain 2200", "FD Limit", "Overshoot", "GasFD", "TubeID", 
-    "Gas Slope", "Gas Offset", "Liq Slope", "Liq Offset", "DriveSaturationAlgorithm800", "PressureEffect_Flow_Liquid", 
-    "PressureEffect_Flow_Gas", "PressureEffect_Density", "Zero Stability", "A 4", "TemperatureEffect_Density", 
-    "TemperatureEffect_Flow", "Tone Level", "Ramp Time", "BL Temp Coeff*", "Drive SP FCF", "Puck P FCF", "dF Tone Spacing",
-    "Freq. Drift Limit*", "Max Sensor Current", "Minimum Flow Multiplier", "T03", "MassFlowAccuracy_Liquid", 
-    "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", "Drive SP FCF", "Puck P FCF", "Max Sensor Current"] 
+    "Gas Slope", "Gas Offset", "Liq Slope", "Liq Offset", 
+    #"DriveSaturationAlgorithm800", "PressureEffect_Flow_Liquid", 
+#    "PressureEffect_Flow_Gas", "PressureEffect_Density", "Zero Stability", "A 4", "TemperatureEffect_Density", 
+#    "TemperatureEffect_Flow", "Tone Level", "Ramp Time", "BL Temp Coeff*", "Drive SP FCF", "Puck P FCF", "dF Tone Spacing",
+#    "Freq. Drift Limit*", "Max Sensor Current", "Minimum Flow Multiplier", "T03", "MassFlowAccuracy_Liquid", 
+#    "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", "Drive SP FCF", "Puck P FCF", "Max Sensor Current"
+] 
 
 #Lists for copying the code file
 sensor_list = [] #All the sensors listed in the code
@@ -92,7 +94,7 @@ copyPurpleErDoc(er_doc_purple, purpleDocTable)
 
 createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_list, working_row, final_code_array, new_blue_doc_title_list,
     new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table, coriolis_red_doc_title_list, coriolis_red_doc_table, 
-    dens_visc_red_doc_title_list, dens_visc_red_doc_table, purpleDocTable, final_doc_array)
+    dens_visc_red_doc_title_list, dens_visc_red_doc_table, purpleDocTable, final_doc_array, greenTableFour)
 
 exportFinalArraytoExcelDocument(final_array)
 
