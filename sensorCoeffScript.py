@@ -13,9 +13,9 @@ coeffs_to_compare = ["ID String",
     "Gas Slope", "Gas Offset", "Liq Slope", "Liq Offset", "Drive Saturation Algorithm 800", 
     "PressureEffect_Flow_Liquid", 
     "PressureEffect_Flow_Gas", "PressureEffect_Density", 
-    "Zero Stability", "A4", "TemperatureEffect_Density", 
-    "TemperatureEffect_Flow", "Tone Level", "Ramp Time", "BL Temp Coeff*", "Drive SP FCF", "Puck P FCF", "dF Tone Spacing",
-    "Freq. Drift Limit*", "Max Sensor Current", "Minimum Flow Multiplier", "T03", "MassFlowAccuracy_Liquid", 
+    "ZeroStability", "A4", "TemperatureEffect_Density", 
+    "TemperatureEffect_Flow", "Tone Level", "Ramp Time", "BL Temp Coeff", "Drive SP FCF", "Puck P FCF", "dF Tone Spacing",
+    "Freq. Drift Limit", "Max Sensor Current", "Minimum Flow Multiplier", "T03", "MassFlowAccuracy_Liquid", 
     "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", "Drive SP FCF", "Puck P FCF", "Max Sensor Current"
 ] 
 

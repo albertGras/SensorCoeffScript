@@ -20,7 +20,7 @@ const S_CAT   CAT_BIG_E       = { _3p4,   _150,  _0p7,  _1p1,  _14,      _0p0,  
 #define NO_FDM_COEFFS 0.f,0.f,0.f
 
 /*                               3083- 3085- 3087--   3089  3091--  3094--     3159----    3161-- 3163-- 3165--   3089-  3091--  3163- */
-//SMV_TABLE,Tone Level,Ramp Time,BL Temp Coeff,Drive SP FCF,Puck P FCF,BL Temp ?Quad? Coeff,dF Tone Spacing,Freq Drift Limit,Max Sensor Current,X,X,X,X 
+//SMV_TABLE,Tone Level,Ramp Time,BL Temp Coeff,Drive SP FCF,Puck P FCF,BL Temp Quad Coeff,dF Tone Spacing,Freq. Drift Limit,Max Sensor Current,X,X,X,X 
 const S_SMV  SMV_CMF010  = {      5.f, 30.f, 6.970f,  1.7f,  50.f, -0.003533f, 0.2666667f, .067f,   8.f,    0.f,  1.7f, 50000.f, 300.f };
 const S_SMV  SMV_CMF025p = {     15.f, 15.f, 7.680f,  3.4f, 250.f, -0.003649f, 0.3333333f, .083f,  30.f,    0.f,  1.7f, 50000.f, 343.f };
 const S_SMV  SMV_CMF050  = {     20.f, 15.f, 6.970f,  .85f, 250.f, -0.003533f, 0.3333333f, .083f,  30.f,    0.f,  1.0f, 50000.f, 300.f };
@@ -33,7 +33,7 @@ const S_SMV  SMV_NONE    = {      0.f,  0.f,    0.f,   0.f,   0.f,        0.f,  
 const SDEF   SdefTable[ ] = {
 /* CMF       MV                                uS         m2                                 --- Pressure Comp ---  lb/min     kg/sec    %MaxPerC    %      %     kg/m3      */
 /*Name-----  Type----- FCF---- K1------ slot.- Mass-- TubeArea-- Category----- SmvCoeffs---  FlowLiq-- Dens-------  Zero Stab- MaxFlow-- TempEff---- liq--- gas-- dens--     */
-//COEFF_TABLE,ID String,X,FCF,K1,X,X,TubeID,CAT,S_SMV,PressureEffect_Flow_Liquid,PressureEffect_Density,Zero Stability,X,X,MassFlowAccuracy_Liquid,MassFlowAccuracyMVD_Gas,DensityAccuracy_Liquid */
+//COEFF_TABLE,ID String,X,FCF,K1,X,X,TubeID,CAT,S_SMV,PressureEffect_Flow_Liquid,PressureEffect_Density,ZeroStability,X,X,MassFlowAccuracy_Liquid,MassFlowAccuracyMVD_Gas,DensityAccuracy_Liquid */
 {"CMF010  ",   CMF010, 0.406f,  9680.f,    s0, 58.0f, 6.587e-6f,     &CAT_S_E,  &SMV_CMF010,  PC_NONE,     PC_NONE, 0.000075f,    0.03f, 0.0001875f, 0.1f,  0.35f,  0.5f }, /* (CMF010M, CMF010N)  */
 {"CMF010P ",  CMF010P, 0.689f,  9249.f,    s0, 27.0f, 5.066e-6f,     &CAT_S_E,  &SMV_CMF010,  PC_NONE,     PC_NONE, 0.00015f,     0.03f, 0.0001875f, 0.1f,  0.35f,  2.0f }, /* (CMF010P)           */
 {"CMF025  ",   CMF025, 4.339f,  6385.f,    s0, 84.0f, 4.302e-5f,     &CAT_S_E,    &SMV_NONE,  PC_NONE,  0.0000040f, 0.001f,    0.60556f,  0.000125f, 0.1f,  0.35f,  0.5f }, /* (CMF025H, CMF025M)  */
