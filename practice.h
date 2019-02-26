@@ -1,13 +1,3 @@
-//                                ---- Drive -------   Over   FD       CMFS              A3     ----------------- VOS --------------------   MinFlow g/ccPerDegC
-//                                Amp      P      I    shoot  lim       A4      GasFD   limit   Gas Slope  Gas Offst  Liq Slope   Liq Offst  Mult    tempEffect Flags
-//CAT_TABLE,Drive Target,Proportional Gain 800,Integral Gain 800,Overshoot,FD Limit,A4,GasFD,X,Gas Slope,Gas Offset,Liq Slope,Liq Offset,Minimum Flow Multiplier,X,X 
-const S_CAT   CAT_S_E         = { _3p4, 100.0f,  0.5f, 1.07f,  _14,      _0p0,   _1p0,  _0p425,      _0p0,      _0p0,      _0p0,       _0p0,  50.0f, 0.000015f, 0 };
-const S_CAT   CAT_TiTAN1      = { 0.5f, 100.0f,  0.5f, 1.07f, 2.0f,      _0p0,   _1p0, 0.0625f,      _0p0,      _0p0,      _0p0,       _0p0, 100.0f,      _0p0, SSA_TSERIES_COMP };
-const S_CAT   CAT_TiTAN2      = { 0.5f,   _150,  _0p7,  _1p1, 2.0f,      _0p0,   _1p0, 0.0625f,      _0p0,      _0p0,      _0p0,       _0p0, 100.0f,      _0p0, SSA_TSERIES_COMP };
-const S_CAT   CAT_E350        = { _3p4,   _150,  _0p7,  _1p1,  _14,      _0p0,   _1p0,  0.170f, 0.010000f, -0.00400f, 0.000000f,  0.000000f, 100.0f, 0.000015f, SSA_VOS_COMP + SSA_T03_COMP };
-//End
-
-
 #define _3p4     3.4f       // default mV/Hz Target Amp
 #define _150   150.0f       // default drive P
 #define _0p7     0.7f       // default drive I
@@ -17,14 +7,28 @@ const S_CAT   CAT_E350        = { _3p4,   _150,  _0p7,  _1p1,  _14,      _0p0,  
 #define _0p425 0.425f       // default mv/Hz A3 limit (.425 is 12.5% of 3.4)
 #define _0p0     0.0f       // default for VOS
 
+//                                ---- Drive -------   Over   FD       CMFS              A3     ----------------- VOS --------------------   MinFlow g/ccPerDegC
+//                                Amp      P      I    shoot  lim       A4      GasFD   limit   Gas Slope  Gas Offst  Liq Slope   Liq Offst  Mult    tempEffect Flags
+//CAT_TABLE,Drive Target,Proportional Gain 800,Integral Gain 800,Overshoot,FD Limit,A4,GasFD,X,Gas Slope,Gas Offset,Liq Slope,Liq Offset,Minimum Flow Multiplier,X,X 
+const S_CAT   CAT_S_E         = { _3p4, 100.0f,  0.5f, 1.07f,  _14,      _0p0,   _1p0,  _0p425,      _0p0,      _0p0,      _0p0,       _0p0,  50.0f, 0.000015f, 0 };
+const S_CAT   CAT_TiTAN1      = { 0.5f, 100.0f,  0.5f, 1.07f, 2.0f,      _0p0,   _1p0, 0.0625f,      _0p0,      _0p0,      _0p0,       _0p0, 100.0f,      _0p0, SSA_TSERIES_COMP };
+const S_CAT   CAT_TiTAN2      = { 0.5f,   _150,  _0p7,  _1p1, 2.0f,      _0p0,   _1p0, 0.0625f,      _0p0,      _0p0,      _0p0,       _0p0, 100.0f,      _0p0, SSA_TSERIES_COMP };
+const S_CAT   CAT_E350        = { _3p4,   _150,  _0p7,  _1p1,  _14,      _0p0,   _1p0,  0.170f, 0.010000f, -0.00400f, 0.000000f,  0.000000f, 100.0f, 0.000015f, SSA_VOS_COMP + SSA_T03_COMP };
+const S_CAT   CAT_BIG_E       = { _3p4,   _150,  _0p7,  _1p1,  _14,      _0p0,   _1p0,  0.170f,      _0p0,      _0p0,      _0p0,       _0p0,  50.0f, 0.000015f, 0 };
+//End
+
+#define NO_FDM_COEFFS 0.f,0.f,0.f
+
 /*                               3083- 3085- 3087--   3089  3091--  3094--     3159----    3161-- 3163-- 3165--   3089-  3091--  3163- */
 //SMV_TABLE,Tone Level,Ramp Time,BL Temp Coeff,Drive SP FCF,Puck P FCF,BL Temp ?Quad? Coeff,dF Tone Spacing,Freq Drift Limit,Max Sensor Current,X,X,X,X 
 const S_SMV  SMV_CMF010  = {      5.f, 30.f, 6.970f,  1.7f,  50.f, -0.003533f, 0.2666667f, .067f,   8.f,    0.f,  1.7f, 50000.f, 300.f };
 const S_SMV  SMV_CMF025p = {     15.f, 15.f, 7.680f,  3.4f, 250.f, -0.003649f, 0.3333333f, .083f,  30.f,    0.f,  1.7f, 50000.f, 343.f };
 const S_SMV  SMV_CMF050  = {     20.f, 15.f, 6.970f,  .85f, 250.f, -0.003533f, 0.3333333f, .083f,  30.f,    0.f,  1.0f, 50000.f, 300.f };
 const S_SMV  SMV_CMF350  = {     40.f, 15.f, 6.840f,  1.7f, 300.f, -0.005574f, 0.2666667f, .067f,  50.f,    0.f,  3.4f, 50000.f, 343.f };
-const S_SMV  SMV_NONE    = {      0.f,  0.f,    0.f,   0.f,   0.f,        0.f,        0.f,   0.f,   0.f,    0.f,  NO_FDM_COEFFS };
+const S_SMV  SMV_NONE    = {      0.f,  0.f,    0.f,   0.f,   0.f,        0.f,        0.f,   0.f,   0.f,    0.f,   0.f,     0.f,   0.f,};
 //End
+
+#define PC_NONE   0.0f
 
 const SDEF   SdefTable[ ] = {
 /* CMF       MV                                uS         m2                                 --- Pressure Comp ---  lb/min     kg/sec    %MaxPerC    %      %     kg/m3      */
@@ -38,4 +42,5 @@ const SDEF   SdefTable[ ] = {
 {"E200D150", E200D150, 185.0f, 11600.f,    s0, 72.0f, 1.134e-3f,   &CAT_BIG_E,    &SMV_NONE, -0.0008f,  0.0000010f, 0.08f,     24.1944f,    0.0005f, 0.1f,  0.35f,  0.5f }, /* (CMF200H, CMF200M)  */
 {"CMF050  ",   CMF050, 14.87f,  6444.f,    s0, 64.0f, 1.206e-4f,     &CAT_S_E,  &SMV_CMF050,  PC_NONE, -0.0000020f, 0.006f,    1.88999f,  0.000125f, 0.1f,  0.35f,  0.5f }, /* (CMF050H, CMF050M)  */
 {"CMF350  ",   CMF350, 1464.f,  7713.f,    s0, 55.0f, 5.176e-3f,    &CAT_E350,  &SMV_CMF350, -0.0017f, -0.0000090f, 0.305f,        113.6f,   0.00075f, 0.1f,  0.35f,  0.5f }, /* (CMF350M, CMF350A)  */
+{"CMF400M ",  CMF400M, 4500.f,  6170.f,    s0, 26.0f, 8.379e-3f,   &CAT_BIG_E,    &SMV_NONE, -0.0011f, -0.0000100f, 0.7242f,      151.389f,   0.00075f, 0.1f,  0.35f,  0.5f }, /* (CMF400M)           */
 }; //End

@@ -7,14 +7,16 @@ print()
 
 #All the coeffs that need comparison
 #coeffs_to_compare = ["ID String", "FCF", "K1", "GasFD", "NominalFlowRate", "TubeID", "A4"]
-coeffs_to_compare = ["ID String", "NominalFlowRate", "FCF", "K1", "I.D. Resistor", "Drive Target", "Proportional Gain 800", 
+coeffs_to_compare = ["ID String", 
+"NominalFlowRate", "FCF", "K1", "I.D. Resistor", "Drive Target", "Proportional Gain 800", 
     "Integral Gain 800", "Proportional Gain 2200", "Integral Gain 2200", "FD Limit", "Overshoot", "GasFD", "TubeID", 
-    "Gas Slope", "Gas Offset", "Liq Slope", "Liq Offset", 
-    #"DriveSaturationAlgorithm800", "PressureEffect_Flow_Liquid", 
-#    "PressureEffect_Flow_Gas", "PressureEffect_Density", "Zero Stability", "A 4", "TemperatureEffect_Density", 
-#    "TemperatureEffect_Flow", "Tone Level", "Ramp Time", "BL Temp Coeff*", "Drive SP FCF", "Puck P FCF", "dF Tone Spacing",
-#    "Freq. Drift Limit*", "Max Sensor Current", "Minimum Flow Multiplier", "T03", "MassFlowAccuracy_Liquid", 
-#    "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", "Drive SP FCF", "Puck P FCF", "Max Sensor Current"
+    "Gas Slope", "Gas Offset", "Liq Slope", "Liq Offset", "Drive Saturation Algorithm 800", 
+    "PressureEffect_Flow_Liquid", 
+    "PressureEffect_Flow_Gas", "PressureEffect_Density", 
+    "Zero Stability", "A4", "TemperatureEffect_Density", 
+    "TemperatureEffect_Flow", "Tone Level", "Ramp Time", "BL Temp Coeff*", "Drive SP FCF", "Puck P FCF", "dF Tone Spacing",
+    "Freq. Drift Limit*", "Max Sensor Current", "Minimum Flow Multiplier", "T03", "MassFlowAccuracy_Liquid", 
+    "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", "Drive SP FCF", "Puck P FCF", "Max Sensor Current"
 ] 
 
 #Lists for copying the code file
@@ -67,12 +69,14 @@ final_array = []
 final_code_array = []
 final_doc_array = []
 
+cat_types = []
+smv_types = []
 
 
+copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table, constants_table, cat_types, smv_types)
 
-copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table, constants_table)
-
-addCatAndSmvTablesToCoeffTable(coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table)
+print(coeff_title_list)
+addCatAndSmvTablesToCoeffTable(coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table, cat_types, smv_types)
 
 replaceVariablesWithDefinitions(coeff_table, constants_table)
 
@@ -97,7 +101,6 @@ createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_list, 
     dens_visc_red_doc_title_list, dens_visc_red_doc_table, purpleDocTable, final_doc_array, greenTableFour)
 
 exportFinalArraytoExcelDocument(final_array)
-
 
 
 
