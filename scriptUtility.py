@@ -266,7 +266,7 @@ def compileErDocRow(coeff, code_row, working_row, new_blue_doc_title_list, new_b
 
 def formatString(stringVariable):
     try: #If the variable can be made into a float, return the float value
-        return "%s"%float(stringVariable)
+        return "%s"%round(float(stringVariable), 3)
     except: # If the variable cannot be made into a float, then just return the original string
         return stringVariable
 
@@ -335,6 +335,9 @@ def createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_li
                 
             elif ((final_doc_array[array_num][element_num] == "0.0") or (final_doc_array[array_num][element_num] == "0"))  and (final_code_array[array_num][element_num] == '---'):
                 working_row.append("Ok")
+                
+#            elif round( formatString(final_code_array[array_num][element_num]), 2) ==  round( formatString(final_doc_array[array_num][element_num]), 2):
+#                working_row.append("Ok")
                 
             else:
                 working_row.append("No Match")
