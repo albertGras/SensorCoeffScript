@@ -13,7 +13,7 @@ def createConstantsArray(line):
 
 def titleListSetUp(line, title_list):
 
-    extraCharacters2 = ['{', '\"', '\n', '}', ';', '/', 'COEFF_TABLE,', 'CAT_TABLE,', 'SMV_TABLE,']
+    extraCharacters2 = ['{', '\"', '\n', '}', ';', '/', '*', 'COEFF_TABLE,', 'CAT_TABLE,', 'SMV_TABLE,']
 #    extraCharacters2 = ['{', '\"', '\n', 'f','}', ';', '/']
 
     for item in extraCharacters2:  #remove unwanted characters in the line
@@ -197,7 +197,8 @@ def checkDocForCoeff(doc_title_list, doc_table, coeff, code_row, working_row, se
                     return working_row
 
 def compileErDocRow(coeff, code_row, working_row, new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table,
-    coriolis_red_doc_title_list, coriolis_red_doc_table, dens_visc_red_doc_title_list, dens_visc_red_doc_table, purpleDocTable, greenTableFour):
+    coriolis_red_doc_title_list, coriolis_red_doc_table, dens_visc_red_doc_title_list, dens_visc_red_doc_table, purpleDocTable, greenTableOne, 
+    greenTableFour):
     
     blue_sensor_col = 3
     red_sensor_col = 1
@@ -238,6 +239,12 @@ def compileErDocRow(coeff, code_row, working_row, new_blue_doc_title_list, new_b
             if code_row[0] in doc_row[0]:
                 working_row.append(str(doc_row[5]))
                 return
+               
+    if coeff == "T03":
+        for doc_row in greenTableOne:
+            if code_row[0] in doc_row[0]:
+                working_row.append(str(doc_row[1]))
+                return
 
     # Look at new blue doc before old blue doc for most recent coeff values
     if checkDocForCoeff(new_blue_doc_title_list, new_blue_doc_table, coeff, code_row, working_row, blue_sensor_col) != None:
@@ -267,7 +274,7 @@ def formatString(stringVariable):
 
 def createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_list, working_row, final_code_array, new_blue_doc_title_list,
     new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table, coriolis_red_doc_title_list, coriolis_red_doc_table, 
-    dens_visc_red_doc_title_list, dens_visc_red_doc_table, purpleDocTable, final_doc_array, greenTableFour):
+    dens_visc_red_doc_title_list, dens_visc_red_doc_table, purpleDocTable, final_doc_array, greenTableOne, greenTableFour):
 
     coeffPopulated = False
 
@@ -298,7 +305,8 @@ def createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_li
         # put er document coeffs into final array 
         for coeff in coeffs_to_compare:  # Loop through master coeff list
             compileErDocRow(coeff, code_row, working_row, new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table,
-                coriolis_red_doc_title_list, coriolis_red_doc_table, dens_visc_red_doc_title_list, dens_visc_red_doc_table, purpleDocTable, greenTableFour)
+                coriolis_red_doc_title_list, coriolis_red_doc_table, dens_visc_red_doc_title_list, dens_visc_red_doc_table, purpleDocTable, greenTableOne,
+                greenTableFour)
         final_doc_array.append(working_row)
 #        print (working_row)
 #        print()
@@ -309,9 +317,9 @@ def createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_li
    #Create and put match or no match row into final array
     for array_num, array in enumerate(final_code_array):
         final_array.append(final_code_array[array_num])
-        print(final_code_array[array_num])
+# #        print(final_code_array[array_num])
         final_array.append(final_doc_array[array_num])
-        print(final_doc_array[array_num])
+# #        print(final_doc_array[array_num])
         
         for element_num, element in enumerate(array):
 #            print(formatString(final_code_array[array_num][element_num]))
@@ -332,8 +340,8 @@ def createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_li
                 working_row.append("No Match")
 
         final_array.append(working_row)
-        print(working_row)
-        print()
+# #        print(working_row)
+# #        print()
         working_row = []
    
 
@@ -421,8 +429,6 @@ def copyGreenErDoc(er_doc_green, greenTableOne, greenTableTwo, greenTableThree, 
                 if beforeTables == False and title_row == False:  # Add item to row if its after the tables start
                     if cell.text != '':  # Remove blank lines
                         new_row.append(cell.text)
-
-
 
 
 def copyPurpleErDoc(er_doc_purple, purpleDocTable):

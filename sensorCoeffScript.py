@@ -75,10 +75,13 @@ smv_types = []
 
 copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table, constants_table, cat_types, smv_types)
 
-print(coeff_title_list)
+
 addCatAndSmvTablesToCoeffTable(coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table, cat_types, smv_types)
 
 replaceVariablesWithDefinitions(coeff_table, constants_table)
+
+print(coeff_title_list)
+print(coeff_table)
 
 #ER-20018334  /  Blue
 copyExcelFile(old_blue_doc_title_list, old_blue_doc_table, new_blue_doc_title_list, new_blue_doc_table, blue_excel_file, 
@@ -98,7 +101,7 @@ copyPurpleErDoc(er_doc_purple, purpleDocTable)
 
 createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_list, working_row, final_code_array, new_blue_doc_title_list,
     new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table, coriolis_red_doc_title_list, coriolis_red_doc_table, 
-    dens_visc_red_doc_title_list, dens_visc_red_doc_table, purpleDocTable, final_doc_array, greenTableFour)
+    dens_visc_red_doc_title_list, dens_visc_red_doc_table, purpleDocTable, final_doc_array, greenTableOne, greenTableFour)
 
 exportFinalArraytoExcelDocument(final_array)
 
