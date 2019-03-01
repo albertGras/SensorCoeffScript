@@ -9,12 +9,13 @@
 
 //                                ---- Drive -------   Over   FD       CMFS              A3     ----------------- VOS --------------------   MinFlow g/ccPerDegC
 //                                Amp      P      I    shoot  lim       A4      GasFD   limit   Gas Slope  Gas Offst  Liq Slope   Liq Offst  Mult    tempEffect Flags
-//CAT_TABLE,Drive Target,Proportional Gain 800,Integral Gain 800,Overshoot,FD Limit,A4,GasFD,X,Gas Slope,Gas Offset,Liq Slope,Liq Offset,Minimum Flow Multiplier,X,X 
+//CAT_TABLE,Drive Target,Proportional Gain 800,Integral Gain 800,Overshoot,FD Limit,A 4,GasFD,X,Gas Slope,Gas Offset,Liq Slope,Liq Offset,Minimum Flow Multiplier,X,X 
 const S_CAT   CAT_S_E         = { _3p4, 100.0f,  0.5f, 1.07f,  _14,      _0p0,   _1p0,  _0p425,      _0p0,      _0p0,      _0p0,       _0p0,  50.0f, 0.000015f, 0 };
 const S_CAT   CAT_TiTAN1      = { 0.5f, 100.0f,  0.5f, 1.07f, 2.0f,      _0p0,   _1p0, 0.0625f,      _0p0,      _0p0,      _0p0,       _0p0, 100.0f,      _0p0, SSA_TSERIES_COMP };
 const S_CAT   CAT_TiTAN2      = { 0.5f,   _150,  _0p7,  _1p1, 2.0f,      _0p0,   _1p0, 0.0625f,      _0p0,      _0p0,      _0p0,       _0p0, 100.0f,      _0p0, SSA_TSERIES_COMP };
 const S_CAT   CAT_E350        = { _3p4,   _150,  _0p7,  _1p1,  _14,      _0p0,   _1p0,  0.170f, 0.010000f, -0.00400f, 0.000000f,  0.000000f, 100.0f, 0.000015f, SSA_VOS_COMP + SSA_T03_COMP };
 const S_CAT   CAT_BIG_E       = { _3p4,   _150,  _0p7,  _1p1,  _14,      _0p0,   _1p0,  0.170f,      _0p0,      _0p0,      _0p0,       _0p0,  50.0f, 0.000015f, 0 };
+const S_CAT   CAT_CMFS075     = { 2.6f,  75.0f, 0.15f,  _1p1, 2.0f, -.000066f,   _1p0,  _0p425,      _0p0,      _0p0,      _0p0,       _0p0,  50.0f, 0.000015f, SSA_A4 };
 //End
 
 #define NO_FDM_COEFFS 0.f,0.f,0.f
@@ -26,6 +27,7 @@ const S_SMV  SMV_CMF025p = {     15.f, 15.f, 7.680f,  3.4f, 250.f, -0.003649f, 0
 const S_SMV  SMV_CMF050  = {     20.f, 15.f, 6.970f,  .85f, 250.f, -0.003533f, 0.3333333f, .083f,  30.f,    0.f,  1.0f, 50000.f, 300.f };
 const S_SMV  SMV_CMF350  = {     40.f, 15.f, 6.840f,  1.7f, 300.f, -0.005574f, 0.2666667f, .067f,  50.f,    0.f,  3.4f, 50000.f, 343.f };
 const S_SMV  SMV_NONE    = {      0.f,  0.f,    0.f,   0.f,   0.f,        0.f,        0.f,   0.f,   0.f,    0.f,   0.f,     0.f,   0.f,};
+const S_SMV  SMV_CMFS075 = {     11.f, 15.f,  6.64f,  2.6f, 150.f,   -0.00334, 0.3333333f, .083f,  17.f,    0.f,  2.6f, 50000.f, 300.f };
 //End
 
 #define PC_NONE   0.0f
@@ -33,7 +35,7 @@ const S_SMV  SMV_NONE    = {      0.f,  0.f,    0.f,   0.f,   0.f,        0.f,  
 const SDEF   SdefTable[ ] = {
 /* CMF       MV                                uS         m2                                 --- Pressure Comp ---  lb/min     kg/sec    %MaxPerC    %      %     kg/m3      */
 /*Name-----  Type----- FCF---- K1------ slot.- Mass-- TubeArea-- Category----- SmvCoeffs---  FlowLiq-- Dens-------  Zero Stab- MaxFlow-- TempEff---- liq--- gas-- dens--     */
-//COEFF_TABLE,ID String,X,FCF,K1,X,X,TubeID,CAT,S_SMV,PressureEffect_Flow_Liquid,PressureEffect_Density,ZeroStability,X,X,MassFlowAccuracy_Liquid,MassFlowAccuracyMVD_Gas,DensityAccuracy_Liquid */
+//COEFF_TABLE,ID String,X,FCF,K1,X,X,TubeID,CAT,S_SMV,PressureEffect_Flow_Liquid,PressureEffect_Density,ZeroStability,X,X,MassFlowAccuracy_Liquid,MassFlowAccuracyMVD_Gas,DensityAccuracy_Liquid
 {"CMF010  ",   CMF010, 0.406f,  9680.f,    s0, 58.0f, 6.587e-6f,     &CAT_S_E,  &SMV_CMF010,  PC_NONE,     PC_NONE, 0.000075f,    0.03f, 0.0001875f, 0.1f,  0.35f,  0.5f }, /* (CMF010M, CMF010N)  */
 {"CMF010P ",  CMF010P, 0.689f,  9249.f,    s0, 27.0f, 5.066e-6f,     &CAT_S_E,  &SMV_CMF010,  PC_NONE,     PC_NONE, 0.00015f,     0.03f, 0.0001875f, 0.1f,  0.35f,  2.0f }, /* (CMF010P)           */
 {"CMF025  ",   CMF025, 4.339f,  6385.f,    s0, 84.0f, 4.302e-5f,     &CAT_S_E,    &SMV_NONE,  PC_NONE,  0.0000040f, 0.001f,    0.60556f,  0.000125f, 0.1f,  0.35f,  0.5f }, /* (CMF025H, CMF025M)  */
@@ -42,5 +44,6 @@ const SDEF   SdefTable[ ] = {
 {"E200D150", E200D150, 185.0f, 11600.f,    s0, 72.0f, 1.134e-3f,   &CAT_BIG_E,    &SMV_NONE, -0.0008f,  0.0000010f, 0.08f,     24.1944f,    0.0005f, 0.1f,  0.35f,  0.5f }, /* (CMF200H, CMF200M)  */
 {"CMF050  ",   CMF050, 14.87f,  6444.f,    s0, 64.0f, 1.206e-4f,     &CAT_S_E,  &SMV_CMF050,  PC_NONE, -0.0000020f, 0.006f,    1.88999f,  0.000125f, 0.1f,  0.35f,  0.5f }, /* (CMF050H, CMF050M)  */
 {"CMF350  ",   CMF350, 1464.f,  7713.f,    s0, 55.0f, 5.176e-3f,    &CAT_E350,  &SMV_CMF350, -0.0017f, -0.0000090f, 0.305f,        113.6f,   0.00075f, 0.1f,  0.35f,  0.5f }, /* (CMF350M, CMF350A)  */
-{"CMF400M ",  CMF400M, 4500.f,  6170.f,    s0, 26.0f, 8.379e-3f,   &CAT_BIG_E,    &SMV_NONE, -0.0011f, -0.0000100f, 0.7242f,      151.389f,   0.00075f, 0.1f,  0.35f,  0.5f }, /* (CMF400M)           */
+{"CMF400M ",  CMF400M, 4500.f,  6170.f,    s0, 26.0f, 8.379e-3f,   &CAT_BIG_E,    &SMV_CMF200p, -0.0011f, -0.0000100f, 0.7242f,      151.389f,   0.00075f, 0.1f,  0.35f,  0.5f }, /* (CMF400M)           */
+{"CMFS075 ", CMFS075M,   76.f,  6400.f, s3s12, 21.3f, 1.998e-4f, &CAT_CMFS075, &SMV_CMFS075, -0.0007f, -0.0000255f, 0.0110f,   3.48485f,    0.0001f,  0.1f, 0.25f,  0.5f }, /* (CMFS075M/K)        */
 }; //End

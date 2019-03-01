@@ -13,7 +13,7 @@ coeffs_to_compare = ["ID String",
     "Gas Slope", "Gas Offset", "Liq Slope", "Liq Offset", "Drive Saturation Algorithm 800", 
     "PressureEffect_Flow_Liquid", 
     "PressureEffect_Flow_Gas", "PressureEffect_Density", 
-    "ZeroStability", "A4", "TemperatureEffect_Density", 
+    "ZeroStability", "A 4", "TemperatureEffect_Density", 
     "TemperatureEffect_Flow", "Tone Level", "Ramp Time", "BL Temp Coeff", "Drive SP FCF", "Puck P FCF", "dF Tone Spacing",
     "Freq. Drift Limit", "Max Sensor Current", "Minimum Flow Multiplier", "T03", "MassFlowAccuracy_Liquid", 
     "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", "Drive SP FCF", "Puck P FCF", "Max Sensor Current"
@@ -78,10 +78,14 @@ copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat_tab
 
 addCatAndSmvTablesToCoeffTable(coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table, cat_types, smv_types)
 
+print(smv_types)
+print()
+
 replaceVariablesWithDefinitions(coeff_table, constants_table)
 
 print(coeff_title_list)
-print(coeff_table)
+for z in range(0, len(coeff_table)):
+    print(coeff_table[z])
 
 #ER-20018334  /  Blue
 copyExcelFile(old_blue_doc_title_list, old_blue_doc_table, new_blue_doc_title_list, new_blue_doc_table, blue_excel_file, 

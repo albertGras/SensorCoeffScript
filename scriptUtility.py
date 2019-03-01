@@ -18,6 +18,7 @@ def titleListSetUp(line, title_list):
 
     for item in extraCharacters2:  #remove unwanted characters in the line
         line = line.replace(item, '')
+
     line = line.split(',')   # Split up the code line by comas 
     line = [x for x in line if x != ''] #Remove blank elements
     title_list.append(line)
@@ -26,27 +27,31 @@ def titleListSetUp(line, title_list):
     
     
 def tableSetUp(line, types):
+#    print("pre %s" % repr(line))
+    if line == '\n' or line == '':  # Remove blank lines
+#        print('exit')
+        return [line, types]
     extraCharacters = ['{', ' ', '\"', '\n', 'f','}', ';', '/', '&', 'const', 'S_CAT', 'S_SMV',]
+    
     for item in extraCharacters:  #remove unwanted characters in the line
         line = line.replace(item, '')
     line = line.split(',')
-#    print('****')
-#    print(line)
+    
     if(isinstance(types, list)):
         types.append(line[0].split('=')[0]) #copy characters before the '='
+
     line[0] = line[0].split('=', 1)[-1]  #Remove all characters before the '='
-#    print(types)
-#    print(line)
-#    print('****')
+#    print("end %s" % line)
+#    print()
     return [line, types]
 
     
     
     
 def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table, constants_table, cat_types, smv_types):
-    code_file   = open("H:\SensorScript\practice.h")
+#    code_file   = open("H:\SensorScript\practice.h")
+    code_file   = open("C:\PVCS\ProjectsDB\Kinetis_DB\k2Src\k_src_app\coriolis\sensor.cpp")
 #    code_file   = open("C:\Pegasus\BFSrc800\Coriolis\sensor.cpp")
-#    code_file   = open("C:\PVCS\ProjectsDB\Kinetis_DB\k2Src\k_src_app\coriolis\sensor.cpp")
 #    code_file = open(r"C:\Users\AGrasmeder\Documents\SensorCoeffScript\practice.h")
 
     inCoeffTable = False
@@ -82,7 +87,7 @@ def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat
 
         elif inCoeffTable == True:       #Create coeff table
             line, _ = tableSetUp(line, 0)# Prepare coeff data lines to be put into array 
-            if line[0] == '':  # Remove blank lines
+            if line[0] == '' or line[0] == '\n':  # Remove blank lines
                 continue
             if not any("--" in s for s in line): #Remove comment rows with additional coeff decriptions
                 sensor_list.append(line[0])  # Take the sensor types from each line
@@ -95,7 +100,7 @@ def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat
 
         elif inCatTable == True:         #Create cat table
             line, cat_types = tableSetUp(line, cat_types) # Prepare coeff data lines to be put into array 
-            if line[0] == '':  # Remove blank lines
+            if line[0] == '' or line[0] == '\n':  # Remove blank lines
                 continue
             cat_table.append(line)
 
@@ -105,12 +110,11 @@ def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat
 
         elif inSmvTable == True:         #Create smv table
             line, smv_types =tableSetUp(line, smv_types) # Prepare coeff data lines to be put into array 
-            if line[0] == '':  # Remove blank lines
+            if line[0] == '' or line[0] == '\n':  # Remove blank lines
                 continue
             smv_table.append(line)
 
-            
-#    print(sensor_list)
+
 
 
 def addCatAndSmvTablesToCoeffTable(coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table, cat_types, smv_types):
@@ -133,16 +137,26 @@ def addCatAndSmvTablesToCoeffTable(coeff_title_list, coeff_table, cat_title_list
     for coeff_num, coeff_title in enumerate(coeff_title_list, 0):
         if "SMV" in coeff_title:
             for smv_title in smv_title_list[0]:
-                coeff_title_list.insert(coeff_num + 1, smv_title)      # Insert cat titles in coeff title list
+                coeff_title_list.insert(coeff_num + 1, smv_title)      # Insert smv titles in coeff title list
             break
-    
+
+
     for row in coeff_table:
+#        print(row)
         for element_num, element in enumerate(row,0):
-            for type_num, type in enumerate(smv_types, 0):
-                if element == type:
+            if 'SMV' in element:
+                if element not in smv_types:
                     for index in range(0, len(smv_table[0])):
-                        row.insert(element_num + 1, smv_table[type_num][index])
+                        row.insert(element_num + 1, 'bad smv')
                     break
+                for type_num, type in enumerate(smv_types, 0):
+                    if element == type:
+                        for index in range(0, len(smv_table[0])):
+                            row.insert(element_num + 1, smv_table[type_num][index])
+                        
+                        break
+
+
 
 def replaceVariablesWithDefinitions(coeff_table, constants_table):
     for code_row_num, code_row in enumerate(coeff_table, 0):
