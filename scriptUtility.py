@@ -4,17 +4,16 @@ import xlsxwriter
 def createConstantsArray(line):
     line = line.replace('#define', '')
     line = line.replace('f', '')
+    line = line.replace('\n','')
     line = line.split(' ')
     line = [x for x in line if x != ''] #Remove blank elements
     del line[2:20]
-#    print(line)
     return line
 
 
 def titleListSetUp(line, title_list):
 
     extraCharacters2 = ['{', '\"', '\n', '}', ';', '/', '*', 'COEFF_TABLE,', 'CAT_TABLE,', 'SMV_TABLE,']
-#    extraCharacters2 = ['{', '\"', '\n', 'f','}', ';', '/']
 
     for item in extraCharacters2:  #remove unwanted characters in the line
         line = line.replace(item, '')
@@ -31,7 +30,7 @@ def tableSetUp(line, types):
     if line == '\n' or line == '':  # Remove blank lines
 #        print('exit')
         return [line, types]
-    extraCharacters = ['{', ' ', '\"', '\n', 'f','}', ';', '/', '&', 'const', 'S_CAT', 'S_SMV',]
+    extraCharacters = ['{', ' ', '\"', '\n', 'f','}', ';', '/', '&', '}', 'const', 'S_CAT', 'S_SMV',]
     
     for item in extraCharacters:  #remove unwanted characters in the line
         line = line.replace(item, '')
@@ -45,12 +44,12 @@ def tableSetUp(line, types):
 #    print()
     return [line, types]
 
-    
-    
-    
+
+
+
 def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table, constants_table, cat_types, smv_types):
-#    code_file   = open("H:\SensorScript\practice.h")
-    code_file   = open("C:\PVCS\ProjectsDB\Kinetis_DB\k2Src\k_src_app\coriolis\sensor.cpp")
+    code_file   = open("H:\SensorScript\practice.h")
+#    code_file   = open("C:\PVCS\ProjectsDB\Kinetis_DB\k2Src\k_src_app\coriolis\sensor.cpp")
 #    code_file   = open("C:\Pegasus\BFSrc800\Coriolis\sensor.cpp")
 #    code_file = open(r"C:\Users\AGrasmeder\Documents\SensorCoeffScript\practice.h")
 
@@ -115,6 +114,61 @@ def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat
             smv_table.append(line)
 
 
+            
+# Find Flow linearity coeffs
+def findFlowLinearityCoeffs(flowLinearityTable):
+    code_file = open("C:\PVCS\ProjectsDB\Kinetis_DB\k2Src\k_src_app\coriolis\massflow.cpp")
+    
+    insideTable = False
+    new_row = []
+    code_file.seek(0)   # Go to beginning of file
+    
+    while(1):
+        line = 0
+        line = code_file.readline()  # Read a line from the coefficient code file
+
+        if not line:                  # if end of file, stop trying to read the file
+            break  # break out of reading file while loop
+
+        if "FlowLinearityTables" in line:
+            insideTable = True
+            
+        elif "End" in line:
+            break # break out of reading file while loop
+            
+        elif insideTable == True:
+            for item in ['float', 'kg/s', 'comp', 'FL_', '{', ' ', '[]', '\n','}', ';', '}',  'f']:  #remove unwanted characters in the line
+                line = line.replace(item, '')
+            
+            if 'float' in line:
+                sensor_line = True
+            else: 
+                sensor_line = False
+            
+            if 'LT' in line:
+                temp = '< 0.95'
+            elif 'GT' in line:
+                temp = '> 0.95'
+            else:
+                temp = None
+            
+            line = line.split('_',1)[0]  #Remove all characters after the '_'
+            line = line.split('/',1)[0]  #Remove all characters after the '/'
+            line = line.split('=',1)[0]  #Remove all characters after the '='
+            
+            if line == '\n' or line == '':  # Remove blank lines
+                continue
+
+            line = line.split(',')
+            line = [x for x in line if x != ''] #Remove blank string elements
+
+#            print(repr(line))
+            if temp != None: line.append(temp)
+            flowLinearityTable.append(line)
+    
+    print(flowLinearityTable)
+
+
 
 
 def addCatAndSmvTablesToCoeffTable(coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table, cat_types, smv_types):
@@ -128,12 +182,17 @@ def addCatAndSmvTablesToCoeffTable(coeff_title_list, coeff_table, cat_title_list
     
     for row in coeff_table:
         for element_num, element in enumerate(row,0):
-            for type_num, type in enumerate(cat_types, 0):
-                if element == type:
+            if 'CAT' in element:
+                if element not in cat_types:
                     for index in range(0, len(cat_table[0])):
-                        row.insert(element_num + 1, cat_table[type_num][index])
+                        row.insert(element_num + 1, 'bad cat')
                     break
-    
+                for type_num, type in enumerate(cat_types, 0):
+                    if element == type:
+                        for index in range(0, len(cat_table[0])):
+                            row.insert(element_num + 1, cat_table[type_num][index])
+                        break
+
     for coeff_num, coeff_title in enumerate(coeff_title_list, 0):
         if "SMV" in coeff_title:
             for smv_title in smv_title_list[0]:
@@ -142,7 +201,6 @@ def addCatAndSmvTablesToCoeffTable(coeff_title_list, coeff_table, cat_title_list
 
 
     for row in coeff_table:
-#        print(row)
         for element_num, element in enumerate(row,0):
             if 'SMV' in element:
                 if element not in smv_types:
@@ -153,7 +211,6 @@ def addCatAndSmvTablesToCoeffTable(coeff_title_list, coeff_table, cat_title_list
                     if element == type:
                         for index in range(0, len(smv_table[0])):
                             row.insert(element_num + 1, smv_table[type_num][index])
-                        
                         break
 
 
@@ -283,6 +340,7 @@ def formatString(stringVariable):
         return "%s"%round(float(stringVariable), 3)
     except: # If the variable cannot be made into a float, then just return the original string
         return stringVariable
+
 
 
 
@@ -418,20 +476,43 @@ def copyGreenErDoc(er_doc_green, greenTableOne, greenTableTwo, greenTableThree, 
     beforeTables = True
     tableNumber = 0
     
+    newSensor = False
+    tmp_sensor = None
+    
     tables = er_doc_green.tables
     
     for table in tables:
         for row in table.rows:
             title_row = False
             if(beforeTables == False and len(new_row) != 0):
+
+                if [s for s in new_row if '0.95' in s]:
+                    sensor = new_row[0:2]
+                else:
+                    sensor = new_row[0]
+                
+                if tmp_sensor == sensor:
+                    newSensor = False
+                else:
+                    newSensor = True
+                    tmp_sensor = sensor
+               
                 if tableNumber == 1:
                     greenTableOne.append(new_row)
 
                 elif tableNumber == 2:
-                    greenTableTwo.append(new_row)
+                    if newSensor == True:
+                        newSensor = False
+                        greenTableTwo.append(sensor)
+                    greenTableTwo.append(new_row[2:4])
 
                 elif tableNumber == 3:
-                    greenTableThree.append(new_row)
+                    if newSensor == True:
+                        newSensor = False
+                        greenTableTwo.append([sensor])
+#                        greenTableThree.append(sensor)
+#                    greenTableThree.append(new_row[1:3])
+                    greenTableTwo.append(new_row[1:3])
 
                 elif tableNumber == 5: # because of the way the table is setup Sensor Model is read twice and this becomes 5 instead of 4
                     greenTableFour.append(new_row)
@@ -444,8 +525,10 @@ def copyGreenErDoc(er_doc_green, greenTableOne, greenTableTwo, greenTableThree, 
                     beforeTables = False
 
                 if beforeTables == False and title_row == False:  # Add item to row if its after the tables start
+#                    new_row = [x for x in new_row if x != '< 0.95'] #Remove blank string elements
                     if cell.text != '':  # Remove blank lines
                         new_row.append(cell.text)
+
 
 
 def copyPurpleErDoc(er_doc_purple, purpleDocTable):
@@ -474,6 +557,89 @@ def copyPurpleErDoc(er_doc_purple, purpleDocTable):
 #    print(new_row)
        
        
+   
+   
+def compareflowLinearityTables(flowLinearityTable, greenTableTwo, greenTableThree):
+    x = 0
+    y = 0 
+    flowLinearityMatch = []
+    for x in range(len(flowLinearityTable) - 1):
+#        print('~~~~~~~~~~~')
+#        print('x')
+#        print(x)
+#        print('while 1')
+        
+        while y < len(greenTableTwo) and x < len(flowLinearityTable):
+#            print('while 2')
+#            print(y)
+#            print(len(greenTableTwo))
+#            print(x)
+#            print(len(flowLinearityTable))
+            print()
+            print(flowLinearityTable[x][0])
+            print(greenTableTwo[y][0])
+            if formatString(flowLinearityTable[x][0]) in formatString(greenTableTwo[y][0]):  #If theres a match
+#                print('if 1')
+                flowLinearityMatch.append('ok')
+                print('ok')
+#                y = y+1
+                y = 0
+#                x = x+1
+                break
+            else:  # If there isnt a match
+#                print('else 1')
+                if y == len(greenTableTwo) - 1: # If at the end of the greenTable
+#                    print('if 2')
+                    flowLinearityMatch.append('no match')
+                    print('no match')
+                    y = 0
+                    x = x + 1
+                    break
+                else:
+#                    print('else 2')
+                    y = y + 1
+
+#    x = 0
+#    y = 0 
+#    print("beginning of table three")
+#    while x < len(flowLinearityTable) - 1:
+#        print('inside while 1')
+#        print(y)
+#        print(len(greenTableThree))
+#        print(x)
+#        print(len(flowLinearityTable))
+#        print()
+#        while y < len(greenTableThree) or x < len(flowLinearityTable):
+#            print()
+#            print('inside while 2')
+#            if formatString(flowLinearityTable[x][0]) in formatString(greenTableThree[y][0]):  #If theres a match
+#                print('inside if 1')
+#                flowLinearityMatch.append('ok')
+#                x = x+1
+#                y = y+1
+#            else:  # If there isnt a match
+#                print('inside else 1')
+#                if y == len(greenTableThree) - 1: # If at the end of the greenTable
+#                    print('inside if 2')
+#                    flowLinearityMatch.append('no match')
+#                    y = 0
+#                    x = x + 1
+#                else:
+#                    print('inside else 2')
+#                    y = y + 1
+
+
+    print(flowLinearityMatch)
+
+   
+   
+   
+   
+   
+   
+   
+   
+   
    
    
    
