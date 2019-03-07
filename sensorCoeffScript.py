@@ -100,13 +100,13 @@ print()
 
 #for z in range(0, len(greenTableTwo)):
 #    print(greenTableTwo[z])
-    
+
 print()
 print()
 
 #for z in range(0, len(flowLinearityTable)):
 #    print(flowLinearityTable[z])
-    
+
 print()
 print()
 
@@ -122,7 +122,7 @@ exportFinalArraytoExcelDocument(final_array)
 
 flowLinearityMatch = compareflowLinearityTables(flowLinearityTable, greenTableTwo, greenTableThree)
 
-#print()
+print(flowLinearityMatch)
 
 
 

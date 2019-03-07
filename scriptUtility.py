@@ -563,73 +563,26 @@ def compareflowLinearityTables(flowLinearityTable, greenTableTwo, greenTableThre
     x = 0
     y = 0 
     flowLinearityMatch = []
-    for x in range(len(flowLinearityTable) - 1):
-#        print('~~~~~~~~~~~')
-#        print('x')
-#        print(x)
-#        print('while 1')
-        
+    for x in range(len(flowLinearityTable)):
         while y < len(greenTableTwo) and x < len(flowLinearityTable):
-#            print('while 2')
-#            print(y)
-#            print(len(greenTableTwo))
-#            print(x)
-#            print(len(flowLinearityTable))
-            print()
-            print(flowLinearityTable[x][0])
-            print(greenTableTwo[y][0])
-            if formatString(flowLinearityTable[x][0]) in formatString(greenTableTwo[y][0]):  #If theres a match
-#                print('if 1')
-                flowLinearityMatch.append('ok')
-                print('ok')
-#                y = y+1
-                y = 0
-#                x = x+1
-                break
-            else:  # If there isnt a match
-#                print('else 1')
-                if y == len(greenTableTwo) - 1: # If at the end of the greenTable
-#                    print('if 2')
-                    flowLinearityMatch.append('no match')
-                    print('no match')
+            try:   #try comparing 2 values for each table
+                if formatString(flowLinearityTable[x][0]) in formatString(greenTableTwo[y][0]) and formatString(flowLinearityTable[x][1]) in formatString(greenTableTwo[y][1]):   #If theres a match
+                    flowLinearityMatch.append('ok')
                     y = 0
-                    x = x + 1
                     break
-                else:
-#                    print('else 2')
-                    y = y + 1
+            except:  # if both tables didnt have 2 entries then do this
+                if formatString(flowLinearityTable[x][0]) in formatString(greenTableTwo[y][0]):
+                    flowLinearityMatch.append('ok')
+                    y = 0
+                    break
+            if y == len(greenTableTwo) - 1: # If at the end of the greenTable # If there isnt a match
+                flowLinearityMatch.append('no match')
+                y = 0
+                break
+            else:
+                y = y + 1
 
-#    x = 0
-#    y = 0 
-#    print("beginning of table three")
-#    while x < len(flowLinearityTable) - 1:
-#        print('inside while 1')
-#        print(y)
-#        print(len(greenTableThree))
-#        print(x)
-#        print(len(flowLinearityTable))
-#        print()
-#        while y < len(greenTableThree) or x < len(flowLinearityTable):
-#            print()
-#            print('inside while 2')
-#            if formatString(flowLinearityTable[x][0]) in formatString(greenTableThree[y][0]):  #If theres a match
-#                print('inside if 1')
-#                flowLinearityMatch.append('ok')
-#                x = x+1
-#                y = y+1
-#            else:  # If there isnt a match
-#                print('inside else 1')
-#                if y == len(greenTableThree) - 1: # If at the end of the greenTable
-#                    print('inside if 2')
-#                    flowLinearityMatch.append('no match')
-#                    y = 0
-#                    x = x + 1
-#                else:
-#                    print('inside else 2')
-#                    y = y + 1
-
-
-    print(flowLinearityMatch)
+    return flowLinearityMatch
 
    
    
