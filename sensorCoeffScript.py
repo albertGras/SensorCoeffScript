@@ -96,12 +96,7 @@ copyGreenErDoc(er_doc_green, greenTableOne, greenTableTwo, greenTableThree, gree
 
 findFlowLinearityCoeffs(flowLinearityTable)
 
-print()
 
-#for z in range(0, len(greenTableTwo)):
-#    print(greenTableTwo[z])
-
-print()
 print()
 
 #for z in range(0, len(flowLinearityTable)):
@@ -118,12 +113,14 @@ createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_list, 
     new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table, coriolis_red_doc_title_list, coriolis_red_doc_table, 
     dens_visc_red_doc_title_list, dens_visc_red_doc_table, purpleDocTable, final_doc_array, greenTableOne, greenTableFour)
 
-exportFinalArraytoExcelDocument(final_array)
+flowLinearityMatch = compareflowLinearityTables(flowLinearityTable, greenTableTwo)
 
-flowLinearityMatch = compareflowLinearityTables(flowLinearityTable, greenTableTwo, greenTableThree)
+exportFinalArraytoExcelDocument(final_array, flowLinearityTable, greenTableTwo, flowLinearityMatch)
 
-print(flowLinearityMatch)
+print()
 
+#for z in range(0, len(final_array)):
+#    print(final_array[z])
 
 
 print()

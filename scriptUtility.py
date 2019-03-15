@@ -166,7 +166,7 @@ def findFlowLinearityCoeffs(flowLinearityTable):
             if temp != None: line.append(temp)
             flowLinearityTable.append(line)
     
-    print(flowLinearityTable)
+#    print(flowLinearityTable)
 
 
 
@@ -227,7 +227,6 @@ def replaceVariablesWithDefinitions(coeff_table, constants_table):
 
 
 def copyExcelFile(excel_title_list_one, excel_table_one, excel_title_list_two, excel_table_two, excel_file, title_line_num, data_line_num):
-    
     wb = xlrd.open_workbook(excel_file) #Create workbook for excel blue er document
     sheet_one = wb.sheet_by_index(1) #Set up the old parameters sheet in the excel document
     sheet_two = wb.sheet_by_index(2) #Set up the new parameters sheet in the excel document
@@ -257,8 +256,9 @@ def copyExcelFile(excel_title_list_one, excel_table_one, excel_title_list_two, e
             new_row.append(sheet_two.cell_value(row_idx, col_idx))  # Get cell object by row, col
         excel_table_two.append(new_row)
         new_row = []
-    
-    
+
+
+
 def checkDocForCoeff(doc_title_list, doc_table, coeff, code_row, working_row, sensor_col):
     for doc_coeff_num, doc_coeff_name in enumerate(doc_title_list, 0): # loop through new sheet doc coeff titles
         if coeff == doc_coeff_name: #If these match then this doc contains the coeff title 
@@ -266,6 +266,8 @@ def checkDocForCoeff(doc_title_list, doc_table, coeff, code_row, working_row, se
                 if code_row[0] in str(doc_row[sensor_col]): # If the sensor in the doc matched the sensor in the code
                     working_row.append(str(doc_row[doc_coeff_num]))
                     return working_row
+
+
 
 def compileErDocRow(coeff, code_row, working_row, new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table,
     coriolis_red_doc_title_list, coriolis_red_doc_table, dens_visc_red_doc_title_list, dens_visc_red_doc_table, purpleDocTable, greenTableOne, 
@@ -357,31 +359,24 @@ def createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_li
         for coeff in coeffs_to_compare: # Loop through master coeff list
             coeffPopulated = False
             for code_coeff_num, code_list_coeff_name in enumerate(coeff_title_list[0], 0):
-#                print(coeff)
-#                print(code_list_coeff_name)
-#                print()
                 if coeff == code_list_coeff_name:
-
                     coeffPopulated = True
-#                    print(code_row[code_coeff_num])
                     working_row.append(code_row[code_coeff_num]) # Add coeff value to list 
                     break
+
             if coeffPopulated == False:
                 working_row.append("---")  # Add a place holder if value doesnt exist
+
         final_code_array.append(working_row)
-#        print(working_row)
         working_row = []
 
-        
-        
+
         # put er document coeffs into final array 
         for coeff in coeffs_to_compare:  # Loop through master coeff list
             compileErDocRow(coeff, code_row, working_row, new_blue_doc_title_list, new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table,
                 coriolis_red_doc_title_list, coriolis_red_doc_table, dens_visc_red_doc_title_list, dens_visc_red_doc_table, purpleDocTable, greenTableOne,
                 greenTableFour)
         final_doc_array.append(working_row)
-#        print (working_row)
-#        print()
         working_row = []
    
    
@@ -389,16 +384,9 @@ def createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_li
    #Create and put match or no match row into final array
     for array_num, array in enumerate(final_code_array):
         final_array.append(final_code_array[array_num])
-# #        print(final_code_array[array_num])
         final_array.append(final_doc_array[array_num])
-# #        print(final_doc_array[array_num])
-        
-        for element_num, element in enumerate(array):
-#            print(formatString(final_code_array[array_num][element_num]))
-#            print(formatString(final_doc_array[array_num][element_num]))
-#            print(element_num)
-#           print()
 
+        for element_num, element in enumerate(array):
             if formatString(final_code_array[array_num][element_num]) == formatString(final_doc_array[array_num][element_num]):
                 working_row.append("Ok")
                 
@@ -407,10 +395,7 @@ def createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_li
                 
             elif ((final_doc_array[array_num][element_num] == "0.0") or (final_doc_array[array_num][element_num] == "0"))  and (final_code_array[array_num][element_num] == '---'):
                 working_row.append("Ok")
-                
-#            elif round( formatString(final_code_array[array_num][element_num]), 2) ==  round( formatString(final_doc_array[array_num][element_num]), 2):
-#                working_row.append("Ok")
-                
+
             else:
                 working_row.append("No Match")
 
@@ -434,16 +419,20 @@ def writeRowDescriptors(worksheet, workbook, row_num):
         worksheet.write(row_num, 0, "compare", right_and_bottom_border_format)
    
   
-def exportFinalArraytoExcelDocument(final_array):
+def exportFinalArraytoExcelDocument(final_array, flowLinearityTable, greenTableTwo, flowLinearityMatch):
     #Transfer final array values to excel document 
+    
+    finalFlowArray = []
 
     # Create an new Excel file and add a worksheet.
     workbook = xlsxwriter.Workbook('H:\SensorScript\demo.xlsx')
 #    workbook = xlsxwriter.Workbook(r'C:\Users\AGrasmeder\Documents\SensorCoeffScript')
-    worksheet = workbook.add_worksheet()
+    worksheet = workbook.add_worksheet('coeff compare')
+    flowLinearity = workbook.add_worksheet('flow linearity')
 
     # Widen the first colums to make the text clearer.
     worksheet.set_column('B:AZ', 19)
+    flowLinearity.set_column('A:AZ', 14)
 
     default_format = workbook.add_format()   
     underline_format = workbook.add_format({'bottom': 1})
@@ -451,6 +440,7 @@ def exportFinalArraytoExcelDocument(final_array):
     right_and_bottom_border_format = workbook.add_format({'right': 1, 'bottom': 1})
     red_format = workbook.add_format({'font_color': 'red'})
 
+    # write standard coeff compare worksheet
     for row_num, row in enumerate(final_array, 0):
         writeRowDescriptors(worksheet, workbook, row_num)
         for element_num, element in enumerate(row, 0):
@@ -459,7 +449,36 @@ def exportFinalArraytoExcelDocument(final_array):
             else:
                 worksheet.write(row_num, element_num+1, final_array[row_num][element_num], default_format)
 
+
+    # write flow linarization table in second sheet
+    for row_num, row in enumerate(flowLinearityTable, 0):
+#        writeRowDescriptors(flowLinearity, workbook, row_num)
+        for element_num, element in enumerate(row, 0):
+            if element_num == 1:
+                flowLinearity.write(row_num, element_num, flowLinearityTable[row_num][element_num], right_border_format)
+            else:
+                flowLinearity.write(row_num, element_num, flowLinearityTable[row_num][element_num])
+
+    for row_num, row in enumerate(greenTableTwo, 0):
+#        writeRowDescriptors(flowLinearity, workbook, row_num)
+        for element_num, element in enumerate(row, 0):
+            if element_num == 1:
+                flowLinearity.write(row_num, element_num +2, greenTableTwo[row_num][element_num], right_border_format)
+            else:
+                flowLinearity.write(row_num, element_num +2, greenTableTwo[row_num][element_num])
+                
+        for element_num, element in enumerate(flowLinearityMatch, 0):
+                flowLinearity.write(element_num, 4, flowLinearityMatch[element_num])
+
+       
+                
     worksheet.conditional_format('A1:ZZ500', 
+                                 {'type': 'text',
+                                  'criteria': 'containing',
+                                  'value': 'No Match',
+                                  'format': red_format})
+                                  
+    flowLinearity.conditional_format('A1:ZZ500', 
                                  {'type': 'text',
                                   'criteria': 'containing',
                                   'value': 'No Match',
@@ -559,7 +578,7 @@ def copyPurpleErDoc(er_doc_purple, purpleDocTable):
        
    
    
-def compareflowLinearityTables(flowLinearityTable, greenTableTwo, greenTableThree):
+def compareflowLinearityTables(flowLinearityTable, greenTableTwo):
     x = 0
     y = 0 
     flowLinearityMatch = []
@@ -586,6 +605,7 @@ def compareflowLinearityTables(flowLinearityTable, greenTableTwo, greenTableThre
 
    
    
+
    
    
    
