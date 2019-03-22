@@ -106,8 +106,9 @@ print()
 print()
 
 #ER-20027172 / Purple
-copyPurpleErDoc(er_doc_purple, purpleDocTable)
+purpleDocTable = copyPurpleErDoc(er_doc_purple)
 
+#print(purpleDocTable)
 
 createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_list, working_row, final_code_array, new_blue_doc_title_list,
     new_blue_doc_table, old_blue_doc_title_list, old_blue_doc_table, coriolis_red_doc_title_list, coriolis_red_doc_table, 

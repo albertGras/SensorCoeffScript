@@ -1,5 +1,7 @@
 import xlrd
 import xlsxwriter
+#import math
+from math import log10, floor
 
 def createConstantsArray(line):
     line = line.replace('#define', '')
@@ -48,10 +50,9 @@ def tableSetUp(line, types):
 
 
 def copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table, constants_table, cat_types, smv_types):
-    code_file   = open("H:\SensorScript\practice.h")
-#    code_file   = open("C:\PVCS\ProjectsDB\Kinetis_DB\k2Src\k_src_app\coriolis\sensor.cpp")
+#    code_file   = open("H:\SensorScript\practice.h")
+    code_file   = open("C:\PVCS\ProjectsDB\Kinetis_DB\k2Src\k_src_app\coriolis\sensor.cpp")
 #    code_file   = open("C:\Pegasus\BFSrc800\Coriolis\sensor.cpp")
-#    code_file = open(r"C:\Users\AGrasmeder\Documents\SensorCoeffScript\practice.h")
 
     inCoeffTable = False
     inSmvTable = False
@@ -241,16 +242,20 @@ def copyExcelFile(excel_title_list_one, excel_table_one, excel_title_list_two, e
     # Copy all values in blue er doc - old params 
     for row_idx in range(data_line_num, sheet_one.nrows):    # Iterate through rows
         for col_idx in range(0, num_cols):  # Iterate through columns
-            new_row.append(sheet_one.cell_value(row_idx, col_idx))  # Get cell object by row, col
+            temp = str(sheet_one.cell_value(row_idx, col_idx))
+            temp = temp.replace(' ', '')
+#            temp = temp.replace('/', '')  #Some sensor types have the slash
+#            new_row.append(sheet_one.cell_value(row_idx, col_idx))  # Get cell object by row, col
+            new_row.append(temp)  # Get cell object by row, col
         excel_table_one.append(new_row)
         new_row = []
 
-    # Copy all coefficient names in blue er doc - new params 
+    # Copy all coefficient names in er doc - second sheet 
     num_cols = sheet_two.ncols   # Number of columns
     for col_idx in range(0, num_cols):  # Iterate through columns (x axis direction)
         excel_title_list_two.append(sheet_two.cell_value(title_line_num, col_idx))  # Get cell object by row, col
 
-    # Copy all values in blue er doc - new params 
+    # Copy all values in er doc - first sheet  
     for row_idx in range(data_line_num, sheet_two.nrows):    # Iterate through rows (y axis direction)
         for col_idx in range(0, num_cols):  # Iterate through columns
             new_row.append(sheet_two.cell_value(row_idx, col_idx))  # Get cell object by row, col
@@ -333,10 +338,11 @@ def compileErDocRow(coeff, code_row, working_row, new_blue_doc_title_list, new_b
     if checkDocForCoeff(dens_visc_red_doc_title_list, dens_visc_red_doc_table, coeff, code_row, working_row, red_sensor_col) != None:
         return
 
-    working_row.append('---') # Else, add a '---' for coefficients that cant be populated
+    working_row.append('―') # Else, add a '―' for coefficients that cant be populated
     return working_row
 
 
+#Using default crapy round function
 def formatString(stringVariable):
     try: #If the variable can be made into a float, return the float value
         return "%s"%round(float(stringVariable), 3)
@@ -344,6 +350,32 @@ def formatString(stringVariable):
         return stringVariable
 
 
+def compareString(stringOne, stringTwo):
+    try: #If the variable can be made into a float, return the float value
+        stringOne = '{:06.4f}'.format(stringOne)
+        return "%s"%math.isclose(stringOne, stringTwo, rel_tol=1e-5)
+    except: # If the variable cannot be made into a float, then just return the original string
+        if stringOne == stringTwo:
+            return True
+        else:
+            return False
+
+
+#Specific number of significant figures
+def formatString2(stringVariable):
+    try: #If the variable can be made into a float, return the float value
+        #return '{:.20f}'.format(float(stringVariable))
+        return round(float(stringVariable), -int(floor(log10(abs(float(stringVariable))))) + (3 - 1))
+    except: # If the variable cannot be made into a float, then just return the original string
+        return stringVariable
+
+
+#specific decimal place
+def formatString3(stringVariable):
+    try: #If the variable can be made into a float, return the float value
+        return '%.6f' %float(stringVariable)
+    except: # If the variable cannot be made into a float, then just return the original string
+        return stringVariable
 
 
 def createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_list, working_row, final_code_array, new_blue_doc_title_list,
@@ -365,7 +397,7 @@ def createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_li
                     break
 
             if coeffPopulated == False:
-                working_row.append("---")  # Add a place holder if value doesnt exist
+                working_row.append("―")  # Add a place holder if value doesnt exist
 
         final_code_array.append(working_row)
         working_row = []
@@ -387,21 +419,19 @@ def createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_li
         final_array.append(final_doc_array[array_num])
 
         for element_num, element in enumerate(array):
-            if formatString(final_code_array[array_num][element_num]) == formatString(final_doc_array[array_num][element_num]):
+            if formatString2(final_code_array[array_num][element_num]) == formatString2(final_doc_array[array_num][element_num]):
                 working_row.append("Ok")
-                
-            elif ((final_code_array[array_num][element_num] == "0.0") or (final_code_array[array_num][element_num] == "0"))  and (final_doc_array[array_num][element_num] == '---'): 
-                working_row.append("Ok")
-                
-            elif ((final_doc_array[array_num][element_num] == "0.0") or (final_doc_array[array_num][element_num] == "0"))  and (final_code_array[array_num][element_num] == '---'):
+
+            elif ((final_code_array[array_num][element_num] == "0.0") or (final_code_array[array_num][element_num] == "0")) and ((final_doc_array[array_num][element_num] == 'null') or (final_doc_array[array_num][element_num] == '―')): 
+                working_row.append("Ok") #
+
+            elif ((final_doc_array[array_num][element_num] == "0.0") or (final_doc_array[array_num][element_num] == "0")) and ((final_code_array[array_num][element_num] == 'null') or (final_code_array[array_num][element_num] == '―')):
                 working_row.append("Ok")
 
             else:
                 working_row.append("No Match")
 
         final_array.append(working_row)
-# #        print(working_row)
-# #        print()
         working_row = []
    
 
@@ -467,8 +497,8 @@ def exportFinalArraytoExcelDocument(final_array, flowLinearityTable, greenTableT
             else:
                 flowLinearity.write(row_num, element_num +2, greenTableTwo[row_num][element_num])
                 
-        for element_num, element in enumerate(flowLinearityMatch, 0):
-                flowLinearity.write(element_num, 4, flowLinearityMatch[element_num])
+#        for element_num, element in enumerate(flowLinearityMatch, 0):
+#                flowLinearity.write(element_num, 4, flowLinearityMatch[element_num])
 
        
                 
@@ -550,7 +580,7 @@ def copyGreenErDoc(er_doc_green, greenTableOne, greenTableTwo, greenTableThree, 
 
 
 
-def copyPurpleErDoc(er_doc_purple, purpleDocTable):
+def copyPurpleErDoc(er_doc_purple):
     purpleDocTable = []
     beforeTables = True
     title_row = False
@@ -565,6 +595,7 @@ def copyPurpleErDoc(er_doc_purple, purpleDocTable):
                 purpleDocTable.append(new_row)
 #                print(new_row)
                 new_row = []
+
             for cell in row.cells:
                 if("Sensor Model") in cell.text:
                     title_row = True
@@ -573,7 +604,8 @@ def copyPurpleErDoc(er_doc_purple, purpleDocTable):
                     if cell.text != '':  # Remove blank lines
                         new_row.append(cell.text)
     purpleDocTable.append(new_row)
-#    print(new_row)
+    return purpleDocTable
+
        
        
    
