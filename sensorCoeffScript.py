@@ -9,12 +9,12 @@ print()
 #coeffs_to_compare = ["ID String", "FCF", "K1", "GasFD", "NominalFlowRate", "TubeID", "A4"]
 coeffs_to_compare = ["ID String", "NominalFlowRate", "FCF", "K1", "I.D. Resistor", "Drive Target", "Proportional Gain 800", 
     "Integral Gain 800", "Proportional Gain 2200", "Integral Gain 2200", "FD Limit", "Overshoot",  "TubeID", 
-     "Drive Saturation Algorithm 800", "PressureEffect_Flow_Liquid",
-    "PressureEffect_Flow_Gas", "PressureEffect_Density", "ZeroStability", "A 4", "TemperatureEffect_Density", 
-    "TemperatureEffect_Flow", "Tone Level", "Ramp Time", "BL Temp Coeff", "Drive SP FCF", "Puck P FCF", "dF Tone Spacing",
-    "Freq. Drift Limit", "Max Sensor Current", "Minimum Flow Multiplier", "T03", "MassFlowAccuracy_Liquid", 
-    "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", "Drive SP FCF", "Puck P FCF", "Max Sensor Current",
-    "GasFD","Gas Slope", "Gas Offset", "Liq Slope", "Liq Offset",
+    "Drive Saturation Algorithm 800", "PressureEffect_Flow_Liquid", "PressureEffect_Density", "ZeroStability", "A 4", 
+    "TemperatureEffect_Density", "TemperatureEffect_Flow", "Tone Level", "Ramp Time", "BL Temp Coeff", "Drive SP FCF", 
+    "Puck P FCF", "dF Tone Spacing", "Freq. Drift Limit", "Max Sensor Current", "Minimum Flow Multiplier", "T03", 
+    "MassFlowAccuracy_Liquid", "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", "Drive SP FCF", "Puck P FCF", 
+    "Max Sensor Current", "GasFD","Gas Slope", "Gas Offset", "Liq Slope", "Liq Offset",
+#    "PressureEffect_Flow_Gas",
 ] 
 
 #Lists for copying the code file
@@ -77,6 +77,7 @@ copyCodeFile(sensor_list, coeff_title_list, coeff_table, cat_title_list, cat_tab
 addCatAndSmvTablesToCoeffTable(coeff_title_list, coeff_table, cat_title_list, cat_table, smv_title_list, smv_table, cat_types, smv_types)
 
 replaceVariablesWithDefinitions(coeff_table, constants_table)
+
 
 #print(coeff_title_list)
 #for z in range(0, len(coeff_table)):

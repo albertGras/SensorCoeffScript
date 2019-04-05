@@ -350,15 +350,50 @@ def formatString(stringVariable):
         return stringVariable
 
 
-def compareString(stringOne, stringTwo):
+def compareString2(stringOne, stringTwo):
+    print(stringOne)
+    print(stringTwo)
+    
+    try:
+        tolerance = stringOne * 0.0001
+    except:
+        tolerance = 0
+    print(tolerance)
+    print()
     try: #If the variable can be made into a float, return the float value
-        stringOne = '{:06.4f}'.format(stringOne)
-        return "%s"%math.isclose(stringOne, stringTwo, rel_tol=1e-5)
+        if stringOne + tolerance >= stringTwo >= stringOne - tolerance:
+            return true
+        if float(stringOne) == float(stringTwo):
+            return true
     except: # If the variable cannot be made into a float, then just return the original string
         if stringOne == stringTwo:
             return True
         else:
             return False
+
+
+
+def compareString(stringOne, stringTwo):
+    isNumber = False
+    try:
+        stringOne = float(stringOne)
+        stringTwo = float(stringTwo)
+        tolerance = stringOne * 0.0001
+        isNumber = True
+    except Exception as e:
+        isNumber = False
+
+    if isNumber == True:
+        if (stringOne + tolerance >= stringTwo) and (stringTwo >= stringOne - tolerance):
+            return True
+        elif float(stringOne) == float(stringTwo):
+            return True
+    else:
+        if stringOne == stringTwo:
+            return True
+        else:
+            return False
+
 
 
 #Specific number of significant figures
@@ -372,6 +407,13 @@ def formatString2(stringVariable):
 
 #specific decimal place
 def formatString3(stringVariable):
+    try: #If the variable can be made into a float, return the float value
+        return '%.6f' %float(stringVariable)
+    except: # If the variable cannot be made into a float, then just return the original string
+        return stringVariable
+
+
+def formatString4(stringVariable):
     try: #If the variable can be made into a float, return the float value
         return '%.6f' %float(stringVariable)
     except: # If the variable cannot be made into a float, then just return the original string
@@ -419,13 +461,16 @@ def createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_li
         final_array.append(final_doc_array[array_num])
 
         for element_num, element in enumerate(array):
-            if formatString2(final_code_array[array_num][element_num]) == formatString2(final_doc_array[array_num][element_num]):
+#            if formatString2(final_code_array[array_num][element_num]) == formatString2(final_doc_array[array_num][element_num]):
+#                working_row.append("Ok")
+                
+            if compareString(final_code_array[array_num][element_num], final_doc_array[array_num][element_num]):
                 working_row.append("Ok")
 
-            elif ((final_code_array[array_num][element_num] == "0.0") or (final_code_array[array_num][element_num] == "0")) and ((final_doc_array[array_num][element_num] == 'null') or (final_doc_array[array_num][element_num] == '―')): 
-                working_row.append("Ok") #
+            elif ((final_code_array[array_num][element_num] == "0.0") or (final_code_array[array_num][element_num] == "0")) and ((final_doc_array[array_num][element_num] == 'null')): # or (final_doc_array[array_num][element_num] == '―')): 
+                working_row.append("Ok") 
 
-            elif ((final_doc_array[array_num][element_num] == "0.0") or (final_doc_array[array_num][element_num] == "0")) and ((final_code_array[array_num][element_num] == 'null') or (final_code_array[array_num][element_num] == '―')):
+            elif ((final_doc_array[array_num][element_num] == "0.0") or (final_doc_array[array_num][element_num] == "0")) and ((final_code_array[array_num][element_num] == 'null')): #or (final_code_array[array_num][element_num] == '―')):
                 working_row.append("Ok")
 
             else:
@@ -455,7 +500,7 @@ def exportFinalArraytoExcelDocument(final_array, flowLinearityTable, greenTableT
     finalFlowArray = []
 
     # Create an new Excel file and add a worksheet.
-    workbook = xlsxwriter.Workbook('H:\SensorScript\demo.xlsx')
+    workbook = xlsxwriter.Workbook('H:\SensorScript\Comparisons_Spreadsheet.xlsx')
 #    workbook = xlsxwriter.Workbook(r'C:\Users\AGrasmeder\Documents\SensorCoeffScript')
     worksheet = workbook.add_worksheet('coeff compare')
     flowLinearity = workbook.add_worksheet('flow linearity')
