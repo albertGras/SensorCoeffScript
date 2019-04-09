@@ -6,16 +6,16 @@ print("Hello World!")
 print()
 
 #All the coeffs that need comparison
-#coeffs_to_compare = ["ID String", "FCF", "K1", "GasFD", "NominalFlowRate", "TubeID", "A4"]
-coeffs_to_compare = ["ID String", "NominalFlowRate", "FCF", "K1", "I.D. Resistor", "Drive Target", "Proportional Gain 800", 
-    "Integral Gain 800", "Proportional Gain 2200", "Integral Gain 2200", "FD Limit", "Overshoot",  "TubeID", 
+coeffs_to_compare = ["ID String", "flags", "NominalFlowRate", "FCF", "K1", "I.D. Resistor", "Drive Target", "Proportional Gain 800", 
+    "Integral Gain 800", "FD Limit", "Overshoot", "TubeID",
     "Drive Saturation Algorithm 800", "PressureEffect_Flow_Liquid", "PressureEffect_Density", "ZeroStability", "A 4", 
     "TemperatureEffect_Density", "TemperatureEffect_Flow", "Tone Level", "Ramp Time", "BL Temp Coeff", "Drive SP FCF", 
     "Puck P FCF", "dF Tone Spacing", "Freq. Drift Limit", "Max Sensor Current", "Minimum Flow Multiplier", "T03", 
-    "MassFlowAccuracy_Liquid", "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", "Drive SP FCF", "Puck P FCF", 
-    "Max Sensor Current", "GasFD","Gas Slope", "Gas Offset", "Liq Slope", "Liq Offset",
-#    "PressureEffect_Flow_Gas",
+    "MassFlowAccuracy_Liquid", "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", "Drive SP", 
 ] 
+
+#coeffs not in 5700 
+# "Proportional Gain 2200", "Integral Gain 2200",
 
 #Lists for copying the code file
 sensor_list = [] #All the sensors listed in the code
@@ -28,7 +28,7 @@ smv_table = [] #Table of all Smart Meter Verification coefficients
 constants_table = []
 
 #Blue ER document variables
-blue_excel_file   = "H:\SensorScript\ER docs\ER-20018334_AK.xlsx" #Read in blue ER document into an array
+blue_excel_file   = "H:\ER docs\ER-20018334_AK.xlsx" #Read in blue ER document into an array
 #blue_excel_file   = r"C:\Users\AGrasmeder\Documents\SensorCoeffScript\ER docs\ER-20018334_AK.xlsx"
 blue_excel_title_line_num = 15 # The row number of where the title names are located
 blue_excel_data_line_num = 21 # The row number of where the coeff data begins
@@ -38,7 +38,7 @@ old_blue_doc_title_list =[]
 old_blue_doc_table =[]
 
 #Red ER document variables
-red_excel_file   = "H:\SensorScript\ER docs\ER-20015860_CF.xlsx" #Read in red ER document into an array
+red_excel_file   = "H:\ER docs\ER-20015860_CH.xlsx" #Read in red ER document into an array
 #red_excel_file   = r"C:\Users\AGrasmeder\Documents\SensorCoeffScript\ER docs\ER-20015860_CF.xlsx"
 red_excel_title_line_num = 6 # The row number of where the title names are located
 red_excel_data_line_num = 10 # The row number of where the coeff data begins
@@ -49,14 +49,14 @@ dens_visc_red_doc_table = []
 
 
 #Green ER document variables
-er_doc_green   = Document("H:\SensorScript\ER docs\ER-20015206_AP.docx") #Read in green ER document into an array
+er_doc_green   = Document("H:\ER docs\ER-20015206_AP.docx") #Read in green ER document into an array
 greenTableOne = []
 greenTableTwo = []
 greenTableThree = []
 greenTableFour = []
 
 #Purple ER document variables
-er_doc_purple   = Document("H:\SensorScript\ER docs\ER-20027172_AD.docx") #Read in purple ER document into an array
+er_doc_purple   = Document("H:\ER docs\ER-20027172_AD.docx") #Read in purple ER document into an array
 purpleDocTable = []
 
 #Lists for "compileErDocRow"

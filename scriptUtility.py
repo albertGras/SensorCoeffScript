@@ -269,7 +269,12 @@ def checkDocForCoeff(doc_title_list, doc_table, coeff, code_row, working_row, se
         if coeff == doc_coeff_name: #If these match then this doc contains the coeff title 
             for doc_row in doc_table: #loop through each row of the doc
                 if code_row[0] in str(doc_row[sensor_col]): # If the sensor in the doc matched the sensor in the code
-                    working_row.append(str(doc_row[doc_coeff_num]))
+                    
+                    if coeff == "TubeID":
+                        temp = float(doc_row[doc_coeff_num]) * float(doc_row[doc_coeff_num - 1]) # Multiply TubeID by NumberTubes (AO x AP)
+                        working_row.append(str(temp))
+                    else:
+                        working_row.append(str(doc_row[doc_coeff_num]))
                     return working_row
 
 
@@ -323,6 +328,8 @@ def compileErDocRow(coeff, code_row, working_row, new_blue_doc_title_list, new_b
             if code_row[0] in doc_row[0]:
                 working_row.append(str(doc_row[1]))
                 return
+                
+          
 
     # Look at new blue doc before old blue doc for most recent coeff values
     if checkDocForCoeff(new_blue_doc_title_list, new_blue_doc_table, coeff, code_row, working_row, blue_sensor_col) != None:
@@ -350,74 +357,26 @@ def formatString(stringVariable):
         return stringVariable
 
 
-def compareString2(stringOne, stringTwo):
-    print(stringOne)
-    print(stringTwo)
-    
-    try:
-        tolerance = stringOne * 0.0001
-    except:
-        tolerance = 0
-    print(tolerance)
-    print()
-    try: #If the variable can be made into a float, return the float value
-        if stringOne + tolerance >= stringTwo >= stringOne - tolerance:
-            return true
-        if float(stringOne) == float(stringTwo):
-            return true
-    except: # If the variable cannot be made into a float, then just return the original string
-        if stringOne == stringTwo:
-            return True
-        else:
-            return False
 
-
-
-def compareString(stringOne, stringTwo):
-    isNumber = False
-    try:
-        stringOne = float(stringOne)
-        stringTwo = float(stringTwo)
-        tolerance = stringOne * 0.0001
+def compareString(valOne, valTwo):
+    try: #try making the inputs float
+        valOne = float(valOne)
+        valTwo = float(valTwo)
+        tolerance = valOne * 0.0001
         isNumber = True
-    except Exception as e:
+    except Exception as e: #if this falls through, then the inputs are strings
         isNumber = False
 
-    if isNumber == True:
-        if (stringOne + tolerance >= stringTwo) and (stringTwo >= stringOne - tolerance):
+    if isNumber == True: # if the inputs are numbers, see if they are close enough to match
+        if ((valTwo - (valOne + tolerance))*(valTwo - (valOne - tolerance)) <= 0):  # check if 
             return True
-        elif float(stringOne) == float(stringTwo):
+
+    else: #if the inputs arent numbers, see if the strings match
+        if valOne == valTwo:
             return True
-    else:
-        if stringOne == stringTwo:
-            return True
-        else:
-            return False
 
+    return False
 
-
-#Specific number of significant figures
-def formatString2(stringVariable):
-    try: #If the variable can be made into a float, return the float value
-        #return '{:.20f}'.format(float(stringVariable))
-        return round(float(stringVariable), -int(floor(log10(abs(float(stringVariable))))) + (3 - 1))
-    except: # If the variable cannot be made into a float, then just return the original string
-        return stringVariable
-
-
-#specific decimal place
-def formatString3(stringVariable):
-    try: #If the variable can be made into a float, return the float value
-        return '%.6f' %float(stringVariable)
-    except: # If the variable cannot be made into a float, then just return the original string
-        return stringVariable
-
-
-def formatString4(stringVariable):
-    try: #If the variable can be made into a float, return the float value
-        return '%.6f' %float(stringVariable)
-    except: # If the variable cannot be made into a float, then just return the original string
-        return stringVariable
 
 
 def createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_list, working_row, final_code_array, new_blue_doc_title_list,
@@ -461,16 +420,16 @@ def createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_li
         final_array.append(final_doc_array[array_num])
 
         for element_num, element in enumerate(array):
-#            if formatString2(final_code_array[array_num][element_num]) == formatString2(final_doc_array[array_num][element_num]):
-#                working_row.append("Ok")
-                
+
             if compareString(final_code_array[array_num][element_num], final_doc_array[array_num][element_num]):
                 working_row.append("Ok")
 
-            elif ((final_code_array[array_num][element_num] == "0.0") or (final_code_array[array_num][element_num] == "0")) and ((final_doc_array[array_num][element_num] == 'null')): # or (final_doc_array[array_num][element_num] == '―')): 
+            elif ((final_code_array[array_num][element_num] == "0.0") or (final_code_array[array_num][element_num] == "0")) and ((final_doc_array[array_num][element_num] == 'null') or (final_doc_array[array_num][element_num] == '―')): 
+#            elif ((final_code_array[array_num][element_num] == "0.0") or (final_code_array[array_num][element_num] == "0")) and ((final_doc_array[array_num][element_num] == 'null')):
                 working_row.append("Ok") 
 
-            elif ((final_doc_array[array_num][element_num] == "0.0") or (final_doc_array[array_num][element_num] == "0")) and ((final_code_array[array_num][element_num] == 'null')): #or (final_code_array[array_num][element_num] == '―')):
+            elif ((final_doc_array[array_num][element_num] == "0.0") or (final_doc_array[array_num][element_num] == "0")) and ((final_code_array[array_num][element_num] == 'null') or (final_code_array[array_num][element_num] == '―')):
+#            elif ((final_doc_array[array_num][element_num] == "0.0") or (final_doc_array[array_num][element_num] == "0")) and ((final_code_array[array_num][element_num] == 'null')): 
                 working_row.append("Ok")
 
             else:
