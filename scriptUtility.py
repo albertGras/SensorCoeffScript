@@ -32,7 +32,8 @@ def tableSetUp(line, types):
     if line == '\n' or line == '':  # Remove blank lines
 #        print('exit')
         return [line, types]
-    extraCharacters = ['{', ' ', '\"', '\n', 'f','}', ';', '/', '&', '}', 'const', 'S_CAT', 'S_SMV',]
+    extraCharacters = ['{', ' ', '\"', '\n', 'f','}', ';', '&', '}', 'const', 'S_CAT', 'S_SMV',]
+#    extraCharacters = ['{', ' ', '\"', '\n', 'f','}', ';', '/', '&', '}', 'const', 'S_CAT', 'S_SMV',]
     
     for item in extraCharacters:  #remove unwanted characters in the line
         line = line.replace(item, '')
@@ -269,10 +270,15 @@ def checkDocForCoeff(doc_title_list, doc_table, coeff, code_row, working_row, se
         if coeff == doc_coeff_name: #If these match then this doc contains the coeff title 
             for doc_row in doc_table: #loop through each row of the doc
                 if code_row[0] in str(doc_row[sensor_col]): # If the sensor in the doc matched the sensor in the code
-                    
-                    if coeff == "TubeID":
-                        temp = float(doc_row[doc_coeff_num]) * float(doc_row[doc_coeff_num - 1]) # Multiply TubeID by NumberTubes (AO x AP)
+
+                    if coeff == "TubeID":  # A=pi*r^2. r=TubeID(AP)/2 * NumberTubes (AO) 
+                        temp = 3.14 * ((float(doc_row[doc_coeff_num])*float(doc_row[doc_title_list.index('NumberTubes')])/2)**2)
                         working_row.append(str(temp))
+
+                    elif coeff == "NominalFlowRate":  #Make the unit conversions between the doc (kg/s) and code (uS)
+                        temp = float(doc_row[doc_coeff_num]) * 1000 / float(doc_row[doc_title_list.index('FlowCalFactor')]) 
+                        working_row.append(str(temp))
+
                     else:
                         working_row.append(str(doc_row[doc_coeff_num]))
                     return working_row
@@ -358,21 +364,24 @@ def formatString(stringVariable):
 
 
 
-def compareString(valOne, valTwo):
+def compareString(codeVal, DocVal):
     try: #try making the inputs float
-        valOne = float(valOne)
-        valTwo = float(valTwo)
-        tolerance = valOne * 0.0001
+        codeVal = float(codeVal)
+        DocVal = float(DocVal)
+        tolerance = codeVal * 0.0001
         isNumber = True
     except Exception as e: #if this falls through, then the inputs are strings
         isNumber = False
 
     if isNumber == True: # if the inputs are numbers, see if they are close enough to match
-        if ((valTwo - (valOne + tolerance))*(valTwo - (valOne - tolerance)) <= 0):  # check if 
+        if ((DocVal - (codeVal + tolerance))*(DocVal - (codeVal - tolerance)) <= 0):  # check if 
             return True
+    
+#    elif coeff == "NominalFlowRate":
+        
 
     else: #if the inputs arent numbers, see if the strings match
-        if valOne == valTwo:
+        if codeVal == DocVal:
             return True
 
     return False
@@ -424,12 +433,13 @@ def createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_li
             if compareString(final_code_array[array_num][element_num], final_doc_array[array_num][element_num]):
                 working_row.append("Ok")
 
-            elif ((final_code_array[array_num][element_num] == "0.0") or (final_code_array[array_num][element_num] == "0")) and ((final_doc_array[array_num][element_num] == 'null') or (final_doc_array[array_num][element_num] == '―')): 
-#            elif ((final_code_array[array_num][element_num] == "0.0") or (final_code_array[array_num][element_num] == "0")) and ((final_doc_array[array_num][element_num] == 'null')):
+            # TODO move this to the compare section 
+#            elif ((final_code_array[array_num][element_num] == "0.0") or (final_code_array[array_num][element_num] == "0")) and ((final_doc_array[array_num][element_num] == 'null') or (final_doc_array[array_num][element_num] == '―')): 
+            elif ((final_code_array[array_num][element_num] == "0.0") or (final_code_array[array_num][element_num] == "0")) and ((final_doc_array[array_num][element_num] == 'null')):
                 working_row.append("Ok") 
 
-            elif ((final_doc_array[array_num][element_num] == "0.0") or (final_doc_array[array_num][element_num] == "0")) and ((final_code_array[array_num][element_num] == 'null') or (final_code_array[array_num][element_num] == '―')):
-#            elif ((final_doc_array[array_num][element_num] == "0.0") or (final_doc_array[array_num][element_num] == "0")) and ((final_code_array[array_num][element_num] == 'null')): 
+#            elif ((final_doc_array[array_num][element_num] == "0.0") or (final_doc_array[array_num][element_num] == "0")) and ((final_code_array[array_num][element_num] == 'null') or (final_code_array[array_num][element_num] == '―')):
+            elif ((final_doc_array[array_num][element_num] == "0.0") or (final_doc_array[array_num][element_num] == "0")) and ((final_code_array[array_num][element_num] == 'null')): 
                 working_row.append("Ok")
 
             else:
