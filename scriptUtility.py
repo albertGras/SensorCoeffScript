@@ -271,6 +271,7 @@ def checkDocForCoeff(doc_title_list, doc_table, coeff, code_row, working_row, se
             for doc_row in doc_table: #loop through each row of the doc
                 if code_row[0] in str(doc_row[sensor_col]): # If the sensor in the doc matched the sensor in the code
 
+                    # Exceptions for specific coeffs
                     if coeff == "TubeID":  # A=pi*r^2. r=TubeID(AP)/2 * NumberTubes (AO) 
                         temp = 3.14 * ((float(doc_row[doc_coeff_num])*float(doc_row[doc_title_list.index('NumberTubes')])/2)**2)
                         working_row.append(str(temp))
@@ -278,6 +279,31 @@ def checkDocForCoeff(doc_title_list, doc_table, coeff, code_row, working_row, se
                     elif coeff == "NominalFlowRate":  #Make the unit conversions between the doc (kg/s) and code (uS)
                         temp = float(doc_row[doc_coeff_num]) * 1000 / float(doc_row[doc_title_list.index('FlowCalFactor')]) 
                         working_row.append(str(temp))
+                        
+                    elif coeff == "I.D. Resistor":
+                        if float(doc_row[doc_coeff_num]) < -5: 
+                            working_row.append(str("SLOT_BAD"))
+                        elif float(doc_row[doc_coeff_num]) < 4:
+                            working_row.append(str("SLOT0"))
+                        elif float(doc_row[doc_coeff_num]) < 39.7:
+                            working_row.append(str("SLOT_UNKNOWN"))
+                        elif float(doc_row[doc_coeff_num]) < 42.2:
+                            working_row.append(str("SLOT1"))
+                        elif float(doc_row[doc_coeff_num]) < 44.3:
+                            working_row.append(str("SLOT2"))
+                        elif float(doc_row[doc_coeff_num]) < 46.4:
+                            working_row.append(str("SLOT3"))
+                        elif float(doc_row[doc_coeff_num]) < 48.7:
+                            working_row.append(str("SLOT4"))
+                        elif float(doc_row[doc_coeff_num]) < 50.5:
+                            working_row.append(str("SLOT5"))
+                        elif float(doc_row[doc_coeff_num]) < 51.7:
+                            working_row.append(str("SLOT_UNKNOWN"))
+                        elif float(doc_row[doc_coeff_num]) < 702:
+                            working_row.append(str("SLOT12"))
+
+#                    elif coeff == "
+
 
                     else:
                         working_row.append(str(doc_row[doc_coeff_num]))
@@ -336,7 +362,13 @@ def compileErDocRow(coeff, code_row, working_row, new_blue_doc_title_list, new_b
                 return
                 
           
+     # Look at red doc before blue doc for most recent coeff values
+    if checkDocForCoeff(coriolis_red_doc_title_list, coriolis_red_doc_table, coeff, code_row, working_row, red_sensor_col) != None:
+        return
 
+    if checkDocForCoeff(dens_visc_red_doc_title_list, dens_visc_red_doc_table, coeff, code_row, working_row, red_sensor_col) != None:
+        return
+          
     # Look at new blue doc before old blue doc for most recent coeff values
     if checkDocForCoeff(new_blue_doc_title_list, new_blue_doc_table, coeff, code_row, working_row, blue_sensor_col) != None:
         return
@@ -345,13 +377,7 @@ def compileErDocRow(coeff, code_row, working_row, new_blue_doc_title_list, new_b
     if checkDocForCoeff(old_blue_doc_title_list, old_blue_doc_table, coeff, code_row, working_row, blue_sensor_col) != None:
         return
 
-    if checkDocForCoeff(coriolis_red_doc_title_list, coriolis_red_doc_table, coeff, code_row, working_row, red_sensor_col) != None:
-        return
-
-    if checkDocForCoeff(dens_visc_red_doc_title_list, dens_visc_red_doc_table, coeff, code_row, working_row, red_sensor_col) != None:
-        return
-
-    working_row.append('―') # Else, add a '―' for coefficients that cant be populated
+    working_row.append('0') # Else, add a '―' for coefficients that cant be populated
     return working_row
 
 
@@ -364,24 +390,28 @@ def formatString(stringVariable):
 
 
 
-def compareString(codeVal, DocVal):
+def compareString(codeVal, docVal):
     try: #try making the inputs float
         codeVal = float(codeVal)
-        DocVal = float(DocVal)
-        tolerance = codeVal * 0.0001
+        docVal = float(docVal)
+        tolerance = codeVal * 0.001   #this value determines how lenient the number comparison is
         isNumber = True
     except Exception as e: #if this falls through, then the inputs are strings
         isNumber = False
 
     if isNumber == True: # if the inputs are numbers, see if they are close enough to match
-        if ((DocVal - (codeVal + tolerance))*(DocVal - (codeVal - tolerance)) <= 0):  # check if 
+        if ((docVal - (codeVal + tolerance))*(docVal - (codeVal - tolerance)) <= 0):  # check if 
             return True
     
 #    elif coeff == "NominalFlowRate":
-        
+    
+#    elif coeff == "flags":
+#    if codeVal == "50" and "SSA_DRIVESAT" in docVal:
+#        return True
 
     else: #if the inputs arent numbers, see if the strings match
-        if codeVal == DocVal:
+#        if codeVal == docVal:
+        if str(docVal) in str(codeVal):
             return True
 
     return False
@@ -407,7 +437,7 @@ def createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_li
                     break
 
             if coeffPopulated == False:
-                working_row.append("―")  # Add a place holder if value doesnt exist
+                working_row.append("0")  # Add a place holder if value doesnt exist
 
         final_code_array.append(working_row)
         working_row = []
@@ -434,8 +464,8 @@ def createFinalArray(final_array, coeffs_to_compare, coeff_table, coeff_title_li
                 working_row.append("Ok")
 
             # TODO move this to the compare section 
-#            elif ((final_code_array[array_num][element_num] == "0.0") or (final_code_array[array_num][element_num] == "0")) and ((final_doc_array[array_num][element_num] == 'null') or (final_doc_array[array_num][element_num] == '―')): 
-            elif ((final_code_array[array_num][element_num] == "0.0") or (final_code_array[array_num][element_num] == "0")) and ((final_doc_array[array_num][element_num] == 'null')):
+            elif ((final_code_array[array_num][element_num] == "0.0") or (final_code_array[array_num][element_num] == "0")) and ((final_doc_array[array_num][element_num] == 'null') or (final_doc_array[array_num][element_num] == '―')): 
+#            elif ((final_code_array[array_num][element_num] == "0.0") or (final_code_array[array_num][element_num] == "0")) and ((final_doc_array[array_num][element_num] == 'null')):
                 working_row.append("Ok") 
 
 #            elif ((final_doc_array[array_num][element_num] == "0.0") or (final_doc_array[array_num][element_num] == "0")) and ((final_code_array[array_num][element_num] == 'null') or (final_code_array[array_num][element_num] == '―')):

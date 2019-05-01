@@ -6,13 +6,13 @@ print("Hello World!")
 print()
 
 #All the coeffs that need comparison
-coeffs_to_compare = ["ID String", "FlowCalFactor", "K1", 
-    "I.D. Resistor",  "Drive Saturation Algorithm 800", "TubeID", "NominalFlowRate",
+coeffs_to_compare = ["ID String", "FlowCalFactor", "K1", "flags", "Drive Saturation Algorithm 800", "T03",
+    "I.D. Resistor", "TubeID", "NominalFlowRate",
     "PressureEffect_Flow_Liquid", "PressureEffect_Density", "ZeroStability", "A 4", 
     "Drive Target", "Proportional Gain 800", "Integral Gain 800", "FD Limit", "Overshoot", 
     "TemperatureEffect_Density", "TemperatureEffect_Flow", "Tone Level", "Ramp Time", "BL Temp Coeff", "Drive SP FCF", 
     "Puck P FCF", "dF Tone Spacing", "Freq. Drift Limit", "Max Sensor Current", "Minimum Flow Multiplier", 
-    "MassFlowAccuracy_Liquid", "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", "Drive SP", "flags",  "T03",
+    "MassFlowAccuracy_Liquid", "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", "Drive SP",   
 ] 
 
 #coeffs not in 5700 
