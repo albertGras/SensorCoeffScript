@@ -1,12 +1,14 @@
 from scriptUtility import *
+from codeReadHelper import *
+from docReadHelper import *
+from excelWriteHelper import *
 from docx import Document
 
 
 print("Hello World!")
-print()
 
 #All the coeffs that need comparison
-coeffs_to_compare = ["ID String", "FlowCalFactor", "K1", "flags", "Drive Saturation Algorithm 800", "T03",
+COEFFS_TO_COMPARE = ["ID String", "FlowCalFactor", "K1", "flags", "Drive Saturation Algorithm 800", "T03",
     "I.D. Resistor", "TubeID", "NominalFlowRate",
     "PressureEffect_Flow_Liquid", "PressureEffect_Density", "ZeroStability", "A 4", 
     "Drive Target", "Proportional Gain 800", "Integral Gain 800", "FD Limit", "Overshoot", 
@@ -73,6 +75,9 @@ smvTypes = []
 
 flowLinearityTable = [] 
 
+
+
+
 copyCodeFile(sensorList, mainCoeffList, coeffTable, catCoeffList, catTable, smvCoeffList, smvTable, constantsTable, catTypes, smvTypes)
 
 addCatAndSmvTablesToCoeffTable(mainCoeffList, coeffTable, catCoeffList, catTable, smvCoeffList, smvTable, catTypes, smvTypes)
@@ -112,7 +117,7 @@ purpleDocTable = copyPurpleErDoc(purpleFile)
 
 #print(purpleDocTable)
 
-createFinalArray(finalArray, coeffs_to_compare, coeffTable, mainCoeffList, workingRow, finalCodeArray, newBlueCoeffList,
+createFinalArray(finalArray, COEFFS_TO_COMPARE, coeffTable, mainCoeffList, workingRow, finalCodeArray, newBlueCoeffList,
     newBlueTable, oldBlueCoeffList, oldBlueTable, coriolisRedCoeffList, coriolisRedTable, 
     densViscRedCoeffList, densViscRedTable, purpleDocTable, finalDocArray, greentableOne, greenTableFour)
 
