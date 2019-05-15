@@ -16,7 +16,7 @@ COEFFS_TO_COMPARE = ["ID String", "FlowCalFactor", "K1", "I.D. Resistor", "TubeI
     "PressureEffect_Density", "ZeroStability", "A 4", "Drive Target", "Proportional Gain 800", "Integral Gain 800", "FD Limit", "Overshoot", 
     "TemperatureEffect_Density", "TemperatureEffect_Flow", "Tone Level", "Ramp Time", "BL Temp Coeff", "Drive SP FCF", "Puck P FCF", 
     "dF Tone Spacing", "Freq. Drift Limit", "Max Sensor Current", "Minimum Flow Multiplier", 
-    "MassFlowAccuracy_Liquid", "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", "Drive SP", "flags", "Drive Saturation Algorithm 800", "T03",] 
+    "MassFlowAccuracy_Liquid", "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", "Drive SP", "Drive Saturation Algorithm 800", "T03", "flags",] 
 
 #coeffs not in 5700 
 # "Proportional Gain 2200", "Integral Gain 2200",
@@ -78,6 +78,7 @@ flowLinearityTable = []
 
 extraCoeffs = []
 extraSensorTypes = []
+sensorComparisonDict = {}
 
 
 
@@ -104,8 +105,11 @@ findFlowLinearityCoeffs(flowLinearityTable)
 #ER-20027172 / Purple
 purpleDocTable = copyPurpleErDoc(purpleFile)
 
+createSensorComparisonDict(sensorComparisonDict, newBlueCoeffList, newBlueTable, oldBlueCoeffList, oldBlueTable)
+
+
 createFinalCodeAndDocArrays(COEFFS_TO_COMPARE, finalCodeArray, finalDocArray, mainCoeffList, coeffTable, newBlueCoeffList, newBlueTable, oldBlueCoeffList, oldBlueTable, coriolisRedCoeffList, coriolisRedTable, 
-    densViscRedCoeffList, densViscRedTable, purpleDocTable, greentableOne, greenTableFour)
+    densViscRedCoeffList, densViscRedTable, purpleDocTable, greentableOne, greenTableFour, sensorComparisonDict)
 
 createFinalArray(COEFFS_TO_COMPARE, finalArray, finalCodeArray, finalDocArray)
 
@@ -140,6 +144,9 @@ print(extraCoeffs)
 print()
 print()
 print(extraSensorTypes)
+
+print()
+print()
 
 print()
 print()

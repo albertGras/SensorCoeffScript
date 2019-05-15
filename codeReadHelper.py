@@ -157,11 +157,9 @@ def findFlowLinearityCoeffs(flowLinearityTable):
             line = line.split(',')
             line = [x for x in line if x != ''] #Remove blank string items
 
-#            print(repr(line))
             if temp != None: line.append(temp)
             flowLinearityTable.append(line)
     
-#    print(flowLinearityTable)
 
 
 

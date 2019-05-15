@@ -9,11 +9,17 @@ import xlsxwriter
 #--------------------------------------------------------------------------
 
 
-def checkDocForCoeff(coeffList, table, coeff, codeRow, workingRow, sensorColumn):
+def checkDocForCoeff(coeffList, table, coeff, codeRow, workingRow, sensorColumn, sensorDict):
     for coeffIndex, coeffName in enumerate(coeffList, 0): # loop through new sheet doc coeff titles
         if coeff == coeffName: #If these match then this doc contains the coeff title 
             for row in table: #loop through each row of the doc
-                if codeRow[0] in str(row[sensorColumn]): # If the sensor in the doc matched the sensor in the code
+#                if codeRow[0 in str(row[sensorColumn]): # If the sensor in the doc matched the sensor in the code
+
+                if codeRow[0] == str(row[sensorColumn]) or sensorDict.get(str(row[sensorColumn])) == codeRow[0]:
+                    print("Code = ", codeRow[0])
+                    print("Doc = ", str(row[sensorColumn]))
+                    print("Dictionary = ", sensorDict.get(str(row[sensorColumn])))
+                    print('~~~~~~~~~~')
 
                     # Exceptions for specific coeffs
                     if coeff == "TubeID":  # A=pi*r^2. r=TubeID(AP)/2 * NumberTubes (AO) 
@@ -54,7 +60,7 @@ def checkDocForCoeff(coeffList, table, coeff, codeRow, workingRow, sensorColumn)
 
 def compileErDocRow(coeff, codeRow, workingRow, newBlueCoeffList, newBlueTable, oldBlueCoeffList, oldBlueTable,
     coriolisRedCoeffList, coriolisRedTable, densViscRedCoeffList, densViscRedTable, purpleDocTable, greentableOne, 
-    greenTableFour):
+    greenTableFour, sensorCompDict):
     
     blueSensorColumn = 3
     redSensorColumn = 1
@@ -104,22 +110,21 @@ def compileErDocRow(coeff, codeRow, workingRow, newBlueCoeffList, newBlueTable, 
                 
           
      # Look at red doc before blue doc for most recent coeff values
-    if checkDocForCoeff(coriolisRedCoeffList, coriolisRedTable, coeff, codeRow, workingRow, redSensorColumn) != None:
+    if checkDocForCoeff(coriolisRedCoeffList, coriolisRedTable, coeff, codeRow, workingRow, redSensorColumn, sensorCompDict) != None:
         return
 
-    if checkDocForCoeff(densViscRedCoeffList, densViscRedTable, coeff, codeRow, workingRow, redSensorColumn) != None:
+    if checkDocForCoeff(densViscRedCoeffList, densViscRedTable, coeff, codeRow, workingRow, redSensorColumn, sensorCompDict) != None:
         return
           
     # Look at new blue doc before old blue doc for most recent coeff values
-    if checkDocForCoeff(newBlueCoeffList, newBlueTable, coeff, codeRow, workingRow, blueSensorColumn) != None:
+    if checkDocForCoeff(newBlueCoeffList, newBlueTable, coeff, codeRow, workingRow, blueSensorColumn, sensorCompDict) != None:
         return
 
     # Look at old sheet in blue ER doc for coeff
-    if checkDocForCoeff(oldBlueCoeffList, oldBlueTable, coeff, codeRow, workingRow, blueSensorColumn) != None:
+    if checkDocForCoeff(oldBlueCoeffList, oldBlueTable, coeff, codeRow, workingRow, blueSensorColumn, sensorCompDict) != None:
         return
 
-    workingRow.append('―') # Else, add a '―' for coefficients that cant be populated     #TODO
-#    workingRow.append('0') # Else, add a '―' for coefficients that cant be populated
+    workingRow.append('―') # Else, add a '―' for coefficients that cant be populated  
     return workingRow
 
 
@@ -158,65 +163,33 @@ def compareflowLinearityTables(flowLinearityTable, greenTableTwo):
 
 
 def compareString(codeVal, docVal):
-#    print(str(codeVal))
-#    print(str(docVal))
-
     try: #try making the inputs float
         codeVal = float(codeVal)
         docVal = float(docVal)
         tolerance = codeVal * 0.001   #this value determines how lenient the number comparison is
         isNumber = True
-#        print("try")
+        if ((docVal - (codeVal + tolerance))*(docVal - (codeVal - tolerance)) <= 0):  # check if 
+            return True
 
     except Exception as e: #if this falls through, then the inputs are not floats (probably strings)
-#        print("Except")
-        isNumber = False
-    
-    if isNumber == True: # if the inputs are floats, see if they are close enough to match
-#        print('if')
-        if ((docVal - (codeVal + tolerance))*(docVal - (codeVal - tolerance)) <= 0):  # check if 
-#            print('inside tolerance')
-            return True
-
-    else: #if the inputs arent numbers, see if the strings match
-            
         codeVal = str(codeVal).strip()
         docVal = str(docVal).strip()
-# .replace(" ", "")
-#        if '0' == codeVal:
-#            print('code val is 0')
-    
-#        if docVal == '―':
-#            print('docVal is a -')
-    
-#        print('else')
+
         if docVal in codeVal: #This was done this direction so SLOT0+SLOT1 matches with SLOT0
-#            print("doc val inside code val")
             return True
 
-        if codeVal == '0' and  docVal == '―':
-#            print('code val 0 and docVal -')
-            return True
-        
-        if docVal == '0' and codeVal == '―':
-#            print('docVal 0 and codeVal -')
-            return True
-            
         if (((codeVal == "0.0") or (codeVal == "0")) and ((docVal == "null") or (docVal == "―"))): 
-#            print('code val 0 and docVal - or null')
             return True
 
         if (((docVal == "0.0") or (docVal == "0")) and ((codeVal == "null") or (codeVal == "―"))): 
-#            print('docVal 0 and codeVal - or null')
             return True
 
-#    print('false')
     return False
 
 
 
 def createFinalCodeAndDocArrays(COEFFS_TO_COMPARE, finalCodeArray, finalDocArray, mainCoeffList, coeffTable, newBlueCoeffList, newBlueTable, oldBlueCoeffList, 
-    oldBlueTable, coriolisRedCoeffList, coriolisRedTable,     densViscRedCoeffList, densViscRedTable, purpleDocTable, greentableOne, greenTableFour):
+    oldBlueTable, coriolisRedCoeffList, coriolisRedTable,     densViscRedCoeffList, densViscRedTable, purpleDocTable, greentableOne, greenTableFour, sensorComparisonDict):
     workingRow = []
     coeffPopulated = False
 
@@ -231,7 +204,7 @@ def createFinalCodeAndDocArrays(COEFFS_TO_COMPARE, finalCodeArray, finalDocArray
                     break
 
             if coeffPopulated == False:
-                workingRow.append("―")  # Add a place holder if value doesnt exist    #TODO
+                workingRow.append("―")  # Add a place holder if value doesnt exist 
 
         finalCodeArray.append(workingRow)
         workingRow = []
@@ -241,7 +214,7 @@ def createFinalCodeAndDocArrays(COEFFS_TO_COMPARE, finalCodeArray, finalDocArray
         for coeff in COEFFS_TO_COMPARE:  # Loop through master coeff list
             compileErDocRow(coeff, codeRow, workingRow, newBlueCoeffList, newBlueTable, oldBlueCoeffList, oldBlueTable,
                 coriolisRedCoeffList, coriolisRedTable, densViscRedCoeffList, densViscRedTable, purpleDocTable, greentableOne,
-                greenTableFour)
+                greenTableFour, sensorComparisonDict)
         finalDocArray.append(workingRow)
         workingRow = []
 
@@ -260,13 +233,9 @@ def createFinalArray(COEFFS_TO_COMPARE, finalArray, finalCodeArray, finalDocArra
         for itemNum, item in enumerate(array):
             if compareString(finalCodeArray[array_num][itemNum], finalDocArray[array_num][itemNum]):
                 workingRow.append("Ok")
-#                print("ok")
-#                print()
 
             else:
                 workingRow.append("No Match")
-#                print("No Match")
-#                print()
 
         finalArray.append(workingRow)
         workingRow = []

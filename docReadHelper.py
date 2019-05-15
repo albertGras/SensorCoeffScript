@@ -8,18 +8,18 @@ import xlrd
 # Output      : <Description of the return value>
 #--------------------------------------------------------------------------
 def copyExcelFile(coeffListOne, tableOne, coeffListTwo, tableTwo, file, coeffLineNum, dataLineNum):
-    wb = xlrd.open_workbook(file) #Create workbook for excel blue er document
-    sheetOne = wb.sheet_by_index(1) #Set up the old parameters sheet in the excel document
-    sheetTwo = wb.sheet_by_index(2) #Set up the new parameters sheet in the excel document
+    wb = xlrd.open_workbook(file) #Create workbook for er document
+    sheetOne = wb.sheet_by_index(1) #Set up the old/coriolis parameters sheet in the excel document
+    sheetTwo = wb.sheet_by_index(2) #Set up the new/density viscocity parameters sheet in the excel document
     
     newRow = []
 
-    # Copy all coefficient names in blue er doc - old params 
+    # Copy all coefficient names in  er doc - first sheet
     numCols = sheetOne.ncols   # Number of columns
     for colIndex in range(0, numCols):  # Iterate through columns
         coeffListOne.append(sheetOne.cell_value(coeffLineNum, colIndex))  # Get cell object by row, col
 
-    # Copy all values in blue er doc - old params 
+    # Copy all values in er doc - first sheet
     for rowIndex in range(dataLineNum, sheetOne.nrows):    # Iterate through rows
         for colIndex in range(0, numCols):  # Iterate through columns
             temp = str(sheetOne.cell_value(rowIndex, colIndex))
@@ -129,4 +129,45 @@ def copyPurpleErDoc(purpleFile):
                         newRow.append(cell.text)
     purpleDocTable.append(newRow)
     return purpleDocTable
+
+
+
+def createSensorComparisonDict(sensorComparisonDict, newBlueCoeffList, newBlueTable, oldBlueCoeffList, oldBlueTable):
+    baseModelNum = 0
+    IdStringNum = 0
+
+    for titleNum, coeff in enumerate(newBlueCoeffList, 0):
+        if "Base Model" in str(coeff):
+            baseModelNum = titleNum
+        elif "ID String" in str(coeff):
+            IdStringNum = titleNum
+    
+    for row in newBlueTable:
+        if row[baseModelNum] not in sensorComparisonDict:
+            sensorComparisonDict[row[baseModelNum]] = row[IdStringNum]
+
+    for titleNum, coeff in enumerate(oldBlueCoeffList, 0):
+        if "Base Model" in str(coeff):
+            baseModelNum = titleNum
+        elif "ID String" in str(coeff):
+            IdStringNum = titleNum
+            
+    for row in oldBlueTable:
+        if row[baseModelNum] not in sensorComparisonDict:
+            sensorComparisonDict[row[baseModelNum]] = row[IdStringNum]
+#    print()
+#    print(sensorComparisonDict)
+#    print()
+
+
+
+
+
+
+
+
+
+
+
+
 
