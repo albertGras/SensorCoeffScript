@@ -118,7 +118,8 @@ def compileErDocRow(coeff, codeRow, workingRow, newBlueCoeffList, newBlueTable, 
     if checkDocForCoeff(oldBlueCoeffList, oldBlueTable, coeff, codeRow, workingRow, blueSensorColumn) != None:
         return
 
-    workingRow.append('0') # Else, add a '―' for coefficients that cant be populated
+    workingRow.append('―') # Else, add a '―' for coefficients that cant be populated     #TODO
+#    workingRow.append('0') # Else, add a '―' for coefficients that cant be populated
     return workingRow
 
 
@@ -157,54 +158,80 @@ def compareflowLinearityTables(flowLinearityTable, greenTableTwo):
 
 
 def compareString(codeVal, docVal):
+#    print(str(codeVal))
+#    print(str(docVal))
+
     try: #try making the inputs float
         codeVal = float(codeVal)
         docVal = float(docVal)
         tolerance = codeVal * 0.001   #this value determines how lenient the number comparison is
         isNumber = True
-    except Exception as e: #if this falls through, then the inputs are strings
-        isNumber = False
+#        print("try")
 
-    if isNumber == True: # if the inputs are numbers, see if they are close enough to match
+    except Exception as e: #if this falls through, then the inputs are not floats (probably strings)
+#        print("Except")
+        isNumber = False
+    
+    if isNumber == True: # if the inputs are floats, see if they are close enough to match
+#        print('if')
         if ((docVal - (codeVal + tolerance))*(docVal - (codeVal - tolerance)) <= 0):  # check if 
+#            print('inside tolerance')
             return True
-    
-#    elif coeff == "NominalFlowRate":
-    
-#    elif coeff == "flags":
-#    if codeVal == "50" and "SSA_DRIVESAT" in docVal:
-#        return True
 
     else: #if the inputs arent numbers, see if the strings match
-#        if codeVal == docVal:
-        if str(docVal) in str(codeVal):
+            
+        codeVal = str(codeVal).strip()
+        docVal = str(docVal).strip()
+# .replace(" ", "")
+#        if '0' == codeVal:
+#            print('code val is 0')
+    
+#        if docVal == '―':
+#            print('docVal is a -')
+    
+#        print('else')
+        if docVal in codeVal: #This was done this direction so SLOT0+SLOT1 matches with SLOT0
+#            print("doc val inside code val")
             return True
 
+        if codeVal == '0' and  docVal == '―':
+#            print('code val 0 and docVal -')
+            return True
+        
+        if docVal == '0' and codeVal == '―':
+#            print('docVal 0 and codeVal -')
+            return True
+            
+        if (((codeVal == "0.0") or (codeVal == "0")) and ((docVal == "null") or (docVal == "―"))): 
+#            print('code val 0 and docVal - or null')
+            return True
+
+        if (((docVal == "0.0") or (docVal == "0")) and ((codeVal == "null") or (codeVal == "―"))): 
+#            print('docVal 0 and codeVal - or null')
+            return True
+
+#    print('false')
     return False
 
 
 
-
-def createFinalArray(finalArray, COEFFS_TO_COMPARE, coeffTable, mainCoeffList, workingRow, finalCodeArray, newBlueCoeffList,
-    newBlueTable, oldBlueCoeffList, oldBlueTable, coriolisRedCoeffList, coriolisRedTable, 
-    densViscRedCoeffList, densViscRedTable, purpleDocTable, finalDocArray, greentableOne, greenTableFour):
-
+def createFinalCodeAndDocArrays(COEFFS_TO_COMPARE, finalCodeArray, finalDocArray, mainCoeffList, coeffTable, newBlueCoeffList, newBlueTable, oldBlueCoeffList, 
+    oldBlueTable, coriolisRedCoeffList, coriolisRedTable,     densViscRedCoeffList, densViscRedTable, purpleDocTable, greentableOne, greenTableFour):
+    workingRow = []
     coeffPopulated = False
-
-    finalArray.append(COEFFS_TO_COMPARE) # Add coeff titles to first row of final array 
 
     #Put code coeffs into final code array
     for codeRow in coeffTable:  #put first row of coeffs from code in final array
         for coeff in COEFFS_TO_COMPARE: # Loop through master coeff list
             coeffPopulated = False
-            for code_coeffIndex, code_list_coeff_name in enumerate(mainCoeffList[0], 0):
+            for codeCoeffIndex, code_list_coeff_name in enumerate(mainCoeffList[0], 0):
                 if coeff == code_list_coeff_name:
                     coeffPopulated = True
-                    workingRow.append(codeRow[code_coeffIndex]) # Add coeff value to list 
+                    workingRow.append(codeRow[codeCoeffIndex]) # Add coeff value to list 
                     break
 
             if coeffPopulated == False:
-                workingRow.append("0")  # Add a place holder if value doesnt exist
+                workingRow.append("―")  # Add a place holder if value doesnt exist    #TODO
 
         finalCodeArray.append(workingRow)
         workingRow = []
@@ -217,30 +244,29 @@ def createFinalArray(finalArray, COEFFS_TO_COMPARE, coeffTable, mainCoeffList, w
                 greenTableFour)
         finalDocArray.append(workingRow)
         workingRow = []
-   
-   
-   
-   #Create and put match or no match row into final array
+
+
+
+def createFinalArray(COEFFS_TO_COMPARE, finalArray, finalCodeArray, finalDocArray):
+    workingRow = []
+
+    finalArray.append(COEFFS_TO_COMPARE) # Add coeff titles to first row of final array 
+
+    #Create and put match or no match row into final array
     for array_num, array in enumerate(finalCodeArray):
         finalArray.append(finalCodeArray[array_num])
         finalArray.append(finalDocArray[array_num])
 
         for itemNum, item in enumerate(array):
-
             if compareString(finalCodeArray[array_num][itemNum], finalDocArray[array_num][itemNum]):
                 workingRow.append("Ok")
-
-            # TODO move this to the compare section 
-            elif ((finalCodeArray[array_num][itemNum] == "0.0") or (finalCodeArray[array_num][itemNum] == "0")) and ((finalDocArray[array_num][itemNum] == 'null') or (finalDocArray[array_num][itemNum] == '―')): 
-#            elif ((finalCodeArray[array_num][itemNum] == "0.0") or (finalCodeArray[array_num][itemNum] == "0")) and ((finalDocArray[array_num][itemNum] == 'null')):
-                workingRow.append("Ok") 
-
-#            elif ((finalDocArray[array_num][itemNum] == "0.0") or (finalDocArray[array_num][itemNum] == "0")) and ((finalCodeArray[array_num][itemNum] == 'null') or (finalCodeArray[array_num][itemNum] == '―')):
-            elif ((finalDocArray[array_num][itemNum] == "0.0") or (finalDocArray[array_num][itemNum] == "0")) and ((finalCodeArray[array_num][itemNum] == 'null')): 
-                workingRow.append("Ok")
+#                print("ok")
+#                print()
 
             else:
                 workingRow.append("No Match")
+#                print("No Match")
+#                print()
 
         finalArray.append(workingRow)
         workingRow = []

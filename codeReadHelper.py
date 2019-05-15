@@ -7,7 +7,7 @@
 # Output      : <Description of the return value>
 #--------------------------------------------------------------------------
 def createConstantsArray(line):
-    for item in ['#define', 'f', '\n']:
+    for item in ['#define', 'f', '\n', '(', ')']:
         line = line.replace(item, '')
 
     line = line.split(' ')
@@ -50,13 +50,14 @@ def copyCodeFile(sensorList, mainCoeffList, coeffTable, catCoeffList, catTable, 
     inSmvTable = False
     inCatTable = False
 
+    workingRow = []
     line = []
     count = 0
     
-    codeFile.seek(0)   # Go to beginning of file
+    CODE_FILE.seek(0)   # Go to beginning of file
 
     while count < 3:   # while all 3 tables havent been read (Coeff, Cat, Smv)
-        line = codeFile.readline()  # Read a line from the coefficient code file
+        line = CODE_FILE.readline()  # Read a line from the coefficient code file
 
         if not line:                  # if end of file, stop trying to read the file
             break  # break out of reading file while loop
@@ -111,15 +112,15 @@ def copyCodeFile(sensorList, mainCoeffList, coeffTable, catCoeffList, catTable, 
             
 # Find Flow linearity coeffs
 def findFlowLinearityCoeffs(flowLinearityTable):
-    codeFile = open("C:\PVCS\ProjectsDB\Kinetis_DB\k2Src\k_src_app\coriolis\massflow.cpp")
+    CODE_FILE = open("C:\PVCS\ProjectsDB\Kinetis_DB\k2Src\k_src_app\coriolis\massflow.cpp")
     
     insideTable = False
     newRow = []
-    codeFile.seek(0)   # Go to beginning of file
+    CODE_FILE.seek(0)   # Go to beginning of file
     
     while(1):
         line = 0
-        line = codeFile.readline()  # Read a line from the coefficient code file
+        line = CODE_FILE.readline()  # Read a line from the coefficient code file
 
         if not line:                  # if end of file, stop trying to read the file
             break  # break out of reading file while loop
@@ -217,13 +218,12 @@ def replaceVariablesWithDefinitions(coeffTable, constantsTable):
                     coeffTable[codeRowNum][codeItemNum] = x[1]
                     break
     return coeffTable
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
+
+
+
+
+
+
+
+
+

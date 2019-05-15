@@ -24,8 +24,6 @@ def copyExcelFile(coeffListOne, tableOne, coeffListTwo, tableTwo, file, coeffLin
         for colIndex in range(0, numCols):  # Iterate through columns
             temp = str(sheetOne.cell_value(rowIndex, colIndex))
             temp = temp.replace(' ', '')
-#            temp = temp.replace('/', '')  #Some sensor types have the slash
-#            newRow.append(sheetOne.cell_value(rowIndex, colIndex))  # Get cell object by row, col
             newRow.append(temp)  # Get cell object by row, col
         tableOne.append(newRow)
         newRow = []

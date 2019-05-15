@@ -3,19 +3,20 @@ from codeReadHelper import *
 from docReadHelper import *
 from excelWriteHelper import *
 from docx import Document
+import sys
+
+
+#print(str(sys.argv))
 
 
 print("Hello World!")
 
 #All the coeffs that need comparison
-COEFFS_TO_COMPARE = ["ID String", "FlowCalFactor", "K1", "flags", "Drive Saturation Algorithm 800", "T03",
-    "I.D. Resistor", "TubeID", "NominalFlowRate",
-    "PressureEffect_Flow_Liquid", "PressureEffect_Density", "ZeroStability", "A 4", 
-    "Drive Target", "Proportional Gain 800", "Integral Gain 800", "FD Limit", "Overshoot", 
-    "TemperatureEffect_Density", "TemperatureEffect_Flow", "Tone Level", "Ramp Time", "BL Temp Coeff", "Drive SP FCF", 
-    "Puck P FCF", "dF Tone Spacing", "Freq. Drift Limit", "Max Sensor Current", "Minimum Flow Multiplier", 
-    "MassFlowAccuracy_Liquid", "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", "Drive SP",   
-] 
+COEFFS_TO_COMPARE = ["ID String", "FlowCalFactor", "K1", "I.D. Resistor", "TubeID", "NominalFlowRate", "PressureEffect_Flow_Liquid",
+    "PressureEffect_Density", "ZeroStability", "A 4", "Drive Target", "Proportional Gain 800", "Integral Gain 800", "FD Limit", "Overshoot", 
+    "TemperatureEffect_Density", "TemperatureEffect_Flow", "Tone Level", "Ramp Time", "BL Temp Coeff", "Drive SP FCF", "Puck P FCF", 
+    "dF Tone Spacing", "Freq. Drift Limit", "Max Sensor Current", "Minimum Flow Multiplier", 
+    "MassFlowAccuracy_Liquid", "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", "Drive SP", "flags", "Drive Saturation Algorithm 800", "T03",] 
 
 #coeffs not in 5700 
 # "Proportional Gain 2200", "Integral Gain 2200",
@@ -75,6 +76,8 @@ smvTypes = []
 
 flowLinearityTable = [] 
 
+extraCoeffs = []
+extraSensorTypes = []
 
 
 
@@ -85,17 +88,11 @@ addCatAndSmvTablesToCoeffTable(mainCoeffList, coeffTable, catCoeffList, catTable
 replaceVariablesWithDefinitions(coeffTable, constantsTable)
 
 
-#print(mainCoeffList)
-#for z in range(0, len(coeffTable)):
-#    print(coeffTable[z])
-
 #ER-20018334  /  Blue
-copyExcelFile(oldBlueCoeffList, oldBlueTable, newBlueCoeffList, newBlueTable, blueFile, 
-    blueTitleLineNum, blueDataLineNum) 
+copyExcelFile(oldBlueCoeffList, oldBlueTable, newBlueCoeffList, newBlueTable, blueFile, blueTitleLineNum, blueDataLineNum) 
 
 #ER-20015860  /  Red
-copyExcelFile(coriolisRedCoeffList, coriolisRedTable, densViscRedCoeffList, densViscRedTable, 
-    redFile, redCoeffLineNum, redCoeffDataNum) 
+copyExcelFile(coriolisRedCoeffList, coriolisRedTable, densViscRedCoeffList, densViscRedTable, redFile, redCoeffLineNum, redCoeffDataNum) 
 
 
 #ER-20015206 / Green
@@ -104,34 +101,46 @@ copyGreenErDoc(greenFile, greentableOne, greenTableTwo, greenTableThree, greenTa
 findFlowLinearityCoeffs(flowLinearityTable)
 
 
-print()
-
-#for z in range(0, len(flowLinearityTable)):
-#    print(flowLinearityTable[z])
-
-print()
-print()
-
 #ER-20027172 / Purple
 purpleDocTable = copyPurpleErDoc(purpleFile)
 
-#print(purpleDocTable)
+createFinalCodeAndDocArrays(COEFFS_TO_COMPARE, finalCodeArray, finalDocArray, mainCoeffList, coeffTable, newBlueCoeffList, newBlueTable, oldBlueCoeffList, oldBlueTable, coriolisRedCoeffList, coriolisRedTable, 
+    densViscRedCoeffList, densViscRedTable, purpleDocTable, greentableOne, greenTableFour)
 
-createFinalArray(finalArray, COEFFS_TO_COMPARE, coeffTable, mainCoeffList, workingRow, finalCodeArray, newBlueCoeffList,
-    newBlueTable, oldBlueCoeffList, oldBlueTable, coriolisRedCoeffList, coriolisRedTable, 
-    densViscRedCoeffList, densViscRedTable, purpleDocTable, finalDocArray, greentableOne, greenTableFour)
+createFinalArray(COEFFS_TO_COMPARE, finalArray, finalCodeArray, finalDocArray)
 
 flowLinearityMatch = compareflowLinearityTables(flowLinearityTable, greenTableTwo)
 
 exportFinalArraytoExcelDocument(finalArray, flowLinearityTable, greenTableTwo, flowLinearityMatch)
 
+
+
+fullDocCoeffList = newBlueCoeffList+oldBlueCoeffList+coriolisRedCoeffList+densViscRedCoeffList
+
+fullDocSensorTypeList = []
+fullDocSensorTypeList.append([i[0] for i in newBlueTable])
+fullDocSensorTypeList.append([i[0] for i in oldBlueTable])
+fullDocSensorTypeList.append([i[0] for i in coriolisRedTable])
+fullDocSensorTypeList.append([i[0] for i in densViscRedTable])
+
+for docCoeff in fullDocCoeffList:
+    if docCoeff not in COEFFS_TO_COMPARE and docCoeff not in extraCoeffs:
+        extraCoeffs.append(docCoeff)
+
+
+for docSensorType in fullDocSensorTypeList:
+    if docSensorType not in sensorList and docSensorType not in extraSensorTypes and docSensorType != '':
+        extraSensorTypes.append(docSensorType)
+
+extraCoeffs = [x for x in extraCoeffs if x != ''] #Remove blank items
+extraSensorTypes = [x for x in extraSensorTypes[0] if x != ''] #Remove blank items
+
+
+print(extraCoeffs)
 print()
-
-#for z in range(0, len(finalArray)):
-#    print(finalArray[z])
-
-
 print()
+print(extraSensorTypes)
+
 print()
 print()
 
