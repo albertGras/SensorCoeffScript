@@ -1,12 +1,28 @@
-from scriptUtility import *
 from codeReadHelper import *
 from docReadHelper import *
 from excelWriteHelper import *
 from docx import Document
 import sys
+import os
+
+inputArgs = sys.argv[1:]
+
+if len(inputArgs) > 1:
+    for argIndex in range(0, len(inputArgs)):
+        if os.path.exists(inputArgs[argIndex]):
+            if "20018334" in inputArgs[argIndex]:
+                blueFile = inputArgs[argIndex]
+            if "20015860" in inputArgs[argIndex]:
+                redFile = inputArgs[argIndex]
+            if "20015206" in inputArgs[argIndex]:
+                greenFile = Document(inputArgs[argIndex])
+            if "20027172" in inputArgs[argIndex]:
+                purpleFile = Document(inputArgs[argIndex])
+
+        else:
+            print("Error not a valid path: ", inputArgs[argIndex])
 
 
-#print(str(sys.argv))
 
 
 print("Hello World!")
@@ -32,8 +48,7 @@ smvTable = [] #Table of all Smart Meter Verification coefficients
 constantsTable = []
 
 #Blue ER document variables
-blueFile   = "H:\ER docs\ER-20018334_AK.xlsx" #Read in blue ER document into an array
-#blueFile   = r"C:\Users\AGrasmeder\Documents\SensorCoeffScript\ER docs\ER-20018334_AK.xlsx"
+#blueFile   = "H:\ER docs\ER-20018334_AK.xlsx" #Read in blue ER document into an array
 blueTitleLineNum = 15 # The row number of where the title names are located
 blueDataLineNum = 21 # The row number of where the coeff data begins
 newBlueCoeffList = []
@@ -42,8 +57,7 @@ oldBlueCoeffList =[]
 oldBlueTable =[]
 
 #Red ER document variables
-redFile   = "H:\ER docs\ER-20015860_CH.xlsx" #Read in red ER document into an array
-#redFile   = r"C:\Users\AGrasmeder\Documents\SensorCoeffScript\ER docs\ER-20015860_CF.xlsx"
+#redFile   = "H:\ER docs\ER-20015860_CH.xlsx" #Read in red ER document into an array
 redCoeffLineNum = 6 # The row number of where the title names are located
 redCoeffDataNum = 10 # The row number of where the coeff data begins
 coriolisRedCoeffList = []
@@ -53,14 +67,14 @@ densViscRedTable = []
 
 
 #Green ER document variables
-greenFile   = Document("H:\ER docs\ER-20015206_AP.docx") #Read in green ER document into an array
+#greenFile   = Document("H:\ER docs\ER-20015206_AP.docx") #Read in green ER document into an array
 greentableOne = []
 greenTableTwo = []
 greenTableThree = []
 greenTableFour = []
 
 #Purple ER document variables
-purpleFile   = Document("H:\ER docs\ER-20027172_AD.docx") #Read in purple ER document into an array
+#purpleFile   = Document("H:\ER docs\ER-20027172_AD.docx") #Read in purple ER document into an array
 purpleDocTable = []
 
 #Lists for "compileErDocRow"

@@ -1,4 +1,5 @@
 import xlsxwriter
+import os
 
 #--------------------------------------------------------------------------
 # Function    : <Function Name>
@@ -16,10 +17,10 @@ def checkDocForCoeff(coeffList, table, coeff, codeRow, workingRow, sensorColumn,
 #                if codeRow[0 in str(row[sensorColumn]): # If the sensor in the doc matched the sensor in the code
 
                 if codeRow[0] == str(row[sensorColumn]) or sensorDict.get(str(row[sensorColumn])) == codeRow[0]:
-                    print("Code = ", codeRow[0])
-                    print("Doc = ", str(row[sensorColumn]))
-                    print("Dictionary = ", sensorDict.get(str(row[sensorColumn])))
-                    print('~~~~~~~~~~')
+#                    print("Code = ", codeRow[0])
+#                    print("Doc = ", str(row[sensorColumn]))
+#                    print("Dictionary = ", sensorDict.get(str(row[sensorColumn])))
+#                    print('~~~~~~~~~~')
 
                     # Exceptions for specific coeffs
                     if coeff == "TubeID":  # A=pi*r^2. r=TubeID(AP)/2 * NumberTubes (AO) 
@@ -253,15 +254,16 @@ def writeRowDescriptors(worksheet, workbook, rowNum):
         worksheet.write(rowNum, 0, "doc", rightBorderFormat)
     elif(rowNum % 3.0 == 0.0): 
         worksheet.write(rowNum, 0, "compare", rightAndBottomBorderFormat)
-   
-  
+
+
 def exportFinalArraytoExcelDocument(finalArray, flowLinearityTable, greenTableTwo, flowLinearityMatch):
     #Transfer final array values to excel document 
     
     finalFlowArray = []
+    filePath = os.getcwd()
 
     # Create an new Excel file and add a worksheet.
-    workbook = xlsxwriter.Workbook('H:\SensorScript\Comparisons_Spreadsheet.xlsx')
+    workbook = xlsxwriter.Workbook(filePath+'\Comparisons_Spreadsheet.xlsx')
 #    workbook = xlsxwriter.Workbook(r'C:\Users\AGrasmeder\Documents\SensorCoeffScript')
     worksheet = workbook.add_worksheet('coeff compare')
     flowLinearity = workbook.add_worksheet('flow linearity')
