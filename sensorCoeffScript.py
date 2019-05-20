@@ -4,28 +4,81 @@ from excelWriteHelper import *
 from docx import Document
 import sys
 import os
-
-inputArgs = sys.argv[1:]
-
-if len(inputArgs) > 1:
-    for argIndex in range(0, len(inputArgs)):
-        if os.path.exists(inputArgs[argIndex]):
-            if "20018334" in inputArgs[argIndex]:
-                blueFile = inputArgs[argIndex]
-            if "20015860" in inputArgs[argIndex]:
-                redFile = inputArgs[argIndex]
-            if "20015206" in inputArgs[argIndex]:
-                greenFile = Document(inputArgs[argIndex])
-            if "20027172" in inputArgs[argIndex]:
-                purpleFile = Document(inputArgs[argIndex])
-
-        else:
-            print("Error not a valid path: ", inputArgs[argIndex])
-
-
-
+import fnmatch 
 
 print("Hello World!")
+
+blueFile = 0
+redFile = 0
+purpleFile = 0
+greenFile = 0
+
+print()
+#inputArgs = sys.argv[1:]
+filePath = sys.argv[1]
+
+#if len(inputArgs) > 1:
+#    for argIndex in range(0, len(inputArgs)):
+#        if os.path.exists(inputArgs[argIndex]):
+#            if "20018334" in inputArgs[argIndex]:
+#                blueFile = inputArgs[argIndex]
+#            if "20015860" in inputArgs[argIndex]:
+#                redFile = inputArgs[argIndex]
+#            if "20015206" in inputArgs[argIndex]:
+#                greenFile = Document(inputArgs[argIndex])
+#            if "20027172" in inputArgs[argIndex]:
+#                purpleFile = Document(inputArgs[argIndex])
+
+#        else:
+#            print("Error not a valid path: ", inputArgs[argIndex])
+
+
+print(filePath)
+print()
+print()
+
+fileList = os.listdir(filePath)
+
+#filePath = sys.argv[1]
+if os.path.exists(filePath):
+    print("EXISTS")
+    for file in fileList:
+        if "20018334" in file and blueFile == 0:
+            print(os.path.join(filePath, file))
+            blueFile = os.path.join(filePath, file)
+            
+        elif "20015860" in file and redFile == 0:
+            print(os.path.join(filePath, file))
+            redFile = os.path.join(filePath, file)
+            
+        elif "20015206" in file and greenFile == 0:
+            print(os.path.join(filePath, file))
+            greenFile = Document(os.path.join(filePath, file))
+            
+        elif "20027172" in file and purpleFile == 0:
+            print(os.path.join(filePath, file))
+            purpleFile = Document(os.path.join(filePath, file))
+            
+#    print(os.listdir(filePath))
+else:
+    print("File path does not exist")
+            
+print()
+print()
+print()
+
+#if len(inputArgs) > 0:
+#    for file in os.listdir(repr(inputArgs)):
+#        print(file)
+#        if "20015860" in files:
+#            print(os.path.join(root, name))
+
+#            blueFile   = "H:\ER docs\ER-20018334_AK.xlsx"
+#            redFile   = "H:\ER docs\ER-20015860_CH.xlsx" 
+#            purpleFile   = Document("H:\ER docs\ER-20027172_AD.docx")
+#            greenFile   = Document("H:\ER docs\ER-20015206_AP.docx")
+    
+
 
 #All the coeffs that need comparison
 COEFFS_TO_COMPARE = ["ID String", "FlowCalFactor", "K1", "I.D. Resistor", "TubeID", "NominalFlowRate", "PressureEffect_Flow_Liquid",
@@ -154,10 +207,10 @@ extraCoeffs = [x for x in extraCoeffs if x != ''] #Remove blank items
 extraSensorTypes = [x for x in extraSensorTypes[0] if x != ''] #Remove blank items
 
 
-print(extraCoeffs)
+#print(extraCoeffs)
 print()
 print()
-print(extraSensorTypes)
+#print(extraSensorTypes)
 
 print()
 print()
