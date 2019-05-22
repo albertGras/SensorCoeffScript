@@ -189,14 +189,14 @@ def compareString(codeVal, docVal):
 
 
 
-def createFinalCodeAndDocArrays(COEFFS_TO_COMPARE, finalCodeArray, finalDocArray, mainCoeffList, coeffTable, newBlueCoeffList, newBlueTable, oldBlueCoeffList, 
+def createFinalCodeAndDocArrays(coeffsToCompare, finalCodeArray, finalDocArray, mainCoeffList, coeffTable, newBlueCoeffList, newBlueTable, oldBlueCoeffList, 
     oldBlueTable, coriolisRedCoeffList, coriolisRedTable,     densViscRedCoeffList, densViscRedTable, purpleDocTable, greentableOne, greenTableFour, sensorComparisonDict):
     workingRow = []
     coeffPopulated = False
 
     #Put code coeffs into final code array
     for codeRow in coeffTable:  #put first row of coeffs from code in final array
-        for coeff in COEFFS_TO_COMPARE: # Loop through master coeff list
+        for coeff in coeffsToCompare: # Loop through master coeff list
             coeffPopulated = False
             for codeCoeffIndex, code_list_coeff_name in enumerate(mainCoeffList[0], 0):
                 if coeff == code_list_coeff_name:
@@ -212,7 +212,7 @@ def createFinalCodeAndDocArrays(COEFFS_TO_COMPARE, finalCodeArray, finalDocArray
 
 
         # put er document coeffs into final array 
-        for coeff in COEFFS_TO_COMPARE:  # Loop through master coeff list
+        for coeff in coeffsToCompare:  # Loop through master coeff list
             compileErDocRow(coeff, codeRow, workingRow, newBlueCoeffList, newBlueTable, oldBlueCoeffList, oldBlueTable,
                 coriolisRedCoeffList, coriolisRedTable, densViscRedCoeffList, densViscRedTable, purpleDocTable, greentableOne,
                 greenTableFour, sensorComparisonDict)
@@ -221,10 +221,10 @@ def createFinalCodeAndDocArrays(COEFFS_TO_COMPARE, finalCodeArray, finalDocArray
 
 
 
-def createFinalArray(COEFFS_TO_COMPARE, finalArray, finalCodeArray, finalDocArray):
+def createFinalArray(coeffsToCompare, finalArray, finalCodeArray, finalDocArray):
     workingRow = []
 
-    finalArray.append(COEFFS_TO_COMPARE) # Add coeff titles to first row of final array 
+    finalArray.append(coeffsToCompare) # Add coeff titles to first row of final array 
 
     #Create and put match or no match row into final array
     for array_num, array in enumerate(finalCodeArray):

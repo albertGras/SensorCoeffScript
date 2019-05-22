@@ -1,22 +1,18 @@
 from codeReadHelper import *
 from docReadHelper import *
 from excelWriteHelper import *
+
 from docx import Document
 import sys
 import os
-import fnmatch 
 
 print("Hello World!")
 
-blueFile = 0
-redFile = 0
-purpleFile = 0
-greenFile = 0
-
 print()
-#inputArgs = sys.argv[1:]
-filePath = sys.argv[1]
 
+
+#Provide the pathes for each file and the files will be found
+#inputArgs = sys.argv[1:]
 #if len(inputArgs) > 1:
 #    for argIndex in range(0, len(inputArgs)):
 #        if os.path.exists(inputArgs[argIndex]):
@@ -33,59 +29,74 @@ filePath = sys.argv[1]
 #            print("Error not a valid path: ", inputArgs[argIndex])
 
 
-print(filePath)
-print()
-print()
 
-fileList = os.listdir(filePath)
+# Provde a file path and the files will be automatcially found
+blueFile = 0
+redFile = 0
+purpleFile = 0
+greenFile = 0
 
-#filePath = sys.argv[1]
-if os.path.exists(filePath):
-    print("EXISTS")
-    for file in fileList:
-        if "20018334" in file and blueFile == 0:
-            print(os.path.join(filePath, file))
-            blueFile = os.path.join(filePath, file)
-            
-        elif "20015860" in file and redFile == 0:
-            print(os.path.join(filePath, file))
-            redFile = os.path.join(filePath, file)
-            
-        elif "20015206" in file and greenFile == 0:
-            print(os.path.join(filePath, file))
-            greenFile = Document(os.path.join(filePath, file))
-            
-        elif "20027172" in file and purpleFile == 0:
-            print(os.path.join(filePath, file))
-            purpleFile = Document(os.path.join(filePath, file))
-            
-#    print(os.listdir(filePath))
-else:
-    print("File path does not exist")
-            
-print()
-print()
-print()
+coeffsToCompare = 0
 
-#if len(inputArgs) > 0:
-#    for file in os.listdir(repr(inputArgs)):
-#        print(file)
-#        if "20015860" in files:
-#            print(os.path.join(root, name))
+for arg in sys.argv[1:]:
+    if os.path.isdir(arg):
+        filePath = arg
+        fileList = os.listdir(filePath)
+        
+        print("\nFiles exist")
+        for file in fileList:
+            if "20018334" in file and blueFile == 0:
+                print(os.path.join(filePath, file))
+                blueFile = os.path.join(filePath, file)
 
-#            blueFile   = "H:\ER docs\ER-20018334_AK.xlsx"
-#            redFile   = "H:\ER docs\ER-20015860_CH.xlsx" 
-#            purpleFile   = Document("H:\ER docs\ER-20027172_AD.docx")
-#            greenFile   = Document("H:\ER docs\ER-20015206_AP.docx")
+            elif "20015860" in file and redFile == 0:
+                print(os.path.join(filePath, file))
+                redFile = os.path.join(filePath, file)
+
+            elif "20015206" in file and greenFile == 0:
+                print(os.path.join(filePath, file))
+                greenFile = Document(os.path.join(filePath, file))
+
+            elif "20027172" in file and purpleFile == 0:
+                print(os.path.join(filePath, file))
+                purpleFile = Document(os.path.join(filePath, file))
+                
+    elif arg == "5700":
+        print("\nTransmitter is 5700")
+        
+        #All the 5700 coeffs that need comparison
+        coeffsToCompare = ["ID String", "FlowCalFactor", "K1", "I.D. Resistor", "TubeID", "NominalFlowRate", "PressureEffect_Flow_Liquid",
+            "PressureEffect_Density", "ZeroStability", "A 4", "Drive Target", "Proportional Gain 800", "Integral Gain 800", "FD Limit", "Overshoot", 
+            "TemperatureEffect_Density", "TemperatureEffect_Flow", "Tone Level", "Ramp Time", "BL Temp Coeff", "Drive SP FCF", "Puck P FCF", 
+            "dF Tone Spacing", "Freq. Drift Limit", "Max Sensor Current", "Minimum Flow Multiplier", 
+            "MassFlowAccuracy_Liquid", "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", "Drive SP", "Drive Saturation Algorithm 800", "T03", "flags",] 
+
+if coeffsToCompare == 0:
+    print("\nIncorrect transmitter. Stopping script")
+    exit()
     
+if blueFile ==0 or redFile ==0 or greenFile ==0 or purpleFile == 0:
+    print("\nIncorrect file location. Stopping script")
+    exit()
 
 
-#All the coeffs that need comparison
-COEFFS_TO_COMPARE = ["ID String", "FlowCalFactor", "K1", "I.D. Resistor", "TubeID", "NominalFlowRate", "PressureEffect_Flow_Liquid",
-    "PressureEffect_Density", "ZeroStability", "A 4", "Drive Target", "Proportional Gain 800", "Integral Gain 800", "FD Limit", "Overshoot", 
-    "TemperatureEffect_Density", "TemperatureEffect_Flow", "Tone Level", "Ramp Time", "BL Temp Coeff", "Drive SP FCF", "Puck P FCF", 
-    "dF Tone Spacing", "Freq. Drift Limit", "Max Sensor Current", "Minimum Flow Multiplier", 
-    "MassFlowAccuracy_Liquid", "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", "Drive SP", "Drive Saturation Algorithm 800", "T03", "flags",] 
+codeFileLoc = os.getcwd()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+coeffsToCompare
+
 
 #coeffs not in 5700 
 # "Proportional Gain 2200", "Integral Gain 2200",
@@ -149,7 +160,7 @@ sensorComparisonDict = {}
 
 
 
-copyCodeFile(sensorList, mainCoeffList, coeffTable, catCoeffList, catTable, smvCoeffList, smvTable, constantsTable, catTypes, smvTypes)
+copyCodeFile(codeFileLoc, sensorList, mainCoeffList, coeffTable, catCoeffList, catTable, smvCoeffList, smvTable, constantsTable, catTypes, smvTypes)
 
 addCatAndSmvTablesToCoeffTable(mainCoeffList, coeffTable, catCoeffList, catTable, smvCoeffList, smvTable, catTypes, smvTypes)
 
@@ -175,10 +186,10 @@ purpleDocTable = copyPurpleErDoc(purpleFile)
 createSensorComparisonDict(sensorComparisonDict, newBlueCoeffList, newBlueTable, oldBlueCoeffList, oldBlueTable)
 
 
-createFinalCodeAndDocArrays(COEFFS_TO_COMPARE, finalCodeArray, finalDocArray, mainCoeffList, coeffTable, newBlueCoeffList, newBlueTable, oldBlueCoeffList, oldBlueTable, coriolisRedCoeffList, coriolisRedTable, 
+createFinalCodeAndDocArrays(coeffsToCompare, finalCodeArray, finalDocArray, mainCoeffList, coeffTable, newBlueCoeffList, newBlueTable, oldBlueCoeffList, oldBlueTable, coriolisRedCoeffList, coriolisRedTable, 
     densViscRedCoeffList, densViscRedTable, purpleDocTable, greentableOne, greenTableFour, sensorComparisonDict)
 
-createFinalArray(COEFFS_TO_COMPARE, finalArray, finalCodeArray, finalDocArray)
+createFinalArray(coeffsToCompare, finalArray, finalCodeArray, finalDocArray)
 
 flowLinearityMatch = compareflowLinearityTables(flowLinearityTable, greenTableTwo)
 
@@ -195,7 +206,7 @@ fullDocSensorTypeList.append([i[0] for i in coriolisRedTable])
 fullDocSensorTypeList.append([i[0] for i in densViscRedTable])
 
 for docCoeff in fullDocCoeffList:
-    if docCoeff not in COEFFS_TO_COMPARE and docCoeff not in extraCoeffs:
+    if docCoeff not in coeffsToCompare and docCoeff not in extraCoeffs:
         extraCoeffs.append(docCoeff)
 
 
@@ -211,9 +222,6 @@ extraSensorTypes = [x for x in extraSensorTypes[0] if x != ''] #Remove blank ite
 print()
 print()
 #print(extraSensorTypes)
-
-print()
-print()
 
 print()
 print()

@@ -1,3 +1,4 @@
+import os
 
 #--------------------------------------------------------------------------
 # Function    : <Function Name>
@@ -43,9 +44,10 @@ def tableSetUp(line, types):
     return [line, types]
 
 
-def copyCodeFile(sensorList, mainCoeffList, coeffTable, catCoeffList, catTable, smvCoeffList, smvTable, constantsTable, catTypes, smvTypes):
-    CODE_FILE   = open("C:\PVCS\ProjectsDB\Kinetis_DB\k2Src\k_src_app\coriolis\sensor.cpp")
+def copyCodeFile(codeFile, sensorList, mainCoeffList, coeffTable, catCoeffList, catTable, smvCoeffList, smvTable, constantsTable, catTypes, smvTypes):
+#    codeFile   = open("C:\PVCS\ProjectsDB\Kinetis_DB\k2Src\k_src_app\coriolis\sensor.cpp")
 
+    codeFile = open(os.path.join(codeFile, "sensor.cpp"))
     inCoeffTable = False
     inSmvTable = False
     inCatTable = False
@@ -54,10 +56,10 @@ def copyCodeFile(sensorList, mainCoeffList, coeffTable, catCoeffList, catTable, 
     line = []
     count = 0
     
-    CODE_FILE.seek(0)   # Go to beginning of file
+    codeFile.seek(0)   # Go to beginning of file
 
     while count < 3:   # while all 3 tables havent been read (Coeff, Cat, Smv)
-        line = CODE_FILE.readline()  # Read a line from the coefficient code file
+        line = codeFile.readline()  # Read a line from the coefficient code file
 
         if not line:                  # if end of file, stop trying to read the file
             break  # break out of reading file while loop
@@ -112,15 +114,15 @@ def copyCodeFile(sensorList, mainCoeffList, coeffTable, catCoeffList, catTable, 
             
 # Find Flow linearity coeffs
 def findFlowLinearityCoeffs(flowLinearityTable):
-    CODE_FILE = open("C:\PVCS\ProjectsDB\Kinetis_DB\k2Src\k_src_app\coriolis\massflow.cpp")
+    codeFile = open("C:\PVCS\ProjectsDB\Kinetis_DB\k2Src\k_src_app\coriolis\massflow.cpp")
     
     insideTable = False
     newRow = []
-    CODE_FILE.seek(0)   # Go to beginning of file
+    codeFile.seek(0)   # Go to beginning of file
     
     while(1):
         line = 0
-        line = CODE_FILE.readline()  # Read a line from the coefficient code file
+        line = codeFile.readline()  # Read a line from the coefficient code file
 
         if not line:                  # if end of file, stop trying to read the file
             break  # break out of reading file while loop
