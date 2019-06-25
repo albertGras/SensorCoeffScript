@@ -1,4 +1,5 @@
 import xlrd
+import collections 
 
 #--------------------------------------------------------------------------
 # Function    : <Function Name>
@@ -155,6 +156,8 @@ def createSensorComparisonDict(sensorComparisonDict, newBlueCoeffList, newBlueTa
     for row in oldBlueTable:
         if row[baseModelNum] not in sensorComparisonDict:
             sensorComparisonDict[row[baseModelNum]] = row[IdStringNum]
+            
+    sensorComparisonDict = collections.defaultdict(lambda : 'None')
 #    print()
 #    print(sensorComparisonDict)
 #    print()

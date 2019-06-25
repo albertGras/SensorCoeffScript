@@ -85,6 +85,8 @@ def copyCodeFile(codeFile, sensorList, mainCoeffList, coeffTable, catCoeffList, 
             if line[0] == '' or line[0] == '\n':  # Remove blank lines
                 continue
             if not any("--" in s for s in line): #Remove comment rows with additional coeff decriptions
+                if line[0] == "CNG/F50P":
+                    line[0] = "CNG/F050P"   # Correction: to handle the missing 0 in the code
                 sensorList.append(line[0])  # Take the sensor types from each line
                 coeffTable.append(line)
 #                print(line)
@@ -108,10 +110,32 @@ def copyCodeFile(codeFile, sensorList, mainCoeffList, coeffTable, catCoeffList, 
             if line[0] == '' or line[0] == '\n':  # Remove blank lines
                 continue
             smvTable.append(line)
-            
-            
-            
-            
+
+
+#def removeObsoleteSensors(coeffTable, obsoleteSensors):
+#    for sensor in obsoleteSensors:
+#        print(sensor)
+#        for rowNum, row in enumerate(coeffTable, 0):
+#            print(row)
+#            if sensor == row[0]:
+#                print("sensor found")
+#                del coeffTable[rowNum]
+#                break
+#        print('~~~~~~~~')
+#        print()
+#    return coeffTable
+
+def removeObsoleteSensors(coeffTable, obsoleteSensors):
+    lengthOfCoeffTable = len(coeffTable)-1
+    for rowNum, row in enumerate(reversed(coeffTable), 0):
+        for sensor in obsoleteSensors:
+            if sensor == row[0]:
+                del coeffTable[lengthOfCoeffTable-rowNum]
+                break
+    return coeffTable
+
+
+
 # Find Flow linearity coeffs
 def findFlowLinearityCoeffs(flowLinearityTable):
     codeFile = open("C:\PVCS\ProjectsDB\Kinetis_DB\k2Src\k_src_app\coriolis\massflow.cpp")
@@ -185,7 +209,7 @@ def addCatAndSmvTablesToCoeffTable(mainCoeffList, coeffTable, catCoeffList, catT
                 for typeNum, type in enumerate(catTypes, 0):
                     if item == type:
                         for catIndex in range(0, len(catTable[0])):
-                            row.insert(itemNum + 1, catTable[typeNum][catIndex])
+                            row.insert(itemNum + 1, catTable[typeNum][catIndex])  # insert cat values into coeff table
                         break
 
     for coeffIndex, coeff in enumerate(mainCoeffList, 0):
@@ -205,7 +229,7 @@ def addCatAndSmvTablesToCoeffTable(mainCoeffList, coeffTable, catCoeffList, catT
                 for typeNum, type in enumerate(smvTypes, 0):
                     if item == type:
                         for smvIndex in range(0, len(smvTable[0])):
-                            row.insert(itemNum + 1, smvTable[typeNum][smvIndex])
+                            row.insert(itemNum + 1, smvTable[typeNum][smvIndex])  # insert smv values into coeff table
                         break
 
 

@@ -9,22 +9,56 @@ import os
 # Output      : <Description of the return value>
 #--------------------------------------------------------------------------
 
+#def checkDictForKey(sensorComparisonDict, value):
+#    keyList = []
+#    for key, val in sensorComparisonDict.items():
+#        try:
+#            if value in val or value == val:
+#                keyList.append(key)
+                
+#        except:
+#            keyList = []
+#    return keyList
+
+
 
 def checkDocForCoeff(coeffList, table, coeff, codeRow, workingRow, sensorColumn, sensorDict):
-    for coeffIndex, coeffName in enumerate(coeffList, 0): # loop through new sheet doc coeff titles
-        if coeff == coeffName: #If these match then this doc contains the coeff title 
+#    dictkeys = []
+    for coeffIndex, coeffName in enumerate(coeffList, 0): # loop through the doc coeff titles
+        if coeff == coeffName or (coeff == "ID String" and coeffName == "Product"): #If these match then this doc contains the coeff title
+#            print('------------------------------')
+#            print("Coeff: ", coeff)
+#            print("coeffName: ", coeffName)
+#            print("Coeff: ", coeff)
             for row in table: #loop through each row of the doc
-#                if codeRow[0 in str(row[sensorColumn]): # If the sensor in the doc matched the sensor in the code
-
-                if codeRow[0] == str(row[sensorColumn]) or sensorDict.get(str(row[sensorColumn])) == codeRow[0]:
+#                dictkeys = checkDictForKey(sensorDict, str(row[sensorColumn]))
+                code = codeRow[0]
+                stringId = str(row[sensorColumn])
+                dictValues = sensorDict.get(str(row[sensorColumn]))
+#                print(row)
+#                print("Code = ", code)
+#                print("String ID = ", stringId)
+#                print("Dict keys = ", dictkeys)
+#                print("Dict values = ", dictValues)
+#                print('~~~~~~~~~~')
+            
+                # If the sensor in the doc matched the sensor in the code
+                if codeRow[0] == stringId or codeRow[0] == dictValues: 
+#                if codeRow[0] == stringId or codeRow[0] == dictValues or codeRow[0] in dictkeys:
 #                    print("Code = ", codeRow[0])
 #                    print("Doc = ", str(row[sensorColumn]))
-#                    print("Dictionary = ", sensorDict.get(str(row[sensorColumn])))
-#                    print('~~~~~~~~~~')
+#                    print("Dict keys = ", dictkeys)
+#                    print("Dict values = ", sensorDict.get(str(row[sensorColumn])))
+#                    print("match")
+#                    print('************************************')
+#                    if codeRow[0] in dictkeys:
+#                       
 
                     # Exceptions for specific coeffs
                     if coeff == "TubeID":  # A=pi*r^2. r=TubeID(AP)/2 * NumberTubes (AO) 
-                        temp = 3.14 * ((float(row[coeffIndex])*float(row[coeffList.index('NumberTubes')])/2)**2)
+                        tubeID = float(row[coeffIndex])
+                        numOfTubes = float(row[coeffList.index('NumberTubes')])
+                        temp = numOfTubes * 3.14 * ((tubeID/2)**2)
                         workingRow.append(str(temp))
 
                     elif coeff == "NominalFlowRate":  #Make the unit conversions between the doc (kg/s) and code (uS)
@@ -55,6 +89,10 @@ def checkDocForCoeff(coeffList, table, coeff, codeRow, workingRow, sensorColumn,
 
                     else:
                         workingRow.append(str(row[coeffIndex]))
+#                        print("Value: = ", str(row[coeffIndex]))
+#                        print(row)
+#                        print(coeffIndex)
+#                        print('~~~~~~')
                     return workingRow
 
 
@@ -62,6 +100,8 @@ def checkDocForCoeff(coeffList, table, coeff, codeRow, workingRow, sensorColumn,
 def compileErDocRow(coeff, codeRow, workingRow, newBlueCoeffList, newBlueTable, oldBlueCoeffList, oldBlueTable,
     coriolisRedCoeffList, coriolisRedTable, densViscRedCoeffList, densViscRedTable, purpleDocTable, greentableOne, 
     greenTableFour, sensorCompDict):
+    
+#    print(coeff)
     
     blueSensorColumn = 3
     redSensorColumn = 1
@@ -109,18 +149,23 @@ def compileErDocRow(coeff, codeRow, workingRow, newBlueCoeffList, newBlueTable, 
                 workingRow.append(str(row[1]))
                 return
                 
-          
+
+
+#    print("coriolisRedTable")
      # Look at red doc before blue doc for most recent coeff values
     if checkDocForCoeff(coriolisRedCoeffList, coriolisRedTable, coeff, codeRow, workingRow, redSensorColumn, sensorCompDict) != None:
         return
 
+#    print("densViscRedCoeffList")
     if checkDocForCoeff(densViscRedCoeffList, densViscRedTable, coeff, codeRow, workingRow, redSensorColumn, sensorCompDict) != None:
         return
-          
+
+#    print("newBlueCoeffList")
     # Look at new blue doc before old blue doc for most recent coeff values
     if checkDocForCoeff(newBlueCoeffList, newBlueTable, coeff, codeRow, workingRow, blueSensorColumn, sensorCompDict) != None:
         return
 
+#    print("oldBlueCoeffList")
     # Look at old sheet in blue ER doc for coeff
     if checkDocForCoeff(oldBlueCoeffList, oldBlueTable, coeff, codeRow, workingRow, blueSensorColumn, sensorCompDict) != None:
         return
