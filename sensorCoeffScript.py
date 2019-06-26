@@ -65,12 +65,11 @@ for arg in sys.argv[1:]:
         print("\nTransmitter is 5700")
         
         #All the 5700 coeffs that need comparison
-        coeffsToCompare = ["ID String", "ZeroStability", "Tone Level",
-#"FlowCalFactor", "K1", "I.D. Resistor", "TubeID", "NominalFlowRate", "PressureEffect_Flow_Liquid",
-#            "PressureEffect_Density",  "A 4", "Drive Target", "Proportional Gain 800", "Integral Gain 800", "FD Limit", "Overshoot", 
-#            "TemperatureEffect_Density", "TemperatureEffect_Flow",  "Ramp Time", "BL Temp Coeff", "Drive SP FCF", "Puck P FCF", 
-#            "dF Tone Spacing", "Freq. Drift Limit", "Max Sensor Current", "Minimum Flow Multiplier", 
-#            "MassFlowAccuracy_Liquid", "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", "Drive SP", "Drive Saturation Algorithm 800", "T03", "flags",
+        coeffsToCompare = ["ID String", "FlowCalFactor", "K1", "I.D. Resistor", "TubeID", "NominalFlowRate", "PressureEffect_Flow_Liquid",
+            "PressureEffect_Density",  "A 4", "Drive Target", "ZeroStability", "Proportional Gain 800", "Integral Gain 800", "FD Limit", "Overshoot", 
+            "TemperatureEffect_Density", "TemperatureEffect_Flow", "Tone Level", "Ramp Time", "BL Temp Coeff", "Drive SP FCF", "Puck P FCF", 
+            "dF Tone Spacing", "Freq. Drift Limit", "Max Sensor Current", "Minimum Flow Multiplier", 
+            "MassFlowAccuracy_Liquid", "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", "Drive SP", "Drive Saturation Algorithm 800", "T03", "flags",
 ] 
 
 #coeffs not in 5700  ->  "Proportional Gain 2200", "Integral Gain 2200",
@@ -78,11 +77,11 @@ for arg in sys.argv[1:]:
 
             
 if coeffsToCompare == 0:
-    print("\nIncorrect transmitter. Stopping script")
+    print("\nIncorrect transmitter. Stopping script. Supported transmitters: 5700")
     exit()
     
 if blueFile ==0 or redFile ==0 or greenFile ==0 or purpleFile == 0:
-    print("\nIncorrect file location. Stopping script")
+    print("\nIncorrect file location. Stopping script. Can't find ER_20018334, ER_20015860, ER_20015206, or ER_20027172")
     exit()
     
 print()
@@ -101,11 +100,12 @@ practiceSensors = ["CMF350", "CMF010", "CMF010P", "CMF025", "CMF025+", "CMF050",
     "TA200T", "TA300T", "RFH/025", "RFH/025", "RFH/050", "RFH/050", "CNG/F050P", "RFH/100", "RFH/100", "F100P", "F/H300", "F/H300", "F/H300D", "CNG050", "F025S", 
 ]
 
+tempRemovedSensors = ["E400+IS", "TA010T", "TA025T", "TA050T", "TA075T", "TA100T", "TA200T", "TA300T", "F025S", ]
 
 obsoleteSensors = ["A", "E200D150", "E400MIS", "R/F/H025", "R/F/H050", "R/F/H100", "R/F/H200", "D006", "D012", "D025", "D040", "D065", "D100", "D150", "D300", "NOTFOUND", "CMF400M"]
 sensorsMissingFromDocs = ["CMF025", "CMF300", "F050S", "F100S", "F200S", "F/R/H200", "F/H300p", "DS300Z", "DH150S", "DH300S", "DL200S", "D150E200"]
 sensorsOfUnknownStatus = [ "DS600S", "DH006S", "DH012S", "DH025S", "DH040S", "DH038S", "DH100S", "DT065H", "DT100H", "DT150H", "D012X", "DL025S", "DL025X", "DL050X", "DL065S", "DL100S"]
-sensorToRemove = obsoleteSensors+sensorsMissingFromDocs+sensorsOfUnknownStatus #+practiceSensors
+sensorToRemove = obsoleteSensors+sensorsMissingFromDocs+sensorsOfUnknownStatus+tempRemovedSensors #+practiceSensors
 
 #Lists for copying the code file
 sensorList = [] #All the sensors listed in the code

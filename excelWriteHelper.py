@@ -9,50 +9,16 @@ import os
 # Output      : <Description of the return value>
 #--------------------------------------------------------------------------
 
-#def checkDictForKey(sensorComparisonDict, value):
-#    keyList = []
-#    for key, val in sensorComparisonDict.items():
-#        try:
-#            if value in val or value == val:
-#                keyList.append(key)
-                
-#        except:
-#            keyList = []
-#    return keyList
-
-
-
 def checkDocForCoeff(coeffList, table, coeff, codeRow, workingRow, sensorColumn, sensorDict):
-#    dictkeys = []
     for coeffIndex, coeffName in enumerate(coeffList, 0): # loop through the doc coeff titles
-        if coeff == coeffName or (coeff == "ID String" and coeffName == "Product"): #If these match then this doc contains the coeff title
-#            print('------------------------------')
-#            print("Coeff: ", coeff)
-#            print("coeffName: ", coeffName)
-#            print("Coeff: ", coeff)
+        if coeff == coeffName: #If these match then this doc contains the coeff title
             for row in table: #loop through each row of the doc
-#                dictkeys = checkDictForKey(sensorDict, str(row[sensorColumn]))
                 code = codeRow[0]
                 stringId = str(row[sensorColumn])
                 dictValues = sensorDict.get(str(row[sensorColumn]))
-#                print(row)
-#                print("Code = ", code)
-#                print("String ID = ", stringId)
-#                print("Dict keys = ", dictkeys)
-#                print("Dict values = ", dictValues)
-#                print('~~~~~~~~~~')
-            
+
                 # If the sensor in the doc matched the sensor in the code
                 if codeRow[0] == stringId or codeRow[0] == dictValues: 
-#                if codeRow[0] == stringId or codeRow[0] == dictValues or codeRow[0] in dictkeys:
-#                    print("Code = ", codeRow[0])
-#                    print("Doc = ", str(row[sensorColumn]))
-#                    print("Dict keys = ", dictkeys)
-#                    print("Dict values = ", sensorDict.get(str(row[sensorColumn])))
-#                    print("match")
-#                    print('************************************')
-#                    if codeRow[0] in dictkeys:
-#                       
 
                     # Exceptions for specific coeffs
                     if coeff == "TubeID":  # A=pi*r^2. r=TubeID(AP)/2 * NumberTubes (AO) 
@@ -89,10 +55,7 @@ def checkDocForCoeff(coeffList, table, coeff, codeRow, workingRow, sensorColumn,
 
                     else:
                         workingRow.append(str(row[coeffIndex]))
-#                        print("Value: = ", str(row[coeffIndex]))
-#                        print(row)
-#                        print(coeffIndex)
-#                        print('~~~~~~')
+
                     return workingRow
 
 
@@ -208,12 +171,20 @@ def compareflowLinearityTables(flowLinearityTable, greenTableTwo):
     return flowLinearityMatch
 
 
-def compareString(codeVal, docVal):
+#    fcf = Index of Flow Cal Factor
+#    nfr = Index of Nominal Flow Rate
+#    k1 = Index of K1
+def compareString(codeVal, docVal, coeffIndex, fcf, nfr, k1):
     try: #try making the inputs float
         codeVal = float(codeVal)
         docVal = float(docVal)
         tolerance = codeVal * 0.001   #this value determines how lenient the number comparison is
+        specialTolerance = codeVal * 0.03 #this value determines how lenient the special number comparison is
         isNumber = True
+        if coeffIndex == fcf or coeffIndex == nfr or coeffIndex == k1:
+            if ((docVal - (codeVal + specialTolerance))*(docVal - (codeVal - specialTolerance)) <= 0):  # check if 
+                return True
+        
         if ((docVal - (codeVal + tolerance))*(docVal - (codeVal - tolerance)) <= 0):  # check if 
             return True
 
@@ -268,16 +239,21 @@ def createFinalCodeAndDocArrays(coeffsToCompare, finalCodeArray, finalDocArray, 
 
 def createFinalArray(coeffsToCompare, finalArray, finalCodeArray, finalDocArray):
     workingRow = []
-
+#    print(coeffsToCompare)
+    fcfIndex = coeffsToCompare.index('FlowCalFactor')
+    nominalFlowRateIndex = coeffsToCompare.index("NominalFlowRate")
+    k1Index = coeffsToCompare.index("K1")
     finalArray.append(coeffsToCompare) # Add coeff titles to first row of final array 
+    
 
     #Create and put match or no match row into final array
     for array_num, array in enumerate(finalCodeArray):
+#        print(array)
         finalArray.append(finalCodeArray[array_num])
         finalArray.append(finalDocArray[array_num])
 
         for itemNum, item in enumerate(array):
-            if compareString(finalCodeArray[array_num][itemNum], finalDocArray[array_num][itemNum]):
+            if compareString(finalCodeArray[array_num][itemNum], finalDocArray[array_num][itemNum], itemNum, fcfIndex, nominalFlowRateIndex, k1Index):
                 workingRow.append("Ok")
 
             else:
