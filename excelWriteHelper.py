@@ -13,21 +13,37 @@ def checkDocForCoeff(coeffList, table, coeff, codeRow, workingRow, sensorColumn,
     for coeffIndex, coeffName in enumerate(coeffList, 0): # loop through the doc coeff titles
         if coeff == coeffName: #If these match then this doc contains the coeff title
             for row in table: #loop through each row of the doc
+                print(row)
                 code = codeRow[0]
                 stringId = str(row[sensorColumn])
                 dictValues = sensorDict.get(str(row[sensorColumn]))
 
-                # If the sensor in the doc matched the sensor in the code
-                if codeRow[0] == stringId or codeRow[0] == dictValues: 
+                if stringId == "" and dictValues == None:
+                    print("empty")
+                    break
 
+                print("code:   ", code)
+                print("string: ", stringId)
+                print("value:  ", dictValues)
+                print("key:    ", codeRow[0] in sensorDict)
+                print()
+
+                # If the sensor in the doc matched the sensor in the code
+                if codeRow[0] == stringId or codeRow[0] == dictValues or codeRow[0] in sensorDict: 
+                    print("match")
                     # Exceptions for specific coeffs
-                    if coeff == "TubeID":  # A=pi*r^2. r=TubeID(AP)/2 * NumberTubes (AO) 
+                    if coeff == "TubeID":  # A=pi*r^2. r=TubeID(AP)/2 * NumberTubes (AO)
                         tubeID = float(row[coeffIndex])
                         numOfTubes = float(row[coeffList.index('NumberTubes')])
                         temp = numOfTubes * 3.14 * ((tubeID/2)**2)
                         workingRow.append(str(temp))
 
                     elif coeff == "NominalFlowRate":  #Make the unit conversions between the doc (kg/s) and code (uS)
+                        print(coeffIndex)
+                        print(row)
+                        print(row[coeffIndex])
+                        print(coeffList.index('FlowCalFactor'))
+                        print(row[coeffList.index('FlowCalFactor')])
                         temp = float(row[coeffIndex]) * 1000 / float(row[coeffList.index('FlowCalFactor')]) 
                         workingRow.append(str(temp))
                         
@@ -55,7 +71,9 @@ def checkDocForCoeff(coeffList, table, coeff, codeRow, workingRow, sensorColumn,
 
                     else:
                         workingRow.append(str(row[coeffIndex]))
+                        print("appended -> ", str(row[coeffIndex]))
 
+                    print("working row returned")
                     return workingRow
 
 
@@ -112,23 +130,25 @@ def compileErDocRow(coeff, codeRow, workingRow, newBlueCoeffList, newBlueTable, 
                 workingRow.append(str(row[1]))
                 return
                 
+    print("~~~~~")
+    print(coeff)
+    print("~~~~~")
 
-
-#    print("coriolisRedTable")
+    print("coriolisRedTable")
      # Look at red doc before blue doc for most recent coeff values
     if checkDocForCoeff(coriolisRedCoeffList, coriolisRedTable, coeff, codeRow, workingRow, redSensorColumn, sensorCompDict) != None:
         return
 
-#    print("densViscRedCoeffList")
+    print("densViscRedCoeffList")
     if checkDocForCoeff(densViscRedCoeffList, densViscRedTable, coeff, codeRow, workingRow, redSensorColumn, sensorCompDict) != None:
         return
 
-#    print("newBlueCoeffList")
+    print("newBlueCoeffList")
     # Look at new blue doc before old blue doc for most recent coeff values
     if checkDocForCoeff(newBlueCoeffList, newBlueTable, coeff, codeRow, workingRow, blueSensorColumn, sensorCompDict) != None:
         return
 
-#    print("oldBlueCoeffList")
+    print("oldBlueCoeffList")
     # Look at old sheet in blue ER doc for coeff
     if checkDocForCoeff(oldBlueCoeffList, oldBlueTable, coeff, codeRow, workingRow, blueSensorColumn, sensorCompDict) != None:
         return
