@@ -65,12 +65,12 @@ for arg in sys.argv[1:]:
         print("\nTransmitter is 5700")
         
         #All the 5700 coeffs that need comparison
-        coeffsToCompare = ["ID String", "FlowCalFactor", "NominalFlowRate", "K1", "I.D. Resistor",] #"TubeID",  "PressureEffect_Flow_Liquid",
-#            "PressureEffect_Density",  "A 4", ]#"Drive Target", "ZeroStability", "Proportional Gain 800", "Integral Gain 800", "FD Limit", "Overshoot", 
-    #        "TemperatureEffect_Density", "TemperatureEffect_Flow", "Tone Level", "Ramp Time", "BL Temp Coeff", "Drive SP FCF", "Puck P FCF", 
-    #        "dF Tone Spacing", "Freq. Drift Limit", "Max Sensor Current", "Minimum Flow Multiplier", 
-    #        "MassFlowAccuracy_Liquid", "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", "Drive SP", "Drive Saturation Algorithm 800", "T03", "flags",
-#] 
+        coeffsToCompare = ["ID String", "I.D. Resistor", "K1", "ZeroStability", "FlowCalFactor", "NominalFlowRate", "TubeID",   "PressureEffect_Flow_Liquid", 
+            "PressureEffect_Density",  "A 4", "Drive Target",  "Proportional Gain 800", "Integral Gain 800", "FD Limit", "Overshoot", 
+            "TemperatureEffect_Density", "TemperatureEffect_Flow", "Tone Level", "Ramp Time", "BL Temp Coeff", "Drive SP FCF", "Puck P FCF", 
+            "dF Tone Spacing", "Freq. Drift Limit", "Max Sensor Current", "Minimum Flow Multiplier", 
+            "MassFlowAccuracy_Liquid", "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", "Drive SP", "Drive Saturation Algorithm 800", "T03", "flags",
+] 
 
 #coeffs not in 5700  ->  "Proportional Gain 2200", "Integral Gain 2200",
 
@@ -92,21 +92,23 @@ codeFileLoc = os.getcwd()
 practiceSensors = ["CMF350", "CMF010", "CMF010P", "CMF025", "CMF025+", "CMF050", "CMF100", "E200D150", "CMF200+", "CMF300+","CMFS007 ","CMFS010 ",
     "CMFS/010","CMFS015 ","CMFS/015",  "CMFS025 ","CMFS/025","CMFS040 ","CMFS050 ","CMFS/050","CMFS075 ", "CMFS100 ","CMFS/100", "CMFS150 ","CMFS150 ","CMFS/150","CMFS/150","T025    ", "T050    ",
     "T075    ", "T100    ", "T150    ","TA010T  ", "TA025T  ", "TA050T  ","TA075T  ","TA100T  ","TA200T  ", "TA300T  ",
-    "R/F025HT","RFH/025 ", "RFH/025 ","R/F050HT", "R/F050HT",  "RFH/050 ", "RFH/050 ",  "CNG/F50P", "R/F100HT", "RFH/100 ","RFH/100 ", "F100P   ",   "F/R/H200","F/R/H200", #"F/H300  ",
-#    "F/H300D ", "F/H300p ",
-    "HPC010P", "CNG050  ","F025S   ", "F050S   ","F100S   ",   "F200S   ", "R/F/H025","R/F/H025","R/F/H050","R/F/H100","R/F/H200", "D006    ","D012    ", "D025    ","D040    ", 
+    "R/F025HT","RFH/025 ", "RFH/025 ","R/F050HT", "R/F050HT",  "RFH/050 ", "RFH/050 ",  "CNG/F50P", "R/F100HT", "RFH/100 ","RFH/100 ", "F100P   ",   "F/R/H200","F/R/H200", "F/H300  ", "F/H300  ", 
+    "F/H300D ", "F/H300p ","HPC010P", "CNG050  ","F025S   ", "F050S   ","F100S   ",   "F200S   ", "R/F/H025","R/F/H025","R/F/H050","R/F/H100","R/F/H200", "D006    ","D012    ", "D025    ","D040    ", 
     "D040    ", "D040    ",  "D040    ","D065    ",  "D100    ","D150    ","D300    ","DS600S  ","DS600S  ", "DH006S  ","DH012S  ","DH025S  ","DH040S  ","DH038S  ","DH100S  ","DH150S  ","DH300S  ",
     "DT065H","DT100H", "DT150H", "D150E200", "DS300Z", "D012X", "DL025S","DL025X", "DL050X", "DL065S", "DL100S", "DL200S", "NOTFOUND", "CMFHC2", "CMFHC3","CMFHC4","CMFS007","CMFS010","CMFS015","CMFS025",
     "CMFS040","CMFS050","CMFS075","CMFS100","CMFS150","T025","T075","T050", "T100", "T150", "TA010T", "TA025T", "TA050T", "TA075T", "TA100T", 
-    "TA200T", "TA300T", "RFH/025", "RFH/025", "RFH/050", "RFH/050", "CNG/F050P", "RFH/100", "RFH/100", "F100P", "F/H300", "F/H300", "F/H300D", "CNG050", "F025S", 
+    "TA200T", "TA300T", "RFH/025", "RFH/025", "RFH/050", "RFH/050", "CNG/F050P", "RFH/100", "RFH/100", "F100P", "CNG050", "F025S", "F/H300D"
 ]
 
-tempRemovedSensors = ["TA010T", "TA025T", "TA050T", "TA075T", "TA100T", "TA200T", "TA300T", "F025S", ] #"E400+IS", ]
+test = ["E400+IS", "CMF400M", #"F/H300",
+]
 
-obsoleteSensors = ["A", "E200D150", "E400MIS", "R/F/H025", "R/F/H050", "R/F/H100", "R/F/H200", "D006", "D012", "D025", "D040", "D065", "D100", "D150", "D300", "NOTFOUND",] # "CMF400M"]
+tempRemovedSensors = [ "TA010T", "TA025T", "TA050T", "TA075T", "TA100T", "TA200T", "TA300T", "F025S", ]
+
+obsoleteSensors = ["A", "E200D150", "E400MIS", "R/F/H025", "R/F/H050", "R/F/H100", "R/F/H200", "D006", "D012", "D025", "D040", "D065", "D100", "D150", "D300", "NOTFOUND", ]
 sensorsMissingFromDocs = ["CMF025", "CMF300", "F050S", "F100S", "F200S", "F/R/H200", "F/H300p", "DS300Z", "DH150S", "DH300S", "DL200S", "D150E200"]
 sensorsOfUnknownStatus = [ "DS600S", "DH006S", "DH012S", "DH025S", "DH040S", "DH038S", "DH100S", "DT065H", "DT100H", "DT150H", "D012X", "DL025S", "DL025X", "DL050X", "DL065S", "DL100S"]
-sensorToRemove = obsoleteSensors+sensorsMissingFromDocs+sensorsOfUnknownStatus+tempRemovedSensors +practiceSensors
+sensorToRemove = obsoleteSensors+sensorsMissingFromDocs+sensorsOfUnknownStatus #+tempRemovedSensors +practiceSensors
 
 #Lists for copying the code file
 sensorList = [] #All the sensors listed in the code
@@ -166,8 +168,6 @@ extraSensorTypes = []
 sensorComparisonDict = {}
 
 
-print(codeFileLoc)
-
 copyCodeFile(codeFileLoc, sensorList, mainCoeffList, coeffTable, catCoeffList, catTable, smvCoeffList, smvTable, constantsTable, catTypes, smvTypes)
 
 modifiedcoeffTable = removeObsoleteSensors(coeffTable, sensorToRemove)
@@ -180,35 +180,8 @@ replaceVariablesWithDefinitions(modifiedcoeffTable, constantsTable)
 #ER-20018334  /  Blue
 copyExcelFile(oldBlueCoeffList, oldBlueTable, newBlueCoeffList, newBlueTable, blueFile, blueTitleLineNum, blueDataLineNum) 
 
-print()
-print("old blue")
-print(oldBlueCoeffList)
-for row in oldBlueTable:
-    print(row)
-
-print()
-print("new blue")
-print(newBlueCoeffList)
-for row in newBlueTable:
-    print(row)
-
-print()
-
 #ER-20015860  /  Red
 copyExcelFile(coriolisRedCoeffList, coriolisRedTable, densViscRedCoeffList, densViscRedTable, redFile, redCoeffLineNum, redCoeffDataNum) 
-
-print("corilois red")
-print(coriolisRedCoeffList)
-for row in coriolisRedTable:
-    print(row)
-
-print()
-print("dens red")
-print(densViscRedCoeffList)
-for row in densViscRedTable:
-    print(row)
-
-print()
 
 #ER-20015206 / Green
 copyGreenErDoc(greenFile, greentableOne, greenTableTwo, greenTableThree, greenTableFour)
@@ -220,20 +193,10 @@ findFlowLinearityCoeffs(flowLinearityTable)
 purpleDocTable = copyPurpleErDoc(purpleFile)
 
 createSensorComparisonDict(sensorComparisonDict, newBlueCoeffList, newBlueTable, oldBlueCoeffList, oldBlueTable)
-print("*******")
-#print(sensorComparisonDict.get('CMF400M'))
-#print( checkDictForKey(sensorComparisonDict, 'E400+ IS'))
-#for k, v in sensorComparisonDict.items():
-#    if 'E400+ IS' in v or 'E400+ IS' == v:
-#        print(k)
-#print [a for a, b in sensorComparisonDict.items() if 'E400+ IS' in b]
-#print("*******")
-print()
-for key,value in sensorComparisonDict.items():
-    print("Key: %s, Value: %s" % (key, value))
-print()
 
-print('~~~~~~')
+#for key, value in sensorComparisonDict.items():
+#    print(key, "->", value)
+
 createFinalCodeAndDocArrays(coeffsToCompare, finalCodeArray, finalDocArray, mainCoeffList, modifiedcoeffTable, newBlueCoeffList, newBlueTable, oldBlueCoeffList, oldBlueTable, coriolisRedCoeffList, coriolisRedTable, 
     densViscRedCoeffList, densViscRedTable, purpleDocTable, greentableOne, greenTableFour, sensorComparisonDict)
 

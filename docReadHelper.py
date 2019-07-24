@@ -145,7 +145,7 @@ def createSensorComparisonDict(sensorComparisonDict, newBlueCoeffList, newBlueTa
     
     for row in newBlueTable:
         if row[baseModelNum] not in sensorComparisonDict:
-            sensorComparisonDict[row[baseModelNum]] = row[IdStringNum]
+            sensorComparisonDict[row[baseModelNum]] = row[IdStringNum].replace(" ", "")
 
     for titleNum, coeff in enumerate(oldBlueCoeffList, 0):
         if "Base Model" in str(coeff):
@@ -155,7 +155,7 @@ def createSensorComparisonDict(sensorComparisonDict, newBlueCoeffList, newBlueTa
             
     for row in oldBlueTable:
         if row[baseModelNum] not in sensorComparisonDict:
-            sensorComparisonDict[row[baseModelNum]] = row[IdStringNum]
+            sensorComparisonDict[row[baseModelNum]] = row[IdStringNum].replace(" ", "")
             
     sensorComparisonDict = collections.defaultdict(lambda : 'None')
 #    print()
