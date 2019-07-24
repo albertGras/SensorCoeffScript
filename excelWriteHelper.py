@@ -10,43 +10,22 @@ import os
 #--------------------------------------------------------------------------
 
 def checkDocForCoeff(coeffList, table, coeff, codeRow, workingRow, sensorColumn, sensorDict):
-#    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-    
     for coeffIndex, coeffName in enumerate(coeffList, 0): # loop through the doc coeff titles
-#        print(coeffName)
         if coeff == coeffName or (coeff == "ID String" and coeffName == "Product"): #If these match then this doc contains the coeff title
             for docRow in table: #loop through each row of the doc
-#                print(docRow)
-
                 code = codeRow[0]
                 doc = str(docRow[sensorColumn])
-                dictValues = sensorDict.get(doc)
                 
+                dictValues = sensorDict.get(doc)
                 listOfKeys = sensorDict.keys()
                 releventKeys = []
-
                 for key in listOfKeys:
                     if sensorDict.get(code) == doc :
                         releventKeys.append(key)
 
-#                print("code:   ", code)
-#                print("doc:    ", doc)
-#                print("value:  ", dictValues)
-#                print("key:    ", releventKeys)
-#                print()
-
                 # If the sensor in the doc matched the sensor in the code
                 if code == doc or code == dictValues or code in releventKeys and docRow[sensorColumn] != "": 
-#                    print("match")
-#                    print(docRow)
-#                    print("code:   ", code)
-#                    print("doc:    ", doc)
-#                    print("value:  ", dictValues)
-#                    print("key:    ", releventKeys)
-#                    print(coeffName)
-#                    print(coeffIndex)
-#                    print()
-                    
+
                     # Exceptions for specific coeffs
                     if coeff == "TubeID":  # A=pi*r^2. r=TubeID(AP)/2 * NumberTubes (AO)
                         tubeID = float(docRow[coeffIndex])
@@ -55,11 +34,6 @@ def checkDocForCoeff(coeffList, table, coeff, codeRow, workingRow, sensorColumn,
                         workingRow.append(str(temp))
 
                     elif coeff == "NominalFlowRate":  #Make the unit conversions between the doc (kg/s) and code (uS)
-#                        print(coeffIndex)
-#                        print(docRow)
-#                        print(docRow[coeffIndex])
-#                        print(coeffList.index('FlowCalFactor'))
-#                        print(docRow[coeffList.index('FlowCalFactor')])
                         temp = float(docRow[coeffIndex]) * 1000 / float(docRow[coeffList.index('FlowCalFactor')]) 
                         workingRow.append(str(temp))
                         
@@ -87,9 +61,7 @@ def checkDocForCoeff(coeffList, table, coeff, codeRow, workingRow, sensorColumn,
 
                     else:
                         workingRow.append(str(docRow[coeffIndex]))
-#                        print("appended -> ", str(docRow[coeffIndex]))
 
-#                    print("working row returned")
                     return workingRow
 
 
@@ -143,26 +115,18 @@ def compileErDocRow(coeff, codeRow, workingRow, newBlueCoeffList, newBlueTable, 
             if codeRow[0] in row[0]:
                 workingRow.append(str(row[1]))
                 return
-                
-#    print("~~~~~")
-#    print(coeff)
-#    print("~~~~~")
 
-#    print("coriolisRedTable")
      # Look at red doc before blue doc for most recent coeff values
     if checkDocForCoeff(coriolisRedCoeffList, coriolisRedTable, coeff, codeRow, workingRow, redSensorColumn, sensorCompDict) != None:
         return
 
-#    print("densViscRedCoeffList")
     if checkDocForCoeff(densViscRedCoeffList, densViscRedTable, coeff, codeRow, workingRow, redSensorColumn, sensorCompDict) != None:
         return
 
-#    print("newBlueCoeffList")
     # Look at new blue doc before old blue doc for most recent coeff values
     if checkDocForCoeff(newBlueCoeffList, newBlueTable, coeff, codeRow, workingRow, blueSensorColumn, sensorCompDict) != None:
         return
 
-#    print("oldBlueCoeffList")
     # Look at old sheet in blue ER doc for coeff
     if checkDocForCoeff(oldBlueCoeffList, oldBlueTable, coeff, codeRow, workingRow, blueSensorColumn, sensorCompDict) != None:
         return
@@ -208,7 +172,7 @@ def compareflowLinearityTables(flowLinearityTable, greenTableTwo):
 #    fcf = Index of Flow Cal Factor
 #    nfr = Index of Nominal Flow Rate
 #    k1 = Index of K1
-def compareString(codeVal, docVal, coeffIndex, fcf, nfr, k1):
+def compareString(codeVal, docVal, coeffIndex, fcf, nfr, k1, sensorDict):
     try: #try making the inputs float
         codeVal = float(codeVal)
         docVal = float(docVal)
@@ -222,7 +186,7 @@ def compareString(codeVal, docVal, coeffIndex, fcf, nfr, k1):
         if ((docVal - (codeVal + tolerance))*(docVal - (codeVal - tolerance)) <= 0):  # check if 
             return True
 
-    except Exception as e: #if this falls through, then the inputs are not floats (probably strings)
+    except Exception as e: # the inputs are not floats (probably strings)
         codeVal = str(codeVal).strip()
         docVal = str(docVal).strip()
 
@@ -234,6 +198,26 @@ def compareString(codeVal, docVal, coeffIndex, fcf, nfr, k1):
 
         if (((docVal == "0.0") or (docVal == "0")) and ((codeVal == "null") or (codeVal == "―"))): 
             return True
+
+        
+#        dictValues = sensorDict.get(docVal)
+#        listOfKeys = sensorDict.keys()
+#        releventKeys = []
+#        for key in listOfKeys:
+
+#            if sensorDict.get(codeVal) == docVal :
+#                releventKeys.append(key)
+
+#        print("~~~~")
+#        print(sensorDict.get(codeVal))
+#        print("Doc  :", docVal)
+#        print("Code :", codeVal)
+#        print("dict :", releventKeys)
+        try:
+            if codeVal == sensorDict.get(docVal):
+                return True
+        except:
+            return False
 
     return False
 
@@ -271,7 +255,7 @@ def createFinalCodeAndDocArrays(coeffsToCompare, finalCodeArray, finalDocArray, 
 
 
 
-def createFinalArray(coeffsToCompare, finalArray, finalCodeArray, finalDocArray):
+def createFinalArray(coeffsToCompare, finalArray, finalCodeArray, finalDocArray, sensorDict):
     workingRow = []
 #    print(coeffsToCompare)
     fcfIndex = coeffsToCompare.index('FlowCalFactor')
@@ -287,7 +271,7 @@ def createFinalArray(coeffsToCompare, finalArray, finalCodeArray, finalDocArray)
         finalArray.append(finalDocArray[array_num])
 
         for itemNum, item in enumerate(array):
-            if compareString(finalCodeArray[array_num][itemNum], finalDocArray[array_num][itemNum], itemNum, fcfIndex, nominalFlowRateIndex, k1Index):
+            if compareString(finalCodeArray[array_num][itemNum], finalDocArray[array_num][itemNum], itemNum, fcfIndex, nominalFlowRateIndex, k1Index, sensorDict):
                 workingRow.append("Ok")
 
             else:

@@ -200,7 +200,7 @@ createSensorComparisonDict(sensorComparisonDict, newBlueCoeffList, newBlueTable,
 createFinalCodeAndDocArrays(coeffsToCompare, finalCodeArray, finalDocArray, mainCoeffList, modifiedcoeffTable, newBlueCoeffList, newBlueTable, oldBlueCoeffList, oldBlueTable, coriolisRedCoeffList, coriolisRedTable, 
     densViscRedCoeffList, densViscRedTable, purpleDocTable, greentableOne, greenTableFour, sensorComparisonDict)
 
-createFinalArray(coeffsToCompare, finalArray, finalCodeArray, finalDocArray)
+createFinalArray(coeffsToCompare, finalArray, finalCodeArray, finalDocArray, sensorComparisonDict)
 
 flowLinearityMatch = compareflowLinearityTables(flowLinearityTable, greenTableTwo)
 
