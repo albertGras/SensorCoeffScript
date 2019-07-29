@@ -89,26 +89,40 @@ print()
 
 codeFileLoc = os.getcwd()
 
-practiceSensors = ["CMF350", "CMF010", "CMF010P", "CMF025", "CMF025+", "CMF050", "CMF100", "E200D150", "CMF200+", "CMF300+","CMFS007 ","CMFS010 ",
-    "CMFS/010","CMFS015 ","CMFS/015",  "CMFS025 ","CMFS/025","CMFS040 ","CMFS050 ","CMFS/050","CMFS075 ", "CMFS100 ","CMFS/100", "CMFS150 ","CMFS150 ","CMFS/150","CMFS/150","T025    ", "T050    ",
-    "T075    ", "T100    ", "T150    ","TA010T  ", "TA025T  ", "TA050T  ","TA075T  ","TA100T  ","TA200T  ", "TA300T  ",
-    "R/F025HT","RFH/025 ", "RFH/025 ","R/F050HT", "R/F050HT",  "RFH/050 ", "RFH/050 ",  "CNG/F50P", "R/F100HT", "RFH/100 ","RFH/100 ", "F100P   ",   "F/R/H200","F/R/H200", "F/H300  ", "F/H300  ", 
-    "F/H300D ", "F/H300p ","HPC010P", "CNG050  ","F025S   ", "F050S   ","F100S   ",   "F200S   ", "R/F/H025","R/F/H025","R/F/H050","R/F/H100","R/F/H200", "D006    ","D012    ", "D025    ","D040    ", 
-    "D040    ", "D040    ",  "D040    ","D065    ",  "D100    ","D150    ","D300    ","DS600S  ","DS600S  ", "DH006S  ","DH012S  ","DH025S  ","DH040S  ","DH038S  ","DH100S  ","DH150S  ","DH300S  ",
-    "DT065H","DT100H", "DT150H", "D150E200", "DS300Z", "D012X", "DL025S","DL025X", "DL050X", "DL065S", "DL100S", "DL200S", "NOTFOUND", "CMFHC2", "CMFHC3","CMFHC4","CMFS007","CMFS010","CMFS015","CMFS025",
-    "CMFS040","CMFS050","CMFS075","CMFS100","CMFS150","T025","T075","T050", "T100", "T150", "TA010T", "TA025T", "TA050T", "TA075T", "TA100T", 
-    "TA200T", "TA300T", "RFH/025", "RFH/025", "RFH/050", "RFH/050", "CNG/F050P", "RFH/100", "RFH/100", "F100P", "CNG050", "F025S", "F/H300D"
-]
+inCodeButNotPriceList = ["R/F025HT", "R/F050HT", "R/F100HT", "TA300T","CMFS010", "CMFS015","CMFS025", "CMFS050", 
+                        "CMFS075 ", "CMFS100", "CMFS150", "E400MIS", "E400+IS", "F/H300",
+                        "F/H300D", "F/H300p", "CNG/F050P", "DS600S", "DH006S", "DH012S", "DH025S", "DH038S", "DH040S", "DH100S",
+                        "DT065H", "DT100H", "DT150H",
+                        "D012X", "DL025S", "DL025X", "DL050X", "DL065S", "DL100S", ] # "CNG/F50P",
+                        
+supportedSensors = ["CMF010", "CMF010P", "CMF025+", "CMF050", "CMF100", "CMF200+", "CMF300+", "CMF350", "CMF400M",
+                    "CMFS007", "CMFS/010", "CMFS/015", "CMFS/025", "CMFS040", "CMFS/050", "CMFS075", "CMFS/100", 
+                    "CMFS/150", "CMFHC2", "CMFHC3", "CMFHC4",  "RFH/025", "RFH/050", "RFH/100", "F100P", "F/R/H200", 
+                    "T025", "T050",
+                    "T075", "T100", "T150", "CNG050", "TA010T", "TA025T", "TA050T","TA075T","TA100T","TA200T", "DH150S"
+                    "HPC010P", "DH150S", "DH300S", "DS300Z", "D300", "DL200S", "D150E200" ]
 
-test = ["E400+IS", "CMF400M", #"F/H300",
-]
+obsoleteSensors = ["A", "CMF025", "CMF300", "R/F/H025","R/F/H050","R/F/H100","R/F/H200", "E200D150", "F025S", "F050S", 
+                    "F100S", "F200S", "D006", "D012", "D025","D040", "D065", "D100", "D150", "NOTFOUND",]
+                    
+                    
+# Problems in comparison spreadsheet:
+#    - E400MIS  - inCodeButNotPriceList
+#    - F/R/H200 - supportedSensors
+#    - F/H300p  - 
+#    - D300     - 
+#    - DH006S   - 
+#    - DH012S   - 
+#    - DH025S   - 
+#    - DH040S   - 
+#    - DH038S   - 
+#    - D150E200 - 
+#    - D012X    - 
+#    - DL025S   - 
+#    - DL025X   - 
+#    - DL050X   - 
 
-tempRemovedSensors = [ "TA010T", "TA025T", "TA050T", "TA075T", "TA100T", "TA200T", "TA300T", "F025S", ]
-
-obsoleteSensors = ["A", "E200D150", "E400MIS", "R/F/H025", "R/F/H050", "R/F/H100", "R/F/H200", "D006", "D012", "D025", "D040", "D065", "D100", "D150", "D300", "NOTFOUND", ]
-sensorsMissingFromDocs = ["CMF025", "CMF300", "F050S", "F100S", "F200S", "F/R/H200", "F/H300p", "DS300Z", "DH150S", "DH300S", "DL200S", "D150E200"]
-sensorsOfUnknownStatus = [ "DS600S", "DH006S", "DH012S", "DH025S", "DH040S", "DH038S", "DH100S", "DT065H", "DT100H", "DT150H", "D012X", "DL025S", "DL025X", "DL050X", "DL065S", "DL100S"]
-sensorToRemove = obsoleteSensors+sensorsMissingFromDocs+sensorsOfUnknownStatus #+tempRemovedSensors +practiceSensors
+sensorToRemove = obsoleteSensors
 
 #Lists for copying the code file
 sensorList = [] #All the sensors listed in the code
