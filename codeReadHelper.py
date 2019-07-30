@@ -67,8 +67,6 @@ def copyCodeFile(codeFile, sensorList, mainCoeffList, coeffTable, catCoeffList, 
         if "define" in line:
             line = createConstantsArray(line)
             constantsTable.append(line)
-#            print(constantsTable)
-#            print()
 
         if "End" in line:   # end of one of the tables
             count = count + 1
@@ -89,7 +87,6 @@ def copyCodeFile(codeFile, sensorList, mainCoeffList, coeffTable, catCoeffList, 
                     line[0] = "CNG/F050P"   # Correction: to handle the missing 0 in the code
                 sensorList.append(line[0])  # Take the sensor types from each line
                 coeffTable.append(line)
-#                print(line)
 
         elif "CAT_TABLE" in line:        #Create cat table list
             coeffListSetUp(line, catCoeffList) # Prepare title line to be put into array
@@ -110,20 +107,6 @@ def copyCodeFile(codeFile, sensorList, mainCoeffList, coeffTable, catCoeffList, 
             if line[0] == '' or line[0] == '\n':  # Remove blank lines
                 continue
             smvTable.append(line)
-
-
-#def removeObsoleteSensors(coeffTable, obsoleteSensors):
-#    for sensor in obsoleteSensors:
-#        print(sensor)
-#        for rowNum, row in enumerate(coeffTable, 0):
-#            print(row)
-#            if sensor == row[0]:
-#                print("sensor found")
-#                del coeffTable[rowNum]
-#                break
-#        print('~~~~~~~~')
-#        print()
-#    return coeffTable
 
 def removeObsoleteSensors(coeffTable, obsoleteSensors):
     lengthOfCoeffTable = len(coeffTable)-1

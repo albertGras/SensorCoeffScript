@@ -118,7 +118,6 @@ def copyPurpleErDoc(purpleFile):
             coeffRow = False
             if(beforeTables == False and len(newRow) != 0):
                 purpleDocTable.append(newRow)
-#                print(newRow)
                 newRow = []
 
             for cell in row.cells:
@@ -158,9 +157,6 @@ def createSensorComparisonDict(sensorComparisonDict, newBlueCoeffList, newBlueTa
             sensorComparisonDict[row[baseModelNum]] = row[IdStringNum].replace(" ", "")
             
     sensorComparisonDict = collections.defaultdict(lambda : 'None')
-#    print()
-#    print(sensorComparisonDict)
-#    print()
 
 
 

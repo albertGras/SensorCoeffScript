@@ -199,20 +199,6 @@ def compareString(codeVal, docVal, coeffIndex, fcf, nfr, k1, sensorDict):
         if (((docVal == "0.0") or (docVal == "0")) and ((codeVal == "null") or (codeVal == "―"))): 
             return True
 
-        
-#        dictValues = sensorDict.get(docVal)
-#        listOfKeys = sensorDict.keys()
-#        releventKeys = []
-#        for key in listOfKeys:
-
-#            if sensorDict.get(codeVal) == docVal :
-#                releventKeys.append(key)
-
-#        print("~~~~")
-#        print(sensorDict.get(codeVal))
-#        print("Doc  :", docVal)
-#        print("Code :", codeVal)
-#        print("dict :", releventKeys)
         try:
             if codeVal == sensorDict.get(docVal):
                 return True
@@ -257,7 +243,6 @@ def createFinalCodeAndDocArrays(coeffsToCompare, finalCodeArray, finalDocArray, 
 
 def createFinalArray(coeffsToCompare, finalArray, finalCodeArray, finalDocArray, sensorDict):
     workingRow = []
-#    print(coeffsToCompare)
     fcfIndex = coeffsToCompare.index('FlowCalFactor')
     nominalFlowRateIndex = coeffsToCompare.index("NominalFlowRate")
     k1Index = coeffsToCompare.index("K1")
@@ -266,7 +251,6 @@ def createFinalArray(coeffsToCompare, finalArray, finalCodeArray, finalDocArray,
 
     #Create and put match or no match row into final array
     for array_num, array in enumerate(finalCodeArray):
-#        print(array)
         finalArray.append(finalCodeArray[array_num])
         finalArray.append(finalDocArray[array_num])
 
