@@ -172,12 +172,18 @@ def compareflowLinearityTables(flowLinearityTable, greenTableTwo):
 #    fcf = Index of Flow Cal Factor
 #    nfr = Index of Nominal Flow Rate
 #    k1 = Index of K1
-def compareString(codeVal, docVal, coeffIndex, fcf, nfr, k1, sensorDict):
+def compareString(codeVal, docVal, coeffIndex, coeffsToCompare, sensorDict):
     try: #try making the inputs float
         codeVal = float(codeVal)
         docVal = float(docVal)
+        
+        fcf = coeffsToCompare.index('FlowCalFactor')
+        nfr = coeffsToCompare.index("NominalFlowRate")
+        k1 = coeffsToCompare.index("K1")
+        
         tolerance = codeVal * 0.001   #this value determines how lenient the number comparison is
         specialTolerance = codeVal * 0.03 #this value determines how lenient the special number comparison is
+        
         isNumber = True
         if coeffIndex == fcf or coeffIndex == nfr or coeffIndex == k1:
             if ((docVal - (codeVal + specialTolerance))*(docVal - (codeVal - specialTolerance)) <= 0):  # check if 
@@ -243,9 +249,7 @@ def createFinalCodeAndDocArrays(coeffsToCompare, finalCodeArray, finalDocArray, 
 
 def createFinalArray(coeffsToCompare, finalArray, finalCodeArray, finalDocArray, sensorDict):
     workingRow = []
-    fcfIndex = coeffsToCompare.index('FlowCalFactor')
-    nominalFlowRateIndex = coeffsToCompare.index("NominalFlowRate")
-    k1Index = coeffsToCompare.index("K1")
+    
     finalArray.append(coeffsToCompare) # Add coeff titles to first row of final array 
     
 
@@ -255,7 +259,7 @@ def createFinalArray(coeffsToCompare, finalArray, finalCodeArray, finalDocArray,
         finalArray.append(finalDocArray[array_num])
 
         for itemNum, item in enumerate(array):
-            if compareString(finalCodeArray[array_num][itemNum], finalDocArray[array_num][itemNum], itemNum, fcfIndex, nominalFlowRateIndex, k1Index, sensorDict):
+            if compareString(finalCodeArray[array_num][itemNum], finalDocArray[array_num][itemNum], itemNum, coeffsToCompare, sensorDict):
                 workingRow.append("Ok")
 
             else:
