@@ -9,7 +9,8 @@ import os
 # Output      : <Description of the return value>
 #--------------------------------------------------------------------------
 
-def checkDocForCoeff(coeffList, table, coeff, codeRow, workingRow, sensorColumn, sensorDict):
+def checkDocForCoeff(coeffList, table, coeff, codeRow, workingRow, sensorColumn, sensorDict, mainCoeffList):
+#    print(coeff)
     for coeffIndex, coeffName in enumerate(coeffList, 0): # loop through the doc coeff titles
         if coeff == coeffName or (coeff == "ID String" and coeffName == "Product"): #If these match then this doc contains the coeff title
             for docRow in table: #loop through each row of the doc
@@ -30,12 +31,13 @@ def checkDocForCoeff(coeffList, table, coeff, codeRow, workingRow, sensorColumn,
                     if coeff == "TubeID":  # A=pi*r^2. r=TubeID(AP)/2 * NumberTubes (AO)
                         tubeID = float(docRow[coeffIndex])
                         numOfTubes = float(docRow[coeffList.index('NumberTubes')])
-                        temp = numOfTubes * 3.14 * ((tubeID/2)**2)
-                        workingRow.append(str(temp))
+                        tubeId = numOfTubes * 3.14 * ((tubeID/2)**2)
+                        workingRow.append(str(tubeId))
 
                     elif coeff == "NominalFlowRate":  #Make the unit conversions between the doc (kg/s) and code (uS)
-                        temp = float(docRow[coeffIndex]) * 1000 / float(docRow[coeffList.index('FlowCalFactor')]) 
-                        workingRow.append(str(temp))
+                        
+                        nfr = float(docRow[coeffIndex]) * 1000 / float(codeRow[mainCoeffList[0].index('FlowCalFactor')]) 
+                        workingRow.append(str(nfr))
                         
                     elif coeff == "I.D. Resistor":
                         if float(docRow[coeffIndex]) < -5: 
@@ -68,7 +70,7 @@ def checkDocForCoeff(coeffList, table, coeff, codeRow, workingRow, sensorColumn,
 
 def compileErDocRow(coeff, codeRow, workingRow, newBlueCoeffList, newBlueTable, oldBlueCoeffList, oldBlueTable,
     coriolisRedCoeffList, coriolisRedTable, densViscRedCoeffList, densViscRedTable, purpleDocTable, greentableOne, 
-    greenTableFour, sensorCompDict):
+    greenTableFour, sensorCompDict, mainCoeffList):
 
     blueSensorColumn = 3
     redSensorColumn = 1
@@ -117,18 +119,18 @@ def compileErDocRow(coeff, codeRow, workingRow, newBlueCoeffList, newBlueTable, 
                 return
 
      # Look at red doc before blue doc for most recent coeff values
-    if checkDocForCoeff(coriolisRedCoeffList, coriolisRedTable, coeff, codeRow, workingRow, redSensorColumn, sensorCompDict) != None:
+    if checkDocForCoeff(coriolisRedCoeffList, coriolisRedTable, coeff, codeRow, workingRow, redSensorColumn, sensorCompDict, mainCoeffList) != None:
         return
 
-    if checkDocForCoeff(densViscRedCoeffList, densViscRedTable, coeff, codeRow, workingRow, redSensorColumn, sensorCompDict) != None:
+    if checkDocForCoeff(densViscRedCoeffList, densViscRedTable, coeff, codeRow, workingRow, redSensorColumn, sensorCompDict, mainCoeffList) != None:
         return
 
     # Look at new blue doc before old blue doc for most recent coeff values
-    if checkDocForCoeff(newBlueCoeffList, newBlueTable, coeff, codeRow, workingRow, blueSensorColumn, sensorCompDict) != None:
+    if checkDocForCoeff(newBlueCoeffList, newBlueTable, coeff, codeRow, workingRow, blueSensorColumn, sensorCompDict, mainCoeffList) != None:
         return
 
     # Look at old sheet in blue ER doc for coeff
-    if checkDocForCoeff(oldBlueCoeffList, oldBlueTable, coeff, codeRow, workingRow, blueSensorColumn, sensorCompDict) != None:
+    if checkDocForCoeff(oldBlueCoeffList, oldBlueTable, coeff, codeRow, workingRow, blueSensorColumn, sensorCompDict, mainCoeffList) != None:
         return
 
     workingRow.append('―') # Else, add a '―' for coefficients that cant be populated  
@@ -185,11 +187,11 @@ def compareString(codeVal, docVal, coeffIndex, coeffsToCompare, sensorDict):
         specialTolerance = codeVal * 0.03 #this value determines how lenient the special number comparison is
         
         isNumber = True
-        if coeffIndex == fcf or coeffIndex == nfr or coeffIndex == k1:
+        if coeffIndex == fcf or coeffIndex == nfr or coeffIndex == k1:  # give a bigger tolerance for these coeffs
             if ((docVal - (codeVal + specialTolerance))*(docVal - (codeVal - specialTolerance)) <= 0):  # check if 
                 return True
         
-        if ((docVal - (codeVal + tolerance))*(docVal - (codeVal - tolerance)) <= 0):  # check if 
+        if ((docVal - (codeVal + tolerance))*(docVal - (codeVal - tolerance)) <= 0):
             return True
 
     except Exception as e: # the inputs are not floats (probably strings)
@@ -216,7 +218,8 @@ def compareString(codeVal, docVal, coeffIndex, coeffsToCompare, sensorDict):
 
 
 def createFinalCodeAndDocArrays(coeffsToCompare, finalCodeArray, finalDocArray, mainCoeffList, coeffTable, newBlueCoeffList, newBlueTable, oldBlueCoeffList, 
-    oldBlueTable, coriolisRedCoeffList, coriolisRedTable,     densViscRedCoeffList, densViscRedTable, purpleDocTable, greentableOne, greenTableFour, sensorComparisonDict):
+    oldBlueTable, coriolisRedCoeffList, coriolisRedTable, densViscRedCoeffList, densViscRedTable, purpleDocTable, greentableOne, greenTableFour, sensorComparisonDict ):
+    
     workingRow = []
     coeffPopulated = False
 
@@ -236,12 +239,12 @@ def createFinalCodeAndDocArrays(coeffsToCompare, finalCodeArray, finalDocArray, 
         finalCodeArray.append(workingRow)
         workingRow = []
 
-
+        
         # put er document coeffs into final array 
         for coeff in coeffsToCompare:  # Loop through master coeff list
             compileErDocRow(coeff, codeRow, workingRow, newBlueCoeffList, newBlueTable, oldBlueCoeffList, oldBlueTable,
                 coriolisRedCoeffList, coriolisRedTable, densViscRedCoeffList, densViscRedTable, purpleDocTable, greentableOne,
-                greenTableFour, sensorComparisonDict)
+                greenTableFour, sensorComparisonDict, mainCoeffList)
         finalDocArray.append(workingRow)
         workingRow = []
 

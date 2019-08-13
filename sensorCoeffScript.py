@@ -65,11 +65,13 @@ for arg in sys.argv[1:]:
         print("\nTransmitter is 5700")
         
         #All the 5700 coeffs that need comparison
-        coeffsToCompare = ["ID String", "I.D. Resistor", "K1", "ZeroStability", "FlowCalFactor", "NominalFlowRate", "TubeID",   "PressureEffect_Flow_Liquid", 
+        coeffsToCompare = ["ID String", "NominalFlowRate", "FlowCalFactor", "I.D. Resistor",  "ZeroStability",  "TubeID",   "PressureEffect_Flow_Liquid", 
             "PressureEffect_Density",  "A 4", "Drive Target",  "Proportional Gain 800", "Integral Gain 800", "FD Limit", "Overshoot", 
-            "TemperatureEffect_Density", "TemperatureEffect_Flow", "Tone Level", "Ramp Time", "BL Temp Coeff", "Drive SP FCF", "Puck P FCF", 
-            "dF Tone Spacing", "Freq. Drift Limit", "Max Sensor Current", "Minimum Flow Multiplier", 
-            "MassFlowAccuracy_Liquid", "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", "Drive SP", "Drive Saturation Algorithm 800", "T03", "flags",
+            "TemperatureEffect_Density", "TemperatureEffect_Flow", "Tone Level", "Ramp Time", "BL Temp Coeff", "Drive SP FCF", 
+            "Puck P FCF", "dF Tone Spacing", "Freq. Drift Limit", "Max Sensor Current", "Minimum Flow Multiplier", 
+            "MassFlowAccuracy_Liquid", "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", "Drive SP", 
+            "K1", 
+            "Drive Saturation Algorithm 800", "T03", "flags",
 ] 
 
 #coeffs not in 5700  ->  "Proportional Gain 2200", "Integral Gain 2200",
@@ -103,8 +105,7 @@ obsoleteSensors = ["A", "CMF025", "CMF300", "CMF400M",  "E400MIS", "CNG050",  "E
                     "DH006S", "DH012S", "DH025S", "DH038S", "DH040S", "DH100S", "DT065H", "DT100H", "DT150H", 
                     "D012X", "DL025S", "DL025X", "DL050X", "DL065S", "DL100S", 
                     "NOTFOUND",]
-                    
-                    
+
 # Problems in comparison spreadsheet:
 #    - F/R/H200 
 #    - F/H300p  
@@ -115,7 +116,7 @@ sensorToRemove = obsoleteSensors
 
 #Lists for copying the code file
 sensorList = [] #All the sensors listed in the code
-mainCoeffList = [] 
+mainCoeffList = []  
 coeffTable = [] #Table of all regular coefficients listed in the code 
 catCoeffList = []
 catTable = [] #Table of all Category coefficients 
@@ -200,8 +201,12 @@ createSensorComparisonDict(sensorComparisonDict, newBlueCoeffList, newBlueTable,
 #for key, value in sensorComparisonDict.items():
 #    print(key, "->", value)
 
+print("Code Coeff List: ", mainCoeffList)
+
 createFinalCodeAndDocArrays(coeffsToCompare, finalCodeArray, finalDocArray, mainCoeffList, modifiedcoeffTable, newBlueCoeffList, newBlueTable, oldBlueCoeffList, oldBlueTable, coriolisRedCoeffList, coriolisRedTable, 
     densViscRedCoeffList, densViscRedTable, purpleDocTable, greentableOne, greenTableFour, sensorComparisonDict)
+    
+
 
 createFinalArray(coeffsToCompare, finalArray, finalCodeArray, finalDocArray, sensorComparisonDict)
 
