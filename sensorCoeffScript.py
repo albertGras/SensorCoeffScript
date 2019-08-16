@@ -65,13 +65,19 @@ for arg in sys.argv[1:]:
         print("\nTransmitter is 5700")
         
         #All the 5700 coeffs that need comparison
-        coeffsToCompare = ["ID String", "NominalFlowRate", "FlowCalFactor", "I.D. Resistor",  "ZeroStability",  "TubeID",   "PressureEffect_Flow_Liquid", 
-            "PressureEffect_Density",  "A 4", "Drive Target",  "Proportional Gain 800", "Integral Gain 800", "FD Limit", "Overshoot", 
-            "TemperatureEffect_Density", "TemperatureEffect_Flow", "Tone Level", "Ramp Time", "BL Temp Coeff", "Drive SP FCF", 
-            "Puck P FCF", "dF Tone Spacing", "Freq. Drift Limit", "Max Sensor Current", "Minimum Flow Multiplier", 
-            "MassFlowAccuracy_Liquid", "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", "Drive SP", 
-            "K1", 
-            "Drive Saturation Algorithm 800", "T03", "flags",
+        coeffsToCompare = ["ID String", 
+            "Tone Level",  "BL Temp Coeff", "Drive SP FCF", 
+            "Puck P FCF",  "Max Sensor Current", 
+            "Minimum Flow Multiplier", 
+             "TemperatureEffect_Flow", "TemperatureEffect_Density",
+            "FD Limit", "Proportional Gain 800", "PressureEffect_Density",
+            
+            "Ramp Time", 
+            "dF Tone Spacing", "Freq. Drift Limit",
+            "NominalFlowRate", "FlowCalFactor", "I.D. Resistor",  "ZeroStability",  "TubeID",   "PressureEffect_Flow_Liquid", 
+            "A 4", "Drive Target",  "Integral Gain 800", "Overshoot", 
+            "MassFlowAccuracy_Liquid", 
+            "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", "Drive SP", "K1", "Drive Saturation Algorithm 800", "T03", "flags",
 ] 
 
 #coeffs not in 5700  ->  "Proportional Gain 2200", "Integral Gain 2200",
@@ -94,17 +100,20 @@ codeFileLoc = os.getcwd()
 supportedSensors = ["CMF010", "CMF010P", "CMF025+", "CMF050", "CMF100", "CMF200+", "CMF300+", "CMF350", "E400+IS",
                     "CMFS007", "CMFS010", "CMFS/010", "CMFS015", "CMFS/015", "CMFS/025", "CMFS025", "CMFS040", "CMFS050", 
                     "CMFS/050", "CMFS075 ", "CMFS100", "CMFS/100", "CMFS150", "CMFS/150", "F/H300", "F/H300D", "F/H300p",
-                    "CMFHC2", "CMFHC3", "CMFHC4", "T025", "T050","T075", "T100", "T150", 
-                    "TA010T", "TA025T", "TA050T","TA075T","TA100T","TA200T", "TA300T", 
-                    "RFH/025", "R/F025HT", "RFH/050", "R/F050HT", "RFH/100", "R/F100HT", "F/R/H200", "F100P",
-                     "CNG/F050P", "HPC010P", "DH150S", "DH300S", "DS300Z", "D300", "DL200S", "D150E200" ]
+                    "CMFHC2", "CMFHC3", "CMFHC4", "T025", "T050","T075", "T100", "T150", "TA010T", "TA025T", "TA050T",
+                    "TA075T","TA100T","TA200T", "TA300T", "RFH/025", "R/F025HT", "RFH/050", "R/F050HT", "RFH/100", 
+                    "R/F100HT", "F/R/H200", "F100P", "CNG/F050P", "HPC010P", "DH150S", "DH300S", "DS300Z", "D300", 
+                    "DL200S", "D150E200",
+                    "CMFS075"
+                    ]
 
 obsoleteSensors = ["A", "CMF025", "CMF300", "CMF400M",  "E400MIS", "CNG050",  "E200D150", "F025S", "F050S", 
                     "F100S", "F200S", "D006", "D012", "D025", "D040", "D065", "D100", "D150", 
                     "R/F/H025", "R/F/H050", "R/F/H100", "R/F/H200", "DS600S", 
                     "DH006S", "DH012S", "DH025S", "DH038S", "DH040S", "DH100S", "DT065H", "DT100H", "DT150H", 
                     "D012X", "DL025S", "DL025X", "DL050X", "DL065S", "DL100S", 
-                    "NOTFOUND",]
+                    "NOTFOUND",
+                    ]
 
 # Problems in comparison spreadsheet:
 #    - F/R/H200 
@@ -198,11 +207,6 @@ purpleDocTable = copyPurpleErDoc(purpleFile)
 
 createSensorComparisonDict(sensorComparisonDict, newBlueCoeffList, newBlueTable, oldBlueCoeffList, oldBlueTable)
 
-#for key, value in sensorComparisonDict.items():
-#    print(key, "->", value)
-
-print("Code Coeff List: ", mainCoeffList)
-
 createFinalCodeAndDocArrays(coeffsToCompare, finalCodeArray, finalDocArray, mainCoeffList, modifiedcoeffTable, newBlueCoeffList, newBlueTable, oldBlueCoeffList, oldBlueTable, coriolisRedCoeffList, coriolisRedTable, 
     densViscRedCoeffList, densViscRedTable, purpleDocTable, greentableOne, greenTableFour, sensorComparisonDict)
     
@@ -246,6 +250,6 @@ print()
 print()
 
 
-print("End")
+print("Finished")
 
 

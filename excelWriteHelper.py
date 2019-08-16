@@ -10,13 +10,12 @@ import os
 #--------------------------------------------------------------------------
 
 def checkDocForCoeff(coeffList, table, coeff, codeRow, workingRow, sensorColumn, sensorDict, mainCoeffList):
-#    print(coeff)
     for coeffIndex, coeffName in enumerate(coeffList, 0): # loop through the doc coeff titles
         if coeff == coeffName or (coeff == "ID String" and coeffName == "Product"): #If these match then this doc contains the coeff title
             for docRow in table: #loop through each row of the doc
                 code = codeRow[0]
-                doc = str(docRow[sensorColumn])
-                
+                doc = str(docRow[sensorColumn]).replace(" ", "")
+
                 dictValues = sensorDict.get(doc)
                 listOfKeys = sensorDict.keys()
                 releventKeys = []
@@ -26,7 +25,6 @@ def checkDocForCoeff(coeffList, table, coeff, codeRow, workingRow, sensorColumn,
 
                 # If the sensor in the doc matched the sensor in the code
                 if code == doc or code == dictValues or code in releventKeys and docRow[sensorColumn] != "": 
-
                     # Exceptions for specific coeffs
                     if coeff == "TubeID":  # A=pi*r^2. r=TubeID(AP)/2 * NumberTubes (AO)
                         tubeID = float(docRow[coeffIndex])
@@ -174,23 +172,27 @@ def compareflowLinearityTables(flowLinearityTable, greenTableTwo):
 #    fcf = Index of Flow Cal Factor
 #    nfr = Index of Nominal Flow Rate
 #    k1 = Index of K1
+#    zeroStab = Index of ZeroStability
 def compareString(codeVal, docVal, coeffIndex, coeffsToCompare, sensorDict):
     try: #try making the inputs float
         codeVal = float(codeVal)
         docVal = float(docVal)
-        
-        fcf = coeffsToCompare.index('FlowCalFactor')
-        nfr = coeffsToCompare.index("NominalFlowRate")
-        k1 = coeffsToCompare.index("K1")
-        
+
+        try:
+            fcf = coeffsToCompare.index('FlowCalFactor')
+            nfr = coeffsToCompare.index("NominalFlowRate")
+            k1 = coeffsToCompare.index("K1")
+            zeroStab = coeffsToCompare.index("ZeroStability")
+        except:
+            print("FCF, NominalFlowRate, K1, or ZeroStability is missing from the coeff list")
+
         tolerance = codeVal * 0.001   #this value determines how lenient the number comparison is
-        specialTolerance = codeVal * 0.03 #this value determines how lenient the special number comparison is
-        
-        isNumber = True
-        if coeffIndex == fcf or coeffIndex == nfr or coeffIndex == k1:  # give a bigger tolerance for these coeffs
+        specialTolerance = codeVal * 0.2 #this value determines how lenient the special number comparison is
+
+        if coeffIndex == fcf or coeffIndex == nfr or coeffIndex == k1 or coeffIndex == zeroStab:  # give a bigger tolerance for these coeffs
             if ((docVal - (codeVal + specialTolerance))*(docVal - (codeVal - specialTolerance)) <= 0):  # check if 
                 return True
-        
+
         if ((docVal - (codeVal + tolerance))*(docVal - (codeVal - tolerance)) <= 0):
             return True
 
