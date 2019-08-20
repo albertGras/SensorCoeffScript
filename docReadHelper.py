@@ -43,7 +43,7 @@ def copyExcelFile(coeffListOne, tableOne, coeffListTwo, tableTwo, file, coeffLin
 
 
 
-
+# ER-20015206
 def copyGreenErDoc(greenFile, greentableOne, greenTableTwo, greenTableThree, greenTableFour):
     newRow = []
     coeffRow = False
@@ -84,8 +84,6 @@ def copyGreenErDoc(greenFile, greentableOne, greenTableTwo, greenTableThree, gre
                     if newSensor == True:
                         newSensor = False
                         greenTableTwo.append([sensor])
-#                        greenTableThree.append(sensor)
-#                    greenTableThree.append(newRow[1:3])
                     greenTableTwo.append(newRow[1:3])
 
                 elif tableNumber == 5: # because of the way the table is setup Sensor Model is read twice and this becomes 5 instead of 4
@@ -99,7 +97,6 @@ def copyGreenErDoc(greenFile, greentableOne, greenTableTwo, greenTableThree, gre
                     beforeTables = False
 
                 if beforeTables == False and coeffRow == False:  # Add item to row if its after the tables start
-#                    newRow = [x for x in newRow if x != '< 0.95'] #Remove blank string items
                     if cell.text != '':  # Remove blank lines
                         newRow.append(cell.text)
 

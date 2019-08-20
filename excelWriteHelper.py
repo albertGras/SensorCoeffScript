@@ -230,6 +230,14 @@ def createFinalCodeAndDocArrays(coeffsToCompare, finalCodeArray, finalDocArray, 
         for coeff in coeffsToCompare: # Loop through master coeff list
             coeffPopulated = False
             for codeCoeffIndex, code_list_coeff_name in enumerate(mainCoeffList[0], 0):
+                if coeff == "Drive Saturation Algorithm 800" and "SSA_DRIVESAT" in codeRow[mainCoeffList[0].index('flags')]:
+                    workingRow.append("50") # Add coeff value to list 
+                    coeffPopulated = True
+                    break
+                if coeff == "T03" and "SSA_T03_COMP" in codeRow[mainCoeffList[0].index('flags')]:
+                    workingRow.append("4") # Add coeff value to list 
+                    coeffPopulated = True
+                    break
                 if coeff == code_list_coeff_name:
                     coeffPopulated = True
                     workingRow.append(codeRow[codeCoeffIndex]) # Add coeff value to list 
@@ -322,7 +330,6 @@ def exportFinalArraytoExcelDocument(finalArray, flowLinearityTable, greenTableTw
 
     # write flow linarization table in second sheet
     for rowNum, row in enumerate(flowLinearityTable, 0):
-#        writeRowDescriptors(flowLinearity, workbook, rowNum)
         for itemNum, item in enumerate(row, 0):
             if itemNum == 1:
                 flowLinearity.write(rowNum, itemNum, flowLinearityTable[rowNum][itemNum], rightBorderFormat)
@@ -330,18 +337,14 @@ def exportFinalArraytoExcelDocument(finalArray, flowLinearityTable, greenTableTw
                 flowLinearity.write(rowNum, itemNum, flowLinearityTable[rowNum][itemNum])
 
     for rowNum, row in enumerate(greenTableTwo, 0):
-#        writeRowDescriptors(flowLinearity, workbook, rowNum)
         for itemNum, item in enumerate(row, 0):
             if itemNum == 1:
                 flowLinearity.write(rowNum, itemNum +2, greenTableTwo[rowNum][itemNum], rightBorderFormat)
             else:
                 flowLinearity.write(rowNum, itemNum +2, greenTableTwo[rowNum][itemNum])
-                
-#        for itemNum, item in enumerate(flowLinearityMatch, 0):
-#                flowLinearity.write(itemNum, 4, flowLinearityMatch[itemNum])
 
-       
-                
+
+
     worksheet.conditional_format('A1:ZZ500', 
                                  {'type': 'text',
                                   'criteria': 'containing',

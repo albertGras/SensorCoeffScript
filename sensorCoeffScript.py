@@ -71,13 +71,15 @@ for arg in sys.argv[1:]:
             "Minimum Flow Multiplier", 
              "TemperatureEffect_Flow", "TemperatureEffect_Density",
             "FD Limit", "Proportional Gain 800", "PressureEffect_Density",
-            
             "Ramp Time", 
-            "dF Tone Spacing", "Freq. Drift Limit",
-            "NominalFlowRate", "FlowCalFactor", "I.D. Resistor",  "ZeroStability",  "TubeID",   "PressureEffect_Flow_Liquid", 
+            "dF Tone Spacing", 
+            "Freq. Drift Limit",
+            "NominalFlowRate", "FlowCalFactor",   "ZeroStability",  
+            "I.D. Resistor", "TubeID",   "PressureEffect_Flow_Liquid", 
             "A 4", "Drive Target",  "Integral Gain 800", "Overshoot", 
             "MassFlowAccuracy_Liquid", 
-            "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", "Drive SP", "K1", "Drive Saturation Algorithm 800", "T03", "flags",
+            "MassFlowAccuracyMVD_Gas", "DensityAccuracy_Liquid", "Drive SP", 
+            "K1", "Drive Saturation Algorithm 800", "T03", "flags",
 ] 
 
 #coeffs not in 5700  ->  "Proportional Gain 2200", "Integral Gain 2200",
@@ -125,7 +127,7 @@ sensorToRemove = obsoleteSensors
 
 #Lists for copying the code file
 sensorList = [] #All the sensors listed in the code
-mainCoeffList = []  
+mainCoeffList = [] # All of the coeffs listd in the code
 coeffTable = [] #Table of all regular coefficients listed in the code 
 catCoeffList = []
 catTable = [] #Table of all Category coefficients 
@@ -209,7 +211,7 @@ createSensorComparisonDict(sensorComparisonDict, newBlueCoeffList, newBlueTable,
 
 createFinalCodeAndDocArrays(coeffsToCompare, finalCodeArray, finalDocArray, mainCoeffList, modifiedcoeffTable, newBlueCoeffList, newBlueTable, oldBlueCoeffList, oldBlueTable, coriolisRedCoeffList, coriolisRedTable, 
     densViscRedCoeffList, densViscRedTable, purpleDocTable, greentableOne, greenTableFour, sensorComparisonDict)
-    
+
 
 
 createFinalArray(coeffsToCompare, finalArray, finalCodeArray, finalDocArray, sensorComparisonDict)
@@ -241,15 +243,11 @@ extraCoeffs = [x for x in extraCoeffs if x != ''] #Remove blank items
 extraSensorTypes = [x for x in extraSensorTypes[0] if x != ''] #Remove blank items
 
 
-#print(extraCoeffs)
 print()
-print()
-#print(extraSensorTypes)
-
 print()
 print()
 
 
-print("Finished")
+print("Finished writing comparison spreadsheet")
 
 
