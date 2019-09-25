@@ -1,4 +1,5 @@
 import os
+import re
 
 #--------------------------------------------------------------------------
 # Function    : <Function Name>
@@ -33,6 +34,9 @@ def tableSetUp(line, types):
     if line == '\n' or line == '':  # Remove blank lines
         return [line, types]
 
+    if(re.search('/\*(.*)\*/', line)):        # removes anything in sensor.cpp 
+        line = re.sub('/\*(.*)\*/', '', line) # that inside a block comment /* */
+
     for item in TABLE_EXTRA:  #remove unwanted characters in the line
         line = line.replace(item, '')
     line = line.split(',')
@@ -45,8 +49,6 @@ def tableSetUp(line, types):
 
 
 def copyCodeFile(codeFile, sensorList, mainCoeffList, coeffTable, catCoeffList, catTable, smvCoeffList, smvTable, constantsTable, catTypes, smvTypes):
-#    codeFile   = open("C:\PVCS\ProjectsDB\Kinetis_DB\k2Src\k_src_app\coriolis\sensor.cpp")
-
     codeFile = open(os.path.join(codeFile, "sensor.cpp"))
     inCoeffTable = False
     inSmvTable = False
@@ -103,7 +105,7 @@ def copyCodeFile(codeFile, sensorList, mainCoeffList, coeffTable, catCoeffList, 
             inSmvTable = True
 
         elif inSmvTable == True:         #Create smv table
-            line, smvTypes =tableSetUp(line, smvTypes) # Prepare coeff data lines to be put into array 
+            line, smvTypes = tableSetUp(line, smvTypes) # Prepare coeff data lines to be put into array 
             if line[0] == '' or line[0] == '\n':  # Remove blank lines
                 continue
             smvTable.append(line)

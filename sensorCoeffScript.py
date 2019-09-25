@@ -43,7 +43,7 @@ for arg in sys.argv[1:]:
         filePath = arg
         fileList = os.listdir(filePath)
         
-        print("\nFiles exist")
+        print("\nFiles exist:\n")
         for file in fileList:
             if "20018334" in file and blueFile == 0:
                 print(os.path.join(filePath, file))
@@ -85,13 +85,21 @@ for arg in sys.argv[1:]:
 #coeffs not in 5700  ->  "Proportional Gain 2200", "Integral Gain 2200",
 
 
-            
 if coeffsToCompare == 0:
     print("\nIncorrect transmitter. Stopping script. Supported transmitters: 5700")
     exit()
     
-if blueFile ==0 or redFile ==0 or greenFile ==0 or purpleFile == 0:
-    print("\nIncorrect file location. Stopping script. Can't find ER_20018334, ER_20015860, ER_20015206, or ER_20027172")
+if blueFile == 0:
+    print("\nMissing File. Stopping script. Can't find ER_20018334")
+    exit()
+if redFile == 0:
+    print("\nMissing File. Stopping script. Can't find ER_20015860")
+    exit()
+if greenFile == 0:
+    print("\nMissing File. Stopping script. Can't find ER_20015206")
+    exit()
+if purpleFile == 0:
+    print("\nMissing File. Stopping script. Can't find ER_20027172")
     exit()
     
 print()

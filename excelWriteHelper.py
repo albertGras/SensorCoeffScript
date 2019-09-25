@@ -227,6 +227,7 @@ def createFinalCodeAndDocArrays(coeffsToCompare, finalCodeArray, finalDocArray, 
 
     #Put code coeffs into final code array
     for codeRow in coeffTable:  #put first row of coeffs from code in final array
+#        print(codeRow)
         for coeff in coeffsToCompare: # Loop through master coeff list
             coeffPopulated = False
             for codeCoeffIndex, code_list_coeff_name in enumerate(mainCoeffList[0], 0):
@@ -245,6 +246,7 @@ def createFinalCodeAndDocArrays(coeffsToCompare, finalCodeArray, finalDocArray, 
 
             if coeffPopulated == False:
                 workingRow.append("―")  # Add a place holder if value doesnt exist 
+#                print("no match")
 
         finalCodeArray.append(workingRow)
         workingRow = []
@@ -304,7 +306,16 @@ def exportFinalArraytoExcelDocument(finalArray, flowLinearityTable, greenTableTw
 
     # Create an new Excel file and add a worksheet.
     workbook = xlsxwriter.Workbook(filePath+'\Comparisons_Spreadsheet.xlsx')
-#    workbook = xlsxwriter.Workbook(r'C:\Users\AGrasmeder\Documents\SensorCoeffScript')
+    
+    #If the file already exists, will check if its already open. If it is, it cant be written to so the script throws an error and exits
+    if os.path.exists("Comparisons_Spreadsheet.xlsx"): 
+        try: 
+            open("Comparisons_Spreadsheet.xlsx", "r+")
+        except IOError:
+            print("Comparisons_Spreadsheet.xlsx is open. Please close it and run script again.\n\n")
+            exit()
+
+    
     worksheet = workbook.add_worksheet('coeff compare')
     flowLinearity = workbook.add_worksheet('flow linearity')
 
