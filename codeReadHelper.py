@@ -176,7 +176,12 @@ def findFlowLinearityCoeffs(flowLinearityTable):
 
 
 def addCatAndSmvTablesToCoeffTable(mainCoeffList, coeffTable, catCoeffList, catTable, smvCoeffList, smvTable, catTypes, smvTypes):
-    mainCoeffList = mainCoeffList[0]
+    try:
+        mainCoeffList = mainCoeffList[0]
+    except:
+        print("Error: The number of coefficients in the coeffsToCompare list do not match the number in the code. \n" 
+            "The coefficient descriptors line labels could be missing: //CAT_TABLE, //SMV_TABLE, //COEFF_TABLE and //End ")
+        exit()
 
     for coeffIndex, coeff in enumerate(mainCoeffList, 0):
         if "CAT" in coeff:
